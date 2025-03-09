@@ -1,2 +1,45 @@
 # Group_Topic_8_Java
 Java
+Primary Actors:
+  + Guest
+  + Student
+  + Parent
+  + Psychologist
+  + Manager
+
+Functional Requirements:
+'In the rapidly growing tourism and accommodation industry, the demand for quality, convenient, and affordable stays, along with additional services such as food, beverages, and entertainment, is increasing. Chỗ Tốt Travel emerges as a comprehensive solution, not only helping customers easily book homestays and camping sites but also offering additional services such as meals, drinks, and packages for morning, afternoon, and evening during their stay. 
+
+With the support of modern technologies like AI, QR codes, and a powerful data management platform, Chỗ Tốt Travel promises to deliver the best booking and accommodation experience for customers while effectively supporting homestay and camping owners in managing their businesses.  
+
+ 
+
+Proposed Solutions:  The project is built to solve the following problems: 
+
+Online Booking and Payment System: 
+
+Allows customers to search, book, and pay for accommodations easily. 
+
+Supports booking additional services such as meals, drinks, and packages for specific times (morning, afternoon, evening). 
+
+Efficient Homestay and Camping Management: 
+
+Helps homestay and camping owners register, update information, and manage bookings. 
+
+Allows owners to upload images and descriptions of services for customers to choose from. 
+
+Personalized Service Recommendations: 
+
+Uses AI to analyze user preferences and recommend suitable homestays, camping sites, and services. 
+
+Revenue and Service Fee Management: 
+
+Automatically deducts 20% of each transaction as a management fee for the Admin. 
+
+Provides detailed reports on revenue, occupancy rates, and customer satisfaction. 
+
+Review and Feedback Support 
+
+Allows customers to review homestays, camping sites, and services after use. 
+
+Supports owners in responding to reviews and resolving issues. 

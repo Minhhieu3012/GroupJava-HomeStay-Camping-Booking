@@ -12,11 +12,14 @@
 Online Booking and Payment System:
   + Allows customers to search, book, and pay for accommodations easily. 
   + Supports booking additional services such as meals, drinks, and packages for specific times (morning, afternoon, evening).
+
 Efficient Homestay and Camping Management: 
   + Helps homestay and camping owners register, update information, and manage bookings. 
   + Allows owners to upload images and descriptions of services for customers to choose from. 
+
 Personalized Service Recommendations: 
   + Uses AI to analyze user preferences and recommend suitable homestays, camping sites, and services. 
+
 Revenue and Service Fee Management: 
   + Automatically deducts 20% of each transaction as a management fee for the Admin. 
   + Provides detailed reports on revenue, occupancy rates, and customer satisfaction. 

@@ -12,7 +12,8 @@ public class Property {
 
     private String name;
     private String location;
-    private BigDecimal price; //BigDecimal de cho gia chinh xac
+    private BigDecimal price;   //BigDecimal de cho gia chinh xac cao (tranh lam tron nhu khi dung float or double)
+                                //price o day nghia la gia thue co ban, tinh tren don vi tgian, thuong la gia moi dem
     private String image; //duong dan hoac url hinh anh
     private String description; //mo ta
 
@@ -32,7 +33,7 @@ public class Property {
         this.status = status;
     }
 
-    //Getters Setters
+    //Getters
     public Long getId() {
         return id;
     }
@@ -61,6 +62,7 @@ public class Property {
         return status;
     }
 
+    //Setters
     public void setName(String name) {
         this.name = name;
     }
@@ -85,7 +87,7 @@ public class Property {
         this.status = status;
     }
 
-    //define enum Property
+    //define enum PropertyStatus
     public enum PropertyStatus {
         AVAILABLE,
         BOOKED

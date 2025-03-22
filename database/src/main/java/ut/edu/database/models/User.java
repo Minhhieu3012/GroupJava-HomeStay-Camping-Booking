@@ -26,7 +26,7 @@ public class User {
         this.role = role;
     }
 
-    //Getters Setters
+    //Getters
     public Long getId() { //truy cap ma dinh danh user
         return id;
     }
@@ -47,6 +47,7 @@ public class User {
         return role;
     }
 
+    //Setters
     public void setName(String name) {
         this.name = name;
     }

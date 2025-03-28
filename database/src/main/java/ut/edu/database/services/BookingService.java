@@ -19,4 +19,12 @@ public class BookingService {
     public List<Booking> getBookingByPropertyId(Long propertyId) {
         return bookingRepository.findByPropertyId(propertyId);
     }
+    //
+    public List<Booking> getBookingByStatus(String status) {
+        return bookingRepository.findByStatus(status);
+    }
+    //
+    public Booking createBooking(Booking booking) {
+        return bookingRepository.save(booking);
+    }
 }

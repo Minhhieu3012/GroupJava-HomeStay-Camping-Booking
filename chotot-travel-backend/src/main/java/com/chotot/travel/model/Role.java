@@ -1,6 +1,8 @@
 package com.chotot.travel.model;
 
 import jakarta.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Role {
@@ -9,9 +11,12 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String name;  // Ví dụ: "ADMIN", "USER", v.v.
 
-    // Getter và Setter
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users = new HashSet<>();
+
+    // Getters và Setters
     public Long getId() {
         return id;
     }
@@ -26,5 +31,13 @@ public class Role {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 }

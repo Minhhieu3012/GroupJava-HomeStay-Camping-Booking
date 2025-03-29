@@ -2,23 +2,31 @@ package ut.edu.database.services;
 import jakarta.transaction.Transactional;
 import ut.edu.database.models.Property;
 import ut.edu.database.repositories.PropertyRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class PropertyService {
-    @Autowired
-    private PropertyRepository propertyRepository;
+    //Constructor Injection
+    private final PropertyRepository propertyRepository;
+    public PropertyService(PropertyRepository propertyRepository) {
+        this.propertyRepository = propertyRepository;
+    }
 
     //lay ds bat dong san thuoc 1 chu so huu
     public List<Property> getPropertiesByOwnerId(Long ownerId) {
+        if(ownerId == null || ownerId <= 0){
+            throw new IllegalArgumentException("Invalid owner id");
+        }
         return propertyRepository.findByOwnerId(ownerId);
     }
     //tim bat dong san theo vi tri
     public List<Property> getPropertiesByLocation(String location) {
-        return propertyRepository.findByLocationContainingIgnoreCase(location); //cho phep tim chuoi con
+        if(location == null || location.isBlank()){
+            throw new IllegalArgumentException("Invalid location");
+        } //cho phep tim chuoi con
+        return propertyRepository.findByLocationContainingIgnoreCase(location);
     }
     //lay ds bat dong san theo status
     public List<Property> getPropertiesByStatus(String status) {

@@ -9,12 +9,18 @@ public class User {
     private String password;
     private String role; // "customer" | "owner"
 
+
+    private String name;    // tên người dùng
+    private String phone;   // số điện thoại
+
     // Constructors
     public User() {}
     public User(String email, String password, String role) {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.name = name;
+        this.phone = phone;
     }
 
     public String getEmail() {
@@ -39,5 +45,21 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+ ///  bổ sưng thêm dữ liệu mơius
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

@@ -2,6 +2,7 @@ package com.chotot.travel.controller;
 
 import com.chotot.travel.dto.LoginRequest;
 import com.chotot.travel.dto.RegisterRequest;
+import com.chotot.travel.dto.UpdateProfileRequest;
 import com.chotot.travel.model.User;
 import com.chotot.travel.service.AuthService;
 
@@ -25,4 +26,12 @@ public class AuthController {
     public String login(@RequestBody LoginRequest request) {
         return authService.login(request);
     }
+
+    @PutMapping("/profile")
+    public User updateProfile(@RequestHeader("Authorization") String authHeader,
+                              @RequestBody UpdateProfileRequest request) {
+        String token = authHeader.replace("Bearer ", "");
+        return authService.updateProfile(token, request);
+    }
+
 }

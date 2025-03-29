@@ -1,50 +1,54 @@
 package ut.edu.database.services;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ut.edu.database.models.Review;
 import ut.edu.database.repositories.ReviewRepository;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReviewService {
-    //Constructor Injection
     private final ReviewRepository reviewRepository;
 
+    // Constructor Injection
     @Autowired
     public ReviewService(ReviewRepository reviewRepository) {
         this.reviewRepository = reviewRepository;
     }
 
-    //lay ds danh gia theo id bat dong san
-    List<Review> getReviewsByPropertyId(Long propertyId) {
-        if(propertyId == null || propertyId <= 0){
-            throw new IllegalArgumentException("Invalid property id");
-        }
-        return reviewRepository.findByPropertyId(propertyId);
+    // Lấy tất cả đánh giá
+    public List<Review> getAllReviews() {
+        return reviewRepository.findAll();
     }
 
-    //lay ds danh gia theo user id
-    List<Review> getReviewsByUserId(Long userId) {
-        if(userId == null || userId <= 0){
-            throw new IllegalArgumentException("Invalid user id");
-        }
-        return reviewRepository.findByUserId(userId);
+    // Lấy đánh giá theo ID
+    public Optional<Review> getReviewById(Long id) {
+        return reviewRepository.findById(id);
     }
 
-    //lay ds danh gia theo rating (1-5 sao)
-    List<Review> getReviewsByRating(int rating) {
-        if(rating < 1 || rating > 5){
-            throw new IllegalArgumentException("Invalid rating");
-        }
-        return reviewRepository.findByRating(rating);
-    }
-
-    //tao danh gia moi
+    // Tạo đánh giá mới
     public Review createReview(Review review) {
-        if(review == null){
-            throw new IllegalArgumentException("Review cannot be null");
-        }
         return reviewRepository.save(review);
+    }
+
+    // Cập nhật đánh giá
+    public Optional<Review> updateReview(Long id, Review updatedReview) {
+        return reviewRepository.findById(id).map(existingReview -> {
+            existingReview.setRating(updatedReview.getRating());
+            existingReview.setComment(updatedReview.getComment());
+            existingReview.setReviewDate(updatedReview.getReviewDate());
+            return reviewRepository.save(existingReview);
+        });
+    }
+
+    // Xóa đánh giá theo ID
+    public boolean deleteReview(Long id) {
+        if (reviewRepository.existsById(id)) {
+            reviewRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

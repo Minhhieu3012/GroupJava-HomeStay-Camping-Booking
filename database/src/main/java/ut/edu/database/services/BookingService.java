@@ -25,7 +25,7 @@ public class BookingService {
             Booking.BookingStatus bookingStatus = Booking.BookingStatus.valueOf(status.toUpperCase()); //chuyen chuoi nhap vaoo thanh chu in hoa, tranh loi nguoi dung nhap chu thuong
             return bookingRepository.findByStatus(bookingStatus.toString()); //chuyen enum thanh chuoi
         }catch(IllegalArgumentException e){ //neu gia tri ko loi se xay ra loi
-            return List.of(); //tra ve ds rong
+            throw new RuntimeException("Invalid booking status: "+status); //bat loi va nem ngoai le khac kem thong bao
         }
     }
     //tao booking moi

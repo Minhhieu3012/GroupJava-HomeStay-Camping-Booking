@@ -35,11 +35,11 @@ public class UserService {
     }
 
     //lay user theo ID
-    public Optional<User> getUserByID(Long userId){
-        if(userId == null || userId <= 0){
+    public Optional<User> getUserById(Long id){
+        if(id == null || id <= 0){
             throw new IllegalArgumentException("Invalid user id");
         }
-        return userRepository.findById(userId);
+        return userRepository.findById(id);
     }
 
     //Tao moi user
@@ -54,8 +54,8 @@ public class UserService {
         return userRepository.save(user);
     }
     //Update thong tin user
-    public User updateUser(Long userId, User updatedUser) {
-        Optional<User> existingUserOpt = userRepository.findById(userId);
+    public User updateUser(Long id, User updatedUser) {
+        Optional<User> existingUserOpt = userRepository.findById(id);
         if(existingUserOpt.isPresent()) {
             User existingUser = existingUserOpt.get();
             existingUser.setName(updatedUser.getName());
@@ -70,11 +70,11 @@ public class UserService {
         throw new IllegalArgumentException("User not found");
     }
     //Xoa user theo ID
-    public void deleteUser(Long userId) {
-        if(!userRepository.existsById(userId)){
+    public void deleteUser(Long id) {
+        if(!userRepository.existsById(id)){
             throw new IllegalArgumentException("User not found");
         }
-        userRepository.deleteById(userId);
+        userRepository.deleteById(id);
     }
 
     //kiem tra nguoi dung co ton tai bang email

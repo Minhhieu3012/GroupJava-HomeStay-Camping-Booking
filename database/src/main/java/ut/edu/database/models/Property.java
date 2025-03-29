@@ -4,20 +4,29 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "Property")
+@Table(name = "Properties")
 public class Property {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 255)
     private String name;
+
+    @Column(nullable = false, length = 500)
     private String location;
+
+    @Column(nullable = false, precision = 10, scale = 2) //xac dinh 2 chu so thap phan
     private BigDecimal price;   //BigDecimal de cho gia chinh xac cao (tranh lam tron nhu khi dung float or double)
                                 //price o day nghia la gia thue co ban, tinh tren don vi tgian, thuong la gia moi dem
+    @Column(length = 500)
     private String image; //duong dan hoac url hinh anh
+
+    @Column(columnDefinition = "TEXT")
     private String description; //mo ta
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private PropertyStatus status; //vd: available, booked
 
     //Constructors

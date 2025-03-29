@@ -1,11 +1,13 @@
 package ut.edu.database.controllers;
 import ut.edu.database.models.User;
 import ut.edu.database.repositories.UserRepository;
+import ut.edu.database.services.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ut.edu.database.services.UserService;
 import java.util.List;
 import java.util.Optional;
+
 
 @RestController
 //REST API
@@ -13,6 +15,8 @@ import java.util.Optional;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
 
     //lay tat ca user
     @GetMapping
@@ -20,7 +24,23 @@ public class UserController {
         return userService.getAllUsers();
     }
     //lay user theo id
-//    @GetMapping("/{id}")
-
-
+    @GetMapping("/{id}")
+    public Optional<User> getUserById(@PathVariable Long id) {
+        return userRepository.findById(id);
+    }
+    //tao user moi
+    @PostMapping
+    public User createUser(@RequestBody User user) {
+        return userRepository.save(user);
+    }
+    //update thong tin user
+    @PutMapping("/{id}")
+    public User updateUser(@PathVariable Long id, @RequestBody User user) {
+        return userRepository.save(user);
+    }
+    //delete user
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userRepository.deleteById(id);
+    }
 }

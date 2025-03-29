@@ -21,8 +21,9 @@ public class BookingController {
 
     //lay tat ca dat cho
     @GetMapping
-    public List<Booking> getAllBookings() {
-        return bookingService.getAllBookings();
+    public ResponseEntity<List<Booking>> getAllBookings() {
+        List<Booking> bookings = bookingService.getAllBookings();
+        return ResponseEntity.ok(bookings);
     }
 
     //lay dat cho theo id

@@ -25,6 +25,7 @@ public class PropertyController {
         List<Property> properties = propertyService.getAllProperties();
         return ResponseEntity.ok(properties); //200 ok
     }
+
     //lay bat dong san theo id
     @GetMapping("/{id}")
     public ResponseEntity<Property> getProperty(@PathVariable Long id) {

@@ -1,14 +1,15 @@
 package ut.edu.database.services;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ut.edu.database.models.Report;
 import ut.edu.database.repositories.ReportRepository;
-import org.springframework.stereotype.Service;
+
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReportService {
-    //Constructor Injection (de test hon - khong can spring context)
-    //dam bao khong bi null vi no duoc yeu cau ngay khi khoi tao
     private final ReportRepository reportRepository;
 
     @Autowired
@@ -16,25 +17,43 @@ public class ReportService {
         this.reportRepository = reportRepository;
     }
 
-    //lay ds bao cao theo id tai san
-    public List<Report> getReportsByPropertyId(Long propertyId) {
-        if(propertyId == null || propertyId <= 0){
-            throw new IllegalArgumentException("Invalid property id");
-        }
-        return reportRepository.findByPropertyId(propertyId);
+    // Lấy tất cả báo cáo
+    public List<Report> getAllReports() {
+        return reportRepository.findAll();
     }
-    //lay ds bao cao theo khoang thoi gian (period)
-    public List<Report> getReportsByPeriod(String period) {
-        if(period == null || period.isBlank()){
-            throw new IllegalArgumentException("Invalid period");
-        }
-        return reportRepository.findByPeriod(period);
+
+    // Lấy báo cáo theo ID
+    public Optional<Report> getReportById(Long id) {
+        return reportRepository.findById(id);
     }
-    //tao bao cao moi
+
+    // Tạo báo cáo mới
     public Report createReport(Report report) {
-        if(report == null){
-            throw new IllegalArgumentException("Invalid report");
+        if (report == null || report.getTotalRevenue() == null || report.getManagementFee() == null ||
+                report.getOccupancyRate() == null || report.getReportDate() == null || report.getStatus() == null) {
+            throw new IllegalArgumentException("Invalid report!");
         }
         return reportRepository.save(report);
+    }
+
+    // Cập nhật báo cáo
+    public Optional<Report> updateReport(Long id, Report updatedReport) {
+        return reportRepository.findById(id).map(existingReport -> {
+            existingReport.setTotalRevenue(updatedReport.getTotalRevenue());
+            existingReport.setManagementFee(updatedReport.getManagementFee());
+            existingReport.setOccupancyRate(updatedReport.getOccupancyRate());
+            existingReport.setReportDate(updatedReport.getReportDate());
+            existingReport.setStatus(updatedReport.getStatus());
+            return reportRepository.save(existingReport);
+        });
+    }
+
+    // Xóa báo cáo theo ID
+    public boolean deleteReport(Long id) {
+        if (reportRepository.existsById(id)) {
+            reportRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

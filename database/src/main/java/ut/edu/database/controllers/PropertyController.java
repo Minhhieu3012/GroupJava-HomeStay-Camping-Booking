@@ -1,8 +1,10 @@
 package ut.edu.database.controllers;
 import ut.edu.database.models.Property;
 import ut.edu.database.repositories.PropertyRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 

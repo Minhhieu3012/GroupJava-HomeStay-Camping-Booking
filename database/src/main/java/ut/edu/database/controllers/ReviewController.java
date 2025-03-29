@@ -1,14 +1,12 @@
 package ut.edu.database.controllers;
 import org.springframework.http.ResponseEntity;
 import ut.edu.database.models.Review;
-import ut.edu.database.repositories.ReviewRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ut.edu.database.services.ReviewService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/reviews")

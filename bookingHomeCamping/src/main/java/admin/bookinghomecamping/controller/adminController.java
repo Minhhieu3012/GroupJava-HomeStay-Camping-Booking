@@ -1,8 +1,6 @@
 package admin.bookinghomecamping.controller;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import admin.bookinghomecamping.models.admin;
 import admin.bookinghomecamping.services.adminService;
 
@@ -25,5 +23,19 @@ public class adminController {
     @GetMapping("/admins")
     public Optional<admin> getAllAdmins(String adminName) {
         return adminService.findByadminName(adminName);
+    }
+
+    @PostMapping("/admin")
+    public long addAdmin(@RequestBody admin admin) {
+        return adminService.CreateAdmin(admin);
+    }
+
+    @PutMapping("/admin/{id}")
+    public long saveAdmin(@RequestBody admin admin) {
+        return adminService.CreateAdmin(admin);
+    }
+    @DeleteMapping("/admin/{id}")
+    public adminService deleteAdmin(@PathVariable Long id) {
+        return adminService;
     }
 }

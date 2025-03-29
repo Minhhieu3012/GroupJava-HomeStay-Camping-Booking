@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
+import java.util.List;
 @Service
 public class adminService {
     @Autowired
@@ -12,13 +13,18 @@ public class adminService {
     public Optional<admin> findByadminName(String adminName) {
         return adminRepository.findByAdminName(adminName);
     }
-    // Save hoặc update Admin
-    public admin saveAdmin(admin admin) {
-        if (adminRepository.existsByAdminName(admin.getAdminName())) {
-            throw new RuntimeException("Username đã tồn tại!");
-        }
-        return adminRepository.save(admin);
+    public List<admin> getAllAdmins() {
+        return adminRepository.findAll();
     }
+
+    //Create admin
+    public long CreateAdmin(admin admin) {
+        return adminRepository.save(admin).getId();
+    }
+    // Save hoặc update Admin
+   public admin updateAdmin(admin admin) {
+        return adminRepository.save(admin);
+   }
 
     // Xóa Admin theo ID
     public void deleteAdmin(Long id) {

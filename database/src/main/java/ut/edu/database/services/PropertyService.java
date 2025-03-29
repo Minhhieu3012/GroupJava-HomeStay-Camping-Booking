@@ -6,6 +6,7 @@ import ut.edu.database.repositories.PropertyRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PropertyService {
@@ -17,6 +18,26 @@ public class PropertyService {
         this.propertyRepository = propertyRepository;
     }
 
+    // Lấy tất cả bất động sản
+    public List<Property> getAllProperties() {
+        return propertyRepository.findAll();
+    }
+
+    // Lấy bất động sản theo ID
+    public Optional<Property> getPropertyById(Long id) {
+        return propertyRepository.findById(id);
+    }
+
+    // Cập nhật bất động sản
+    public Optional<Property> updateProperty(Long id, Property updatedProperty) {
+        return propertyRepository.findById(id).map(existingProperty -> {
+            existingProperty.setName(updatedProperty.getName());
+            existingProperty.setLocation(updatedProperty.getLocation());
+            existingProperty.setStatus(updatedProperty.getStatus());
+            return propertyRepository.save(existingProperty);
+        });
+    }
+
     //lay ds bat dong san thuoc 1 chu so huu
     public List<Property> getPropertiesByOwnerId(Long ownerId) {
         if(ownerId == null || ownerId <= 0){
@@ -24,6 +45,7 @@ public class PropertyService {
         }
         return propertyRepository.findByOwnerId(ownerId);
     }
+
     //tim bat dong san theo vi tri
     public List<Property> getPropertiesByLocation(String location) {
         if(location == null || location.isBlank()){
@@ -41,6 +63,7 @@ public class PropertyService {
         }
     }
 
+    //tao bat dong san moi
     @Transactional  //dam bao giao dich db duoc thuc hien hoan chinh
                     //neu xay ra loi trong qua trinh save, moi thu se duoc rollback (tranh luu du lieu ko hop le)
     public Property createProperty(Property property) {
@@ -48,5 +71,14 @@ public class PropertyService {
             throw new IllegalArgumentException("Property cannot be null");
         }
         return propertyRepository.save(property);
+    }
+
+    // Xóa bất động sản theo ID
+    public boolean deleteProperty(Long id) {
+        if (propertyRepository.existsById(id)) {
+            propertyRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

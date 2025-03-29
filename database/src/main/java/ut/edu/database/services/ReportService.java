@@ -23,8 +23,18 @@ public class ReportService {
     }
 
     // Lấy báo cáo theo ID
-    public Optional<Report> getReportById(Long id) {
+    public Optional<Report> getReportById(Long id) {  // Sửa từ List<Report> -> Optional<Report>
         return reportRepository.findById(id);
+    }
+
+    // Lấy báo cáo theo propertyId
+    public List<Report> getReportsByPropertyId(Long propertyId) {
+        return reportRepository.findByPropertyId(propertyId);
+    }
+
+    // Lấy báo cáo theo thời gian
+    public List<Report> getReportsByPeriod(String period) {
+        return reportRepository.findByPeriod(period);
     }
 
     // Tạo báo cáo mới

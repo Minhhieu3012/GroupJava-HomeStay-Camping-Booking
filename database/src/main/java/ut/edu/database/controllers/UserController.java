@@ -13,16 +13,19 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
+    //Constructor Injection
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
+    //
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
+    //
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         return userService.getUserById(id)
@@ -30,6 +33,7 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    //
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
         try {
@@ -39,6 +43,7 @@ public class UserController {
         }
     }
 
+    //
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
         try {
@@ -48,6 +53,7 @@ public class UserController {
         }
     }
 
+    //
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         try {

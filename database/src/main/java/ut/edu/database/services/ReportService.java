@@ -1,4 +1,5 @@
 package ut.edu.database.services;
+import org.springframework.beans.factory.annotation.Autowired;
 import ut.edu.database.models.Report;
 import ut.edu.database.repositories.ReportRepository;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,8 @@ public class ReportService {
     //Constructor Injection (de test hon - khong can spring context)
     //dam bao khong bi null vi no duoc yeu cau ngay khi khoi tao
     private final ReportRepository reportRepository;
+
+    @Autowired
     public ReportService(ReportRepository reportRepository) {
         this.reportRepository = reportRepository;
     }

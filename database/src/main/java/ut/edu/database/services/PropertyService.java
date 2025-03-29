@@ -1,5 +1,6 @@
 package ut.edu.database.services;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import ut.edu.database.models.Property;
 import ut.edu.database.repositories.PropertyRepository;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,8 @@ import java.util.List;
 public class PropertyService {
     //Constructor Injection
     private final PropertyRepository propertyRepository;
+
+    @Autowired
     public PropertyService(PropertyRepository propertyRepository) {
         this.propertyRepository = propertyRepository;
     }

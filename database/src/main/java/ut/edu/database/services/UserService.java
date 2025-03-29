@@ -1,4 +1,5 @@
 package ut.edu.database.services;
+import org.springframework.beans.factory.annotation.Autowired;
 import ut.edu.database.models.User;
 import ut.edu.database.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,8 @@ public class UserService {
     //Constructor Injection
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;

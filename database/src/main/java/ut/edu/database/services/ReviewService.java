@@ -1,4 +1,5 @@
 package ut.edu.database.services;
+import org.springframework.beans.factory.annotation.Autowired;
 import ut.edu.database.models.Review;
 import ut.edu.database.repositories.ReviewRepository;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,8 @@ import java.util.List;
 public class ReviewService {
     //Constructor Injection
     private final ReviewRepository reviewRepository;
+
+    @Autowired
     public ReviewService(ReviewRepository reviewRepository) {
         this.reviewRepository = reviewRepository;
     }

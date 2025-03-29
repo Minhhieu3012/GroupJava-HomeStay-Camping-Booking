@@ -5,18 +5,26 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "Report")
+@Table(name = "Reports")
 public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private BigDecimal totalRevenue;
-    private BigDecimal managementFee;
-    private BigDecimal occupancyRate;
+    @Column(nullable = false, precision = 15, scale = 2)
+    private BigDecimal totalRevenue; //tong doanh thu
+
+    @Column(nullable = false, precision = 15, scale = 2)
+    private BigDecimal managementFee; //phi quan ly
+
+    @Column(nullable = false, precision = 5, scale = 2)
+    private BigDecimal occupancyRate; //ti le lap day (%)
+
+    @Column(nullable = false)
     private LocalDate reportDate;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ReportStatus status;
 
     //Constructors

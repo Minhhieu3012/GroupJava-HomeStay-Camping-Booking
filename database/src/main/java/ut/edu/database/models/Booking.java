@@ -3,6 +3,8 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Booking")
@@ -11,20 +13,25 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "userID")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "userID", nullable = false) //nullable dam bao kh co booking nao ton tai ma kh co user
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "propertyID")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "propertyID", nullable = false)
     private Property property;
 
     private LocalDate startDate;
     private LocalDate endDate;
-    private String additionalServices; //luu duoi dang chuoi (vd: "breakfast,dinner")
+
+    //luu ds dich vu vao bang rieng
+    @ElementCollection
+    @CollectionTable(name = "booking_services", joinColumns = @JoinColumn(name = "booking_id"))
+    @Column(name = "service")
+    private List<String> additionalServices = new ArrayList<>();
+
     private BigDecimal totalPrice;  //day la tong price ma cus phai tra cho toan bo tgian dat cho
                                     //bao gom gia thue co ban va them cac dich vu
-
     @Enumerated(EnumType.STRING)
     private BookingStatus status; //vd: processing, completed, canceled
 
@@ -32,7 +39,7 @@ public class Booking {
     public Booking() {
 
     }
-    public Booking(User user, Property property, LocalDate startDate, LocalDate endDate, String additionalServices, BigDecimal totalPrice, BookingStatus status) {
+    public Booking(User user, Property property, LocalDate startDate, LocalDate endDate, List<String> additionalServices, BigDecimal totalPrice, BookingStatus status) {
         this.user = user;
         this.property = property;
         this.startDate = startDate;
@@ -63,7 +70,7 @@ public class Booking {
         return endDate;
     }
 
-    public String getAdditionalServices() {
+    public List<String> getAdditionalServices() {
         return additionalServices;
     }
 
@@ -84,7 +91,7 @@ public class Booking {
         this.endDate = endDate;
     }
 
-    public void setAdditionalServices(String additionalServices) {
+    public void setAdditionalServices(List<String> additionalServices) {
         this.additionalServices = additionalServices;
     }
 

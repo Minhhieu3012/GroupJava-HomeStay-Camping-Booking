@@ -57,14 +57,11 @@ public class UserService {
             User existingUser = existingUserOpt.get();
             existingUser.setName(updatedUser.getName());
             existingUser.setEmail(updatedUser.getEmail());
-            existingUser.setPassword(updatedUser.getPassword());
             existingUser.setRole(updatedUser.getRole());
 
             if (updatedUser.getPassword() != null && !updatedUser.getPassword().isBlank()) {
                 existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword())); // Ma hoa lai mk
             }
-
-            existingUser.setRole(updatedUser.getRole());
             return userRepository.save(existingUser);
         }
         throw new IllegalArgumentException("User not found");

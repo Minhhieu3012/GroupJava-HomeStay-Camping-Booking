@@ -3,28 +3,34 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Max;
-import java.util.Objects;
+import jakarta.validation.constraints.NotBlank;
+
 
 @Entity
-@Table(name = "Review")
+@Table(name = "Reviews")
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "userID")
+    @ManyToOne(cascade = CascadeType.ALL) //xoa review khi user bi xoa
+    @JoinColumn(name = "userID", nullable = false)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "propertyID")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "propertyID", nullable = false)
     private Property property;
-
 
     @Min(1)
     @Max(5)
+    @Column(nullable = false)
     private int rating; //1-5
-    private String comment;
+
+    @NotBlank
+    @Column(nullable = false)
+    private String comment; //khong cho phep rong
+
+    @Column(nullable = false)
     private LocalDate reviewDate;
 
     //Constructors
@@ -34,7 +40,7 @@ public class Review {
     public Review(User user, Property property, int rating, String comment, LocalDate reviewDate) {
         this.user = user;
         this.property = property;
-        setRating(rating); // Sử dụng setter
+        this.rating = rating;
         this.comment = comment;
         this.reviewDate = reviewDate;
     }
@@ -74,9 +80,6 @@ public class Review {
     }
 
     public void setRating(int rating) {
-        if(rating<1 ||rating>5){
-            throw new IllegalArgumentException("Rating must be between 1 and 5");
-        }
         this.rating = rating;
     }
 

@@ -1,18 +1,33 @@
 package ut.edu.database.models;
 import jakarta.persistence.*;
-import javax.management.relation.Role;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "User")
+@Table(name = "Users")
 public class User {
     @Id //khoa chinh
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
+    @Column(nullable = false)
     private String name;
+
+    @Email
+    @NotBlank
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @NotBlank
+    @Size(min = 8) //do dai toi thieu cua mk
+    @Column(nullable = false)
     private String password;
+
+
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Role role; //vai tro (vd: customer, homestay owner, admin)
 
     //Constructors
@@ -22,7 +37,7 @@ public class User {
     public User(String name, String email, String password, Role role) {
         this.name = name;
         this.email = email;
-        this.password = password;
+        this.password = password; //co the ma hoa bang BCrypt trc khi luu
         this.role = role;
     }
 

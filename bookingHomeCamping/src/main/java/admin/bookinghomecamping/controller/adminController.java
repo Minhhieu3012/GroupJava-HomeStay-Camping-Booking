@@ -35,7 +35,8 @@ public class adminController {
         return adminService.CreateAdmin(admin);
     }
     @DeleteMapping("/admin/{id}")
-    public adminService deleteAdmin(@PathVariable Long id) {
-        return adminService;
+    String deleteAdmin(@PathVariable long id) {
+        adminService.deleteAdmin(id);
+        return "Admin deleted";
     }
 }

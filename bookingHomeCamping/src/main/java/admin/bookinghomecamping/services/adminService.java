@@ -28,11 +28,6 @@ public class adminService {
 
     // Xóa Admin theo ID
     public void deleteAdmin(Long id) {
-        Optional<admin> admin = adminRepository.findById(id);
-        if (admin.isPresent()) {
-            adminRepository.deleteById(id);
-        } else {
-            throw new RuntimeException("Admin không tồn tại!");
-        }
+        adminRepository.deleteById(id);
     }
 }

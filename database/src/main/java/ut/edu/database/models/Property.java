@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 public class Property {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long ownerId;
 
     @Column(nullable = false, length = 250)
     private String name;
@@ -44,7 +44,7 @@ public class Property {
 
     //Getters
     public Long getId() {
-        return id;
+        return ownerId;
     }
 
     public String getName() {

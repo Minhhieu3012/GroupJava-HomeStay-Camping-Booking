@@ -34,6 +34,9 @@ public class PropertyService {
             existingProperty.setName(updatedProperty.getName());
             existingProperty.setLocation(updatedProperty.getLocation());
             existingProperty.setStatus(updatedProperty.getStatus());
+            existingProperty.setPrice(updatedProperty.getPrice());
+            existingProperty.setImage(updatedProperty.getImage());
+            existingProperty.setDescription(updatedProperty.getDescription());
             return propertyRepository.save(existingProperty);
         });
     }
@@ -67,8 +70,9 @@ public class PropertyService {
     @Transactional  //dam bao giao dich db duoc thuc hien hoan chinh
                     //neu xay ra loi trong qua trinh save, moi thu se duoc rollback (tranh luu du lieu ko hop le)
     public Property createProperty(Property property) {
-        if(property == null || property.getName() == null || property.getLocation() == null){ //tranh luu obj rong
-            throw new IllegalArgumentException("Property cannot be null");
+        if (property == null || property.getName() == null || property.getLocation() == null ||
+                property.getPrice() == null || property.getImage() == null || property.getDescription() == null) {
+            throw new IllegalArgumentException("Property and its required fields cannot be null");
         }
         return propertyRepository.save(property);
     }

@@ -11,6 +11,11 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Liên kết với Property (Many-to-One)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "property_id", nullable = false)
+    private Property property;
+
     @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal totalRevenue; //tong doanh thu
 
@@ -23,6 +28,13 @@ public class Report {
     @Column(nullable = false)
     private LocalDate reportDate;
 
+
+    @Column(nullable = false)
+    private LocalDate startDate; // Thêm trường startDate
+
+    @Column(nullable = false)
+    private LocalDate endDate;   // Thêm trường endDate
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ReportStatus status;
@@ -31,15 +43,25 @@ public class Report {
     public Report() {
 
     }
-    public Report(BigDecimal totalRevenue, BigDecimal managementFee, BigDecimal occupancyRate, LocalDate reportDate, ReportStatus status) {
+    public Report(BigDecimal totalRevenue, BigDecimal managementFee, BigDecimal occupancyRate, LocalDate reportDate, ReportStatus status, LocalDate startDate, LocalDate endDate) {
         this.totalRevenue = totalRevenue; //tong doanh thu
         this.managementFee = managementFee; //phi quan ly
         this.occupancyRate = occupancyRate; //ti le lap day
         this.reportDate = reportDate; //ngay bao cao
         this.status = status;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     //Getters
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
     public Long getId() {
         return id;
     }
@@ -56,15 +78,19 @@ public class Report {
         return occupancyRate;
     }
 
-    public LocalDate getReportDate() {
-        return reportDate;
-    }
-
     public ReportStatus getStatus() {
         return status;
     }
 
     //Setters
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
     public void setTotalRevenue(BigDecimal totalRevenue) {
         this.totalRevenue = totalRevenue;
     }

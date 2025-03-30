@@ -2,13 +2,14 @@ package ut.edu.database.models;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "Properties")
 public class Property {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ownerId;
+    private Long id;
 
     @Column(nullable = false, length = 250)
     private String name;
@@ -19,6 +20,12 @@ public class Property {
     @Column(nullable = false, precision = 10, scale = 2) //xac dinh 2 chu so thap phan
     private BigDecimal price;   //BigDecimal de cho gia chinh xac cao (tranh lam tron nhu khi dung float or double)
                                 //price o day nghia la gia thue co ban, tinh tren don vi tgian, thuong la gia moi dem
+
+    // Liên kết với chủ sở hữu (Many-to-One)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
+    private User owner; // User có role = OWNER
+
     @Column(length = 500)
     private String image; //duong dan hoac url hinh anh
 
@@ -28,6 +35,9 @@ public class Property {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PropertyStatus status; //vd: available, booked
+
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
+    private List<Review> reviews;
 
     //Constructors
     public Property() {
@@ -44,7 +54,7 @@ public class Property {
 
     //Getters
     public Long getId() {
-        return ownerId;
+        return id;
     }
 
     public String getName() {

@@ -1,5 +1,4 @@
 package ut.edu.database.controllers;
-import org.springframework.http.HttpStatus;
 import ut.edu.database.models.Report;
 import ut.edu.database.services.ReportService;
 
@@ -7,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -22,10 +22,18 @@ public class ReportController {
 
     //lay tat ca bao cao
     @GetMapping
-    public ResponseEntity<List<Report>> getAllReports() {
-        List<Report> reports = reportService.getAllReports();
-        return new ResponseEntity<>(reports, HttpStatus.OK); //200 ok
+    public List<Report> getReports(
+            @RequestParam LocalDate startDate,
+            @RequestParam LocalDate endDate) {
+        return reportService.getReportsByDateRange(startDate, endDate);
     }
+
+    // Thêm endpoint mới (nếu cần)
+    @GetMapping("/status/{status}")
+    public List<Report> getReportsByStatus(@PathVariable Report.ReportStatus status) {
+        return reportService.getReportsByStatus(status);
+    }
+
 
     //lay bao cao theo id
     @GetMapping("/{id}")

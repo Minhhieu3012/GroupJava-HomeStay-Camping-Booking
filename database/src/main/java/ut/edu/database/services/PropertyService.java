@@ -2,6 +2,7 @@ package ut.edu.database.services;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import ut.edu.database.models.Property;
+import ut.edu.database.models.User;
 import ut.edu.database.repositories.PropertyRepository;
 import org.springframework.stereotype.Service;
 
@@ -41,12 +42,12 @@ public class PropertyService {
         });
     }
 
-    //lay ds bat dong san thuoc 1 chu so huu
-    public List<Property> getPropertiesByOwnerId(Long ownerId) {
-        if(ownerId == null || ownerId <= 0){
-            throw new IllegalArgumentException("Invalid owner id");
+    // Lấy properties theo chủ sở hữu (dùng User object thay vì ownerId)
+    public List<Property> getPropertiesByOwner(User owner) {
+        if (owner == null) {
+            throw new IllegalArgumentException("Owner cannot be null");
         }
-        return propertyRepository.findByOwnerId(ownerId);
+        return propertyRepository.findByOwner(owner);
     }
 
     //tim bat dong san theo vi tri
@@ -57,13 +58,11 @@ public class PropertyService {
         return propertyRepository.findByLocationContainingIgnoreCase(location);
     }
     //lay ds bat dong san theo status
-    public List<Property> getPropertiesByStatus(String status) {
-        try{
-            Property.PropertyStatus propertyStatus = Property.PropertyStatus.valueOf(status.toUpperCase());
-            return propertyRepository.findByStatus(propertyStatus.toString());
-        }catch(IllegalArgumentException e){
-            throw new IllegalArgumentException("Invalid property status: "+status);
+    public List<Property> filterByStatus(Property.PropertyStatus status) {
+        if (status == null) {
+            throw new IllegalArgumentException("Status cannot be null");
         }
+        return propertyRepository.findByStatus(status);
     }
 
     //tao bat dong san moi

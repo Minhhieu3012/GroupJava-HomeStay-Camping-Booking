@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ut.edu.database.models.Report;
 import ut.edu.database.repositories.ReportRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +16,11 @@ public class ReportService {
     @Autowired
     public ReportService(ReportRepository reportRepository) {
         this.reportRepository = reportRepository;
+    }
+
+    // Thay thế phương thức sử dụng findByPeriod
+    public List<Report> getReportsByDateRange(LocalDate start, LocalDate end) {
+        return reportRepository.findByStartDateBetween(start, end);
     }
 
     // Lấy tất cả báo cáo
@@ -32,15 +38,14 @@ public class ReportService {
         return reportRepository.findByPropertyId(propertyId);
     }
 
-    // Lấy báo cáo theo thời gian
-    public List<Report> getReportsByPeriod(String period) {
-        return reportRepository.findByPeriod(period);
+    public List<Report> getReportsByStatus(Report.ReportStatus status) {
+        return reportRepository.findByStatus(status);
     }
 
     // Tạo báo cáo mới
     public Report createReport(Report report) {
         if (report == null || report.getTotalRevenue() == null || report.getManagementFee() == null ||
-                report.getOccupancyRate() == null || report.getReportDate() == null || report.getStatus() == null) {
+                report.getOccupancyRate() == null || report.getStatus() == null) {
             throw new IllegalArgumentException("Invalid report!");
         }
         return reportRepository.save(report);
@@ -52,7 +57,6 @@ public class ReportService {
             existingReport.setTotalRevenue(updatedReport.getTotalRevenue());
             existingReport.setManagementFee(updatedReport.getManagementFee());
             existingReport.setOccupancyRate(updatedReport.getOccupancyRate());
-            existingReport.setReportDate(updatedReport.getReportDate());
             existingReport.setStatus(updatedReport.getStatus());
             return reportRepository.save(existingReport);
         });

@@ -1,4 +1,3 @@
-# Group_Topic_8_Java
 # Primary Actors:
   + Customers
   + Homestay and Camping Owners
@@ -17,9 +16,6 @@ Efficient Homestay and Camping Management:
   + Helps homestay and camping owners register, update information, and manage bookings. 
   + Allows owners to upload images and descriptions of services for customers to choose from. 
 
-Personalized Service Recommendations: 
-  + Uses AI to analyze user preferences and recommend suitable homestays, camping sites, and services. 
-
 Revenue and Service Fee Management: 
   + Automatically deducts 20% of each transaction as a management fee for the Admin. 
   + Provides detailed reports on revenue, occupancy rates, and customer satisfaction. 
@@ -27,3 +23,7 @@ Revenue and Service Fee Management:
 Review and Feedback Support 
 Allows customers to review homestays, camping sites, and services after use. 
 Supports owners in responding to reviews and resolving issues. 
+
+# ✏️Diagram
+➡️ ORM: https://drive.google.com/file/d/1iOE2lRf9Hx-F6oZYNBLGSQ-ilHJbt5sE/view?usp=drive_link
+➡️ UseCase: https://drive.google.com/file/d/1mgPjM6UZewQ8Am6MQbl4Udnh4Z1lTHcW/view?usp=drive_link

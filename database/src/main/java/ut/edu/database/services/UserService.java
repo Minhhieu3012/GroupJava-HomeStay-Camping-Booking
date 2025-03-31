@@ -86,8 +86,8 @@ public class UserService {
     }
 
     //lay ds user theo vai tro
-    public List<User> getUsersByRole(String role) {
-        if(role == null || role.isBlank()){
+    public List<User> getUsersByRole(User.Role role) {
+        if(role == null){
             throw new IllegalArgumentException("Invalid role");
         }
         return userRepository.findByRole(role);

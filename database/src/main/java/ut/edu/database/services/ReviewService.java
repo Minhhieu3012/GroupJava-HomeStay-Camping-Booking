@@ -38,7 +38,7 @@ public class ReviewService {
     }
 
     // Lấy danh sách đánh giá theo số sao (rating)
-    public List<Review> getReviewsByRating(int rating) {
+    public List<Review> getReviewsByRating(Byte rating) {
         if (rating < 1 || rating > 5) {
             throw new IllegalArgumentException("Rating phải từ 1 đến 5!");
         }

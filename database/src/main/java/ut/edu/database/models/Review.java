@@ -1,9 +1,11 @@
 package ut.edu.database.models;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
+import org.hibernate.annotations.CreationTimestamp;
 
 
 @Entity
@@ -13,31 +15,35 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL) //xoa review khi user bi xoa
+    @ManyToOne
     @JoinColumn(name = "userID", nullable = false)
+    @JsonIgnore
     private User user;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "propertyID", nullable = false)
+    @JsonIgnore
     private Property property;
 
     @Min(1)
     @Max(5)
     @Column(nullable = false)
-    private int rating; //1-5
+    private Byte rating;    //1-5
+                            //Dung byte de tiet kiem bo nho
 
     @NotBlank
-    @Column(nullable = false)
+    @Column(nullable = false, length = 500)
     private String comment; //khong cho phep rong
 
     @Column(nullable = false)
+    @CreationTimestamp //tu dong lay ngay tao
     private LocalDate reviewDate;
 
     //Constructors
     public Review() {
 
     }
-    public Review(User user, Property property, int rating, String comment, LocalDate reviewDate) {
+    public Review(User user, Property property, Byte rating, String comment, LocalDate reviewDate) {
         this.user = user;
         this.property = property;
         this.rating = rating;
@@ -58,7 +64,7 @@ public class Review {
         return property;
     }
 
-    public int getRating() {
+    public Byte getRating() {
         return rating;
     }
 
@@ -79,7 +85,7 @@ public class Review {
         this.property = property;
     }
 
-    public void setRating(int rating) {
+    public void setRating(Byte rating) {
         this.rating = rating;
     }
 

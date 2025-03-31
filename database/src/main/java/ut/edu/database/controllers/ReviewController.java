@@ -1,4 +1,6 @@
 package ut.edu.database.controllers;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import ut.edu.database.models.Review;
 
@@ -34,17 +36,14 @@ public class ReviewController {
 
     //tao danh gia moi
     @PostMapping
-    public ResponseEntity<Review> createReview(@RequestBody Review review) {
-        try{
-            return ResponseEntity.ok(reviewService.createReview(review));
-        }catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build(); //404 bad request
-        }
+    @ResponseStatus(HttpStatus.CREATED)
+    public Review createReview(@Valid @RequestBody Review review) {
+        return reviewService.createReview(review);
     }
 
     //cap nhat danh gia
     @PutMapping("/{id}")
-    public ResponseEntity<Review> updateReview(@PathVariable Long id, @RequestBody Review updatedReview) {
+    public ResponseEntity<Review> updateReview(@PathVariable Long id, @Valid @RequestBody Review updatedReview) {
         try{
             return reviewService.updateReview(id,updatedReview)
                     .map(ResponseEntity::ok)

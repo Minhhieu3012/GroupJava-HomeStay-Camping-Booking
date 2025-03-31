@@ -25,5 +25,6 @@ Allows customers to review homestays, camping sites, and services after use.
 Supports owners in responding to reviews and resolving issues. 
 
 # ✏️Diagram
-➡️ ORM: https://drive.google.com/file/d/1iOE2lRf9Hx-F6oZYNBLGSQ-ilHJbt5sE/view?usp=drive_link
-➡️ UseCase: https://drive.google.com/file/d/1mgPjM6UZewQ8Am6MQbl4Udnh4Z1lTHcW/view?usp=drive_link
+➡️ ORM: [draw.io](https://drive.google.com/file/d/1iOE2lRf9Hx-F6oZYNBLGSQ-ilHJbt5sE/view?usp=drive_link)
+
+➡️ UseCase: [draw.io](https://drive.google.com/file/d/1mgPjM6UZewQ8Am6MQbl4Udnh4Z1lTHcW/view?usp=drive_link)

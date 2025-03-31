@@ -43,7 +43,8 @@ public class Report {
     public Report() {
 
     }
-    public Report(BigDecimal totalRevenue, BigDecimal managementFee, BigDecimal occupancyRate, LocalDate reportDate, ReportStatus status, LocalDate startDate, LocalDate endDate) {
+    public Report(Property property ,BigDecimal totalRevenue, BigDecimal managementFee, BigDecimal occupancyRate, LocalDate reportDate, ReportStatus status, LocalDate startDate, LocalDate endDate) {
+        this.property = property;
         this.totalRevenue = totalRevenue; //tong doanh thu
         this.managementFee = managementFee; //phi quan ly
         this.occupancyRate = occupancyRate; //ti le lap day
@@ -54,6 +55,14 @@ public class Report {
     }
 
     //Getters
+    public Property getProperty() {
+        return property;
+    }
+
+    public LocalDate getReportDate() {
+        return reportDate;
+    }
+
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -83,6 +92,10 @@ public class Report {
     }
 
     //Setters
+    public void setProperty(Property property) {
+        this.property = property;
+    }
+
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }

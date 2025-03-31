@@ -43,9 +43,16 @@ public class ReportService {
     }
 
     // Tạo báo cáo mới
-    public Report createReport(Report report) {
-        if (report == null || report.getTotalRevenue() == null || report.getManagementFee() == null ||
-                report.getOccupancyRate() == null || report.getStatus() == null) {
+    public Report createReport(Report report, Long propertyId) {
+        if (report.getProperty() == null
+                || report.getTotalRevenue() == null
+                || report.getManagementFee() == null
+                || report.getOccupancyRate() == null
+                || report.getStatus() == null
+                || report.getStartDate() == null
+                || report.getEndDate() == null
+                || report.getStartDate().isAfter(report.getEndDate())  // Kiểm tra ngày
+        ) {
             throw new IllegalArgumentException("Invalid report!");
         }
         return reportRepository.save(report);

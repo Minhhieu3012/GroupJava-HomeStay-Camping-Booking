@@ -22,10 +22,16 @@ public class ReportController {
 
     //lay tat ca bao cao
     @GetMapping
-    public List<Report> getReports(
+    public List<Report> getAllReports() {
+        return reportService.getAllReports();  // Lấy tất cả reports
+    }
+
+    @GetMapping("/filter")
+    public List<Report> getReportsByDateRange(
             @RequestParam LocalDate startDate,
-            @RequestParam LocalDate endDate) {
-        return reportService.getReportsByDateRange(startDate, endDate);
+            @RequestParam LocalDate endDate
+    ){
+            return reportService.getReportsByDateRange(startDate, endDate);
     }
 
     // Thêm endpoint mới (nếu cần)
@@ -45,9 +51,9 @@ public class ReportController {
 
     //tao bao cao moi
     @PostMapping
-    public ResponseEntity<Report> createReport(@RequestBody Report report) {
+    public ResponseEntity<Report> createReport(@RequestBody Report report, Long propertyId) {
         try{
-            Report savedReport = reportService.createReport(report);
+            Report savedReport = reportService.createReport(report, propertyId);
             return ResponseEntity.ok(savedReport); //200 ok
         }catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build(); //bao loi 404 khi du lieu ko hop le
@@ -68,7 +74,7 @@ public class ReportController {
 
     //delete bao cao
     @DeleteMapping("/{id}")
-    public ResponseEntity<Report> deleteReport(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteReport(@PathVariable Long id) {
         if(reportService.deleteReport(id)) {
             return ResponseEntity.noContent().build(); //204 no content khi xoa thanh cong
         }

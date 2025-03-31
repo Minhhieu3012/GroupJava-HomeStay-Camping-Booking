@@ -1,10 +1,10 @@
-package ut.edu.database.controllers;
-import ut.edu.database.models.Report;
-import ut.edu.database.services.ReportService;
+package ut.edu.database.controllers.res;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ut.edu.database.models.Report;
+import ut.edu.database.services.ReportService;
 
 import java.time.LocalDate;
 import java.util.List;

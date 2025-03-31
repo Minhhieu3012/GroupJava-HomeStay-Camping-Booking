@@ -1,11 +1,11 @@
-package ut.edu.database.controllers;
+package ut.edu.database.controllers.res;
+
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import ut.edu.database.models.Review;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ut.edu.database.models.Review;
 import ut.edu.database.services.ReviewService;
 
 import java.util.List;

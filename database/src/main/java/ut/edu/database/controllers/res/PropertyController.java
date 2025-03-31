@@ -1,10 +1,10 @@
-package ut.edu.database.controllers;
-import ut.edu.database.models.Property;
-import ut.edu.database.services.PropertyService;
+package ut.edu.database.controllers.res;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ut.edu.database.models.Property;
+import ut.edu.database.services.PropertyService;
 
 import java.util.List;
 

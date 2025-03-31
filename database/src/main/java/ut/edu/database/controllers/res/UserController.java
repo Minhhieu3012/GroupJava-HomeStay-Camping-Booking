@@ -1,4 +1,4 @@
-package ut.edu.database.controllers;
+package ut.edu.database.controllers.res;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

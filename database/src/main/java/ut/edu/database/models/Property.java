@@ -26,6 +26,16 @@ public class Property {
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner; // User có role = OWNER
 
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Booking> bookings;
+
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Review> reviews;
+
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Report> reports;
+
+
     @Column(length = 500)
     private String image; //duong dan hoac url hinh anh
 
@@ -35,9 +45,6 @@ public class Property {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PropertyStatus status; //vd: available, booked
-
-    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
-    private List<Review> reviews;
 
     //Constructors
     public Property() {

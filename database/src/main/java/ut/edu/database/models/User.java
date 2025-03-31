@@ -3,6 +3,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.List;
 
 @Entity
 @Table(name = "Users")
@@ -30,6 +33,16 @@ public class User {
     @Column(nullable = false)
     private Role role; //vai tro (vd: customer, homestay owner, admin)
 
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Property> properties;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Booking> bookings;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Review> reviews;
+
+
     //Constructors
     public User() {
 
@@ -42,6 +55,18 @@ public class User {
     }
 
     //Getters
+    public List<Property> getProperties() {
+        return properties;
+    }
+
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
     public Long getId() { //truy cap ma dinh danh user
         return id;
     }
@@ -63,6 +88,18 @@ public class User {
     }
 
     //Setters
+    public void setProperties(List<Property> properties) {
+        this.properties = properties;
+    }
+
+    public void setBookings(List<Booking> bookings) {
+        this.bookings = bookings;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

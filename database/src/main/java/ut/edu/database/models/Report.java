@@ -28,7 +28,6 @@ public class Report {
     @Column(nullable = false)
     private LocalDate reportDate;
 
-
     @Column(nullable = false)
     private LocalDate startDate; // Thêm trường startDate
 

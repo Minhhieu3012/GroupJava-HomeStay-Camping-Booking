@@ -48,6 +48,7 @@ public class ReportService {
                 || report.getTotalRevenue() == null
                 || report.getManagementFee() == null
                 || report.getOccupancyRate() == null
+                || report.getReportDate() == null
                 || report.getStatus() == null
                 || report.getStartDate() == null
                 || report.getEndDate() == null
@@ -65,6 +66,9 @@ public class ReportService {
             existingReport.setManagementFee(updatedReport.getManagementFee());
             existingReport.setOccupancyRate(updatedReport.getOccupancyRate());
             existingReport.setStatus(updatedReport.getStatus());
+            existingReport.setReportDate(updatedReport.getReportDate());
+            existingReport.setStartDate(updatedReport.getStartDate());
+            existingReport.setEndDate(updatedReport.getEndDate());
             return reportRepository.save(existingReport);
         });
     }

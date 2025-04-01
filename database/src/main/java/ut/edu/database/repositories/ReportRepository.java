@@ -10,6 +10,5 @@ import java.util.List;
 public interface ReportRepository extends JpaRepository<Report, Long> {
     List<Report> findByPropertyId(Long propertyId);
     List<Report> findByStartDateBetween(LocalDate start, LocalDate end);
-    // Thêm phương thức lọc theo status
     List<Report> findByStatus(Report.ReportStatus status);
 }

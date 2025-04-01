@@ -11,7 +11,7 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Liên kết với Property (Many-to-One)
+    // lien ket voi Property (Many-to-One)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "property_id", nullable = false)
     private Property property;
@@ -29,10 +29,10 @@ public class Report {
     private LocalDate reportDate;
 
     @Column(nullable = false)
-    private LocalDate startDate; // Thêm trường startDate
+    private LocalDate startDate;
 
     @Column(nullable = false)
-    private LocalDate endDate;   // Thêm trường endDate
+    private LocalDate endDate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

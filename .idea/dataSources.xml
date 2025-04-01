@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="homestay_booking@localhost" uuid="3184ad2e-ba51-4a81-b0fe-0c291bb46922">
+    <data-source source="LOCAL" name="@bnupvtywcihcnqshd2mq-mysql.services.clever-cloud.com" uuid="7a99ce2b-f496-482f-b7db-eaabd6611503">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
-      <remarks>homestay_booking</remarks>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:3306/homestay_booking</jdbc-url>
+      <jdbc-url>jdbc:mysql://bnupvtywcihcnqshd2mq-mysql.services.clever-cloud.com:3306</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.host.port" />
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />

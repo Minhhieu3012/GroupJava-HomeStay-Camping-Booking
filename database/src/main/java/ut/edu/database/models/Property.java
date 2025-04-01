@@ -21,7 +21,7 @@ public class Property {
     private BigDecimal price;   //BigDecimal de cho gia chinh xac cao (tranh lam tron nhu khi dung float or double)
                                 //price o day nghia la gia thue co ban, tinh tren don vi tgian, thuong la gia moi dem
 
-    // Liên kết với chủ sở hữu (Many-to-One)
+    // lk voi chu so huu (Many-to-One)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner; // User có role = OWNER

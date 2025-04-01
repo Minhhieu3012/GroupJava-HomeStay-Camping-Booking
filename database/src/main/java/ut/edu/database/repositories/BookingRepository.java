@@ -8,5 +8,5 @@ import java.util.List;
 public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findByUserId(Long userId);
     List<Booking> findByPropertyId(Long propertyId);
-    List<Booking> findByStatus(String status);
+    List<Booking> findByStatus(Booking.BookingStatus status); //enum truc tiep
 }

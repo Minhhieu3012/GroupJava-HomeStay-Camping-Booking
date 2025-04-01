@@ -4,6 +4,7 @@ import ut.edu.database.models.Booking;
 import ut.edu.database.repositories.BookingRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,14 +42,29 @@ public class BookingService {
         }
         return bookingRepository.findByPropertyId(propertyId);
     }
+
     //lay ds booking theo status
     public List<Booking> getBookingByStatus(String status) {
-        try{
-            Booking.BookingStatus bookingStatus = Booking.BookingStatus.valueOf(status.toUpperCase()); //chuyen chuoi nhap vaoo thanh chu in hoa, tranh loi nguoi dung nhap chu thuong
-            return bookingRepository.findByStatus(bookingStatus.toString()); //chuyen enum thanh chuoi
-        }catch(IllegalArgumentException e){ //neu gia tri ko loi se xay ra loi
-            throw new RuntimeException("Invalid booking status: "+status); //bat loi va nem ngoai le khac kem thong bao
+        try {
+            Booking.BookingStatus bookingStatus = Booking.BookingStatus.valueOf(status.toUpperCase());
+            return bookingRepository.findByStatus(bookingStatus); // truyen enum truc tiep
+        } catch(IllegalArgumentException e) {
+            throw new RuntimeException("Invalid booking status: " + status);
         }
+    }
+
+    // Lấy danh sách dịch vụ bổ sung của một booking
+    public List<String> getAdditionalServices(Long bookingId) {
+        return bookingRepository.findById(bookingId)
+                .map(Booking::getAdditionalServices)
+                .orElseThrow(() -> new RuntimeException("Booking not found with id: " + bookingId));
+    }
+
+    // Lấy tổng giá booking
+    public BigDecimal getTotalPrice(Long bookingId) {
+        return bookingRepository.findById(bookingId)
+                .map(Booking::getTotalPrice)
+                .orElseThrow(() -> new RuntimeException("Booking not found with id: " + bookingId));
     }
 
     // Tạo booking mới
@@ -62,10 +78,12 @@ public class BookingService {
     //update booking theo id
     public Optional<Booking> updateBooking(Long id, Booking updatedBooking) {
         return bookingRepository.findById(id).map(existingBooking -> {
-            // update thong tin can thiet
+            // Cập nhật tất cả các thông tin có thể sửa đổi
             existingBooking.setStatus(updatedBooking.getStatus());
             existingBooking.setStartDate(updatedBooking.getStartDate());
             existingBooking.setEndDate(updatedBooking.getEndDate());
+            existingBooking.setAdditionalServices(updatedBooking.getAdditionalServices());
+            existingBooking.setTotalPrice(updatedBooking.getTotalPrice());
             return bookingRepository.save(existingBooking);
         });
     }

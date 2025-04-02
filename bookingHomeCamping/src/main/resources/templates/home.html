@@ -1,7 +1,25 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en" th:include="master/masterpage">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <!--      th:include="master/masterpage">-->
+    <div th:replace="master/css::css"></div>
 
+    <body>
+        <div class="container-xxl bg-white p-0">
+            <div class="container-fluid bg-dark px-0">
+                <div class="row gx-0">
+                    <div class="col-lg-9">
+                        <div th:replace="master/header::header"></div>
 
-<body>
-</body>
+                        <div th:replace="master/navbar::navbar"></div>
+                    </div>
+                </div>
+            </div>
+            <th:block th:fragment="content">
+                <!--Nội dung trang con -->
+                <h2>HELLO</h2>
+            </th:block>
+
+            <div th:replace="master/footer::footer"></div>
+        </div>
+    </body>
 </html>

@@ -41,7 +41,7 @@ public class securityConfig {
     }
 }
 
-//Cái này tui tạo để run trang home đừng xóa nha
+//********** CÁI NÀY TUI TẠO ĐỂ RUN WEB ĐỪNG XÓA NHAAA !!!!!!!!!!!!!!!!!
 
 //import admin.bookinghomecamping.BookingHomeCampingApplication;
 //import org.springframework.boot.SpringApplication;

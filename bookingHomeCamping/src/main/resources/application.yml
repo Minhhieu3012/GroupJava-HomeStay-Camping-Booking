@@ -1,0 +1,20 @@
+
+spring:
+  application:
+    name: bookingHomeCamping
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+  datasource:
+    url: jdbc:mysql://bnuoytwcichnqshd2nq-mysql.services.clever-cloud.com/bnuoytwcichnqshd2nq
+    username: uby9dk5z26ove3zq
+    password: d46sL9Megec7WeaLEXLF
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect

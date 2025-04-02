@@ -40,3 +40,18 @@ public class securityConfig {
         return new BCryptPasswordEncoder();
     }
 }
+
+//Cái này tui tạo để run trang home đừng xóa nha
+
+//import admin.bookinghomecamping.BookingHomeCampingApplication;
+//import org.springframework.boot.SpringApplication;
+//import org.springframework.boot.autoconfigure.SpringBootApplication;
+//import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+//
+//@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
+//class securityConfig {
+//
+//    public static void main(String[] args) {
+//        SpringApplication.run(BookingHomeCampingApplication.class, args);
+//    }
+//}

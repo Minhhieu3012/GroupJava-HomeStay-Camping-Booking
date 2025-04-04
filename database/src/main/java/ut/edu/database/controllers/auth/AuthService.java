@@ -7,7 +7,6 @@ import ut.edu.database.dtos.AuthResponse;
 import ut.edu.database.models.User;
 import ut.edu.database.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.http.ResponseEntity;
 
@@ -30,7 +29,8 @@ public class AuthService {
         String encodedPassword = passwordEncoder.encode(registerRequest.getPassword());
 
         //tao moi user
-        User user = new User(registerRequest.getEmail(), encodedPassword, "ROLE_USER");
+        User.Role role = User.Role.valueOf("ROLE_USER"); // Chuyển chuỗi "ROLE_USER" thành enum Role.USER
+        User user = new User(registerRequest.getName(), registerRequest.getEmail(), encodedPassword, role);
         userService.save(user);
 
         return ResponseEntity.ok("Successfully registered");

@@ -3,8 +3,18 @@ package ut.edu.database.dtos;
 public class RegisterRequest {
     private String email;
     private String password;
+    private String name;
 
     //getters & setters
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getEmail() {
         return email;
     }

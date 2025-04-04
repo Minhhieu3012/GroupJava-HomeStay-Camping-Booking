@@ -93,4 +93,9 @@ public class UserService {
         return userRepository.findByRole(role);
     }
 
+    // Phương thức để mã hóa mật khẩu trước khi lưu vào cơ sở dữ liệu
+    public void save(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+    }
 }

@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 @Service
 public class AuthService {
     private final UserService userService;
-    private final BCryptPasswordEncoder passwordEncoder; // Tiêm BCryptPasswordEncoder vào service
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     public AuthService(UserService userService, BCryptPasswordEncoder passwordEncoder) {

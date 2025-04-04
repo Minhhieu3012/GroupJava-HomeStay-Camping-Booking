@@ -12,11 +12,14 @@ import org.springframework.http.ResponseEntity;
 
 @Service
 public class AuthService {
-    @Autowired
-    private UserService userService; //service de thao tac voi user
+    private final UserService userService;
+    private final BCryptPasswordEncoder passwordEncoder; // Tiêm BCryptPasswordEncoder vào service
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder; //dung de ma hoa mk
+    public AuthService(UserService userService, BCryptPasswordEncoder passwordEncoder) {
+        this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     //register user
     public ResponseEntity<String> register(RegisterRequest registerRequest) {

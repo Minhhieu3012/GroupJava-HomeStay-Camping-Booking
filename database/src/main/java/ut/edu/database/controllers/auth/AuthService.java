@@ -7,7 +7,7 @@ import ut.edu.database.dtos.AuthResponse;
 import ut.edu.database.models.User;
 import ut.edu.database.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.http.ResponseEntity;
 

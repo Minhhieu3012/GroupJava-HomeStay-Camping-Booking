@@ -5,11 +5,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import ut.edu.database.dtos.RegisterRequest;
+import ut.edu.database.models.Role;
 import ut.edu.database.models.User;
 import ut.edu.database.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -93,7 +93,7 @@ public class UserService implements UserDetailsService {
     }
 
     //lay ds user theo vai tro
-    public List<User> getUsersByRole(String role) {
+    public List<User> getUsersByRole(Role role) {
         if(role == null){
             throw new IllegalArgumentException("Invalid role");
         }
@@ -111,7 +111,7 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return new org.springframework.security.core.userdetails.User(
-                user.getUsername(), user.getPassword(), Collections.singleton(new SimpleGrantedAuthority(user.getRole()))
+                user.getUsername(), user.getPassword(), Collections.singleton(new SimpleGrantedAuthority(user.getRole().toString()))
         );
     }
     public String registerUser(RegisterRequest registerRequest) {

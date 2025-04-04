@@ -1,6 +1,7 @@
 package ut.edu.database.controllers.auth;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import ut.edu.database.models.Role;
 import ut.edu.database.dtos.LoginRequest;
 import ut.edu.database.dtos.RegisterRequest;
 import ut.edu.database.dtos.AuthResponse;
@@ -32,8 +33,8 @@ public class AuthService {
         String encodedPassword = passwordEncoder.encode(registerRequest.getPassword());
 
         //tao moi user
-        User.Role role = User.Role.valueOf("ROLE_USER"); // Chuyển chuỗi "ROLE_USER" thành enum Role.USER
-        User user = new User(registerRequest.getUsername(), registerRequest.getEmail(), encodedPassword, "Role_user");
+        Role role = Role.CUSTOMER; // hoặc Role.valueOf("CUSTOMER")
+        User user = new User(registerRequest.getUsername(), registerRequest.getEmail(), encodedPassword, Role.CUSTOMER);
         userService.save(user);
 
         return ResponseEntity.ok("Successfully registered");

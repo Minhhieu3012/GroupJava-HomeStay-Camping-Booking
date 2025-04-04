@@ -1,18 +1,20 @@
 package ut.edu.database.dtos;
 
+import ut.edu.database.models.Role;
+
 public class RegisterRequest {
     private String email;
     private String password;
     private String username;
-    private String role;
+    private Role role;
 
     //getters & setters
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 

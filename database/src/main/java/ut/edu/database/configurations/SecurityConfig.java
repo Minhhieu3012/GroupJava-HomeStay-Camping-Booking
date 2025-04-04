@@ -1,4 +1,5 @@
 package ut.edu.database.configurations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,6 +15,12 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    private final JwtRequestFilter jwtRequestFilter;
+
+    @Autowired
+    public SecurityConfig(JwtRequestFilter jwtRequestFilter) {
+        this.jwtRequestFilter = jwtRequestFilter;
+    }
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -33,7 +40,6 @@ public class SecurityConfig {
                         .requestMatchers("/user/**").authenticated()   // User phải đăng nhập
                         .anyRequest().permitAll()                     // Các trang còn lại truy cập tự do
                 )
-                // .userDetailsService(userService)
                 .build();
     }
 }

@@ -15,7 +15,7 @@ public class User {
 
     @NotBlank
     @Column(nullable = false)
-    private String name;
+    private String username;
 
     @Email
     @NotBlank
@@ -30,7 +30,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role; //vai tro (vd: customer, homestay owner, admin)
+    private String role; //vai tro (vd: customer, homestay owner, admin)
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Property> properties;
@@ -46,8 +46,8 @@ public class User {
     public User() {
 
     }
-    public User(String name, String email, String password, Role role) {
-        this.name = name;
+    public User(String username, String email, String password, String role) {
+        this.username = username;
         this.email = email;
         this.password = password; //co the ma hoa bang BCrypt trc khi luu
         this.role = role;
@@ -70,8 +70,8 @@ public class User {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
     public String getEmail() {
@@ -82,7 +82,7 @@ public class User {
         return password;
     }
 
-    public Role getRole() {
+    public String getRole() {
         return role;
     }
 
@@ -99,8 +99,8 @@ public class User {
         this.reviews = reviews;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void setEmail(String email) {
@@ -111,7 +111,7 @@ public class User {
         this.password = password;
     }
 
-    public void setRole(Role role) {
+    public void setRole(String role) {
         this.role = role;
     }
 

@@ -1,9 +1,14 @@
 package ut.edu.database.services;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import ut.edu.database.dtos.RegisterRequest;
 import ut.edu.database.models.User;
 import ut.edu.database.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,7 +63,7 @@ public class UserService {
         Optional<User> existingUserOpt = userRepository.findById(id);
         if(existingUserOpt.isPresent()) {
             User existingUser = existingUserOpt.get();
-            existingUser.setName(updatedUser.getName());
+            existingUser.setUsername(updatedUser.getUsername());
             existingUser.setEmail(updatedUser.getEmail());
             existingUser.setRole(updatedUser.getRole());
 
@@ -97,5 +102,27 @@ public class UserService {
     public void save(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(), user.getPassword(), Collections.singleton(new SimpleGrantedAuthority(user.getRole()))
+        );
+    }
+    public String registerUser(RegisterRequest registerRequest) {
+        if (userRepository.existsByUsername(registerRequest.getUsername())) {
+            return "User already exists!";
+        }
+
+        User user = new User();
+        user.setUsername(registerRequest.getUsername());
+        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        user.setRole(registerRequest.getRole());
+
+        userRepository.save(user);
+        return "User registered successfully!";
     }
 }

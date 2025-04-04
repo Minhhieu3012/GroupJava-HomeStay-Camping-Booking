@@ -33,7 +33,7 @@ public class AuthService {
 
         //tao moi user
         User.Role role = User.Role.valueOf("ROLE_USER"); // Chuyển chuỗi "ROLE_USER" thành enum Role.USER
-        User user = new User(registerRequest.getName(), registerRequest.getEmail(), encodedPassword, role);
+        User user = new User(registerRequest.getUsername(), registerRequest.getEmail(), encodedPassword, "Role_user");
         userService.save(user);
 
         return ResponseEntity.ok("Successfully registered");
@@ -48,8 +48,9 @@ public class AuthService {
         if(!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())){
             return ResponseEntity.badRequest().body(new AuthResponse("Incorrect Password"));
         }
-        //tao jwt token va tra ve
-        String token = "JWT token se duoc tao tai day"; //can tich hop logic tao token
+
+        // Tạo JWT token và trả về
+        String token = "JWT token se duoc tao tai day"; // Cần tích hợp logic tạo JWT ở đây
         return ResponseEntity.ok(new AuthResponse(token));
     }
 }

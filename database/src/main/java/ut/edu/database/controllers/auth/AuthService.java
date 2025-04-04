@@ -42,6 +42,11 @@ public class AuthService {
                 .orElseThrow(() -> new RuntimeException("Email not exist!!!"));
 
         //kiem tra mk
-
+        if(!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())){
+            return ResponseEntity.badRequest().body(new AuthResponse("Incorrect Password"));
+        }
+        //tao jwt token va tra ve
+        String token = "JWT token se duoc tao tai day"; //can tich hop logic tao token
+        return ResponseEntity.ok(new AuthResponse(token));
     }
 }

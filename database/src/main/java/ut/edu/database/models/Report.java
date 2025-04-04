@@ -36,13 +36,13 @@ public class Report {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ReportStatus status;
+    private Role status;
 
     //Constructors
     public Report() {
 
     }
-    public Report(Property property ,BigDecimal totalRevenue, BigDecimal managementFee, BigDecimal occupancyRate, LocalDate reportDate, ReportStatus status, LocalDate startDate, LocalDate endDate) {
+    public Report(Property property ,BigDecimal totalRevenue, BigDecimal managementFee, BigDecimal occupancyRate, LocalDate reportDate, Role status, LocalDate startDate, LocalDate endDate) {
         this.property = property;
         this.totalRevenue = totalRevenue; //tong doanh thu
         this.managementFee = managementFee; //phi quan ly
@@ -86,7 +86,7 @@ public class Report {
         return occupancyRate;
     }
 
-    public ReportStatus getStatus() {
+    public Role getStatus() {
         return status;
     }
 
@@ -119,13 +119,7 @@ public class Report {
         this.reportDate = reportDate;
     }
 
-    public void setStatus(ReportStatus status) {
+    public void setStatus(Role status) {
         this.status = status;
-    }
-
-    //define enum ReportStatus
-    public enum ReportStatus {
-        GENERATED, //report duoc tao
-        APPROVED //report duoc phe duyet
     }
 }

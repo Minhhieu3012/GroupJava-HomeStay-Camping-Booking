@@ -2,12 +2,14 @@ package ut.edu.database.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import ut.edu.database.dtos.RegisterRequest;
 import ut.edu.database.models.User;
 import ut.edu.database.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +17,7 @@ import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
     //Constructor Injection
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -91,7 +93,7 @@ public class UserService {
     }
 
     //lay ds user theo vai tro
-    public List<User> getUsersByRole(User.Role role) {
+    public List<User> getUsersByRole(String role) {
         if(role == null){
             throw new IllegalArgumentException("Invalid role");
         }

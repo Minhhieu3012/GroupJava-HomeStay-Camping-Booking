@@ -3,6 +3,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import ut.edu.database.models.Role;
 
 import java.util.List;
 
@@ -113,12 +114,5 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
-    }
-
-    //define enum Role
-    public enum Role {
-        CUSTOMER,
-        OWNER,
-        ADMIN
     }
 }

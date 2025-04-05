@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-
 @Entity
 public class User {
     @Id
@@ -14,11 +13,19 @@ public class User {
     private Long id;
 
     private String username;
+    private String email;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     private String password;
 
     private boolean isOwner; // True nếu là chủ homestay
-
-    // getters and setters
 
     public Long getId() {
         return id;

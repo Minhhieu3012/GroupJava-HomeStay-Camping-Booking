@@ -1,7 +1,7 @@
 package com.homestay.review.model;
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 public class Review {
@@ -9,19 +9,22 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int rating;  // Điểm đánh giá (1-5)
+    private int rating; // Đánh giá từ 1 đến 5 sao
+    private String comment; // Bình luận của khách hàng
 
-    private String comment;  // Bình luận
-
-    private LocalDateTime datePosted;  // Thời gian đăng đánh giá
-
-    @ManyToOne
-    private User user;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt = new Date(); // Thời gian tạo đánh giá
 
     @ManyToOne
-    private Homestay homestay;
+    @JoinColumn(name = "customer_id", nullable = false)
+    private User customer; // Khách hàng đánh giá
 
-    // getters and setters
+    @ManyToOne
+    @JoinColumn(name = "homestay_id", nullable = false)
+    private Homestay homestay; // Homestay được đánh giá
+
+    // Getters and setters
+
 
     public Long getId() {
         return id;
@@ -47,20 +50,20 @@ public class Review {
         this.comment = comment;
     }
 
-    public LocalDateTime getDatePosted() {
-        return datePosted;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setDatePosted(LocalDateTime datePosted) {
-        this.datePosted = datePosted;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public User getUser() {
-        return user;
+    public User getCustomer() {
+        return customer;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setCustomer(User customer) {
+        this.customer = customer;
     }
 
     public Homestay getHomestay() {

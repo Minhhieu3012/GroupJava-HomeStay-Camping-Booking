@@ -1,42 +1,96 @@
 package ut.edu.database.jwt;
 
-import java.util.Date;
+//import java.util.Date;
+//
+//import org.springframework.security.core.userdetails.UserDetails;
+//import org.springframework.stereotype.Component;
+//
+//import io.jsonwebtoken.Jwts;
+//import io.jsonwebtoken.SignatureAlgorithm;
+//import io.jsonwebtoken.Claims;
+//
+//@Component
+//public class JwtUtil {
+//    private String secretKey = "secret";  // Secret key để ký JWT token
+//
+//    // Tạo JWT token với username, ngày tạo và thời gian hết hạn
+//    public String generateToken(String username) {
+//        return Jwts.builder()
+//                .setSubject(username)
+//                .setIssuedAt(new Date())
+//                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // Token hết hạn sau 1 giờ
+//                .signWith(SignatureAlgorithm.HS256, secretKey)  // Dùng thuật toán HS256 để ký
+//                .compact();
+//    }
+//
+//    // Lấy username từ JWT token
+//    public String extractUsername(String token) {
+//        Claims claims = Jwts.parser()  // Sử dụng JwtParserBuilder
+//                .setSigningKey(secretKey)  // Cung cấp secret key
+//                .build()  // Xây dựng parser
+//                .parseClaimsJws(token)  // Giải mã token
+//                .getBody();  // Lấy Claims (thông tin trong token)
+//
+//        return claims.getSubject();  // Trả về username từ claims
+//    }
+//
+//    // Kiểm tra token có hợp lệ không
+//    public boolean validateToken(String token, UserDetails userDetails) {
+//        // Kiểm tra username trong token có trùng với username trong userDetails không
+//        return extractUsername(token).equals(userDetails.getUsername());
+//    }
+//}
 
+
+import java.util.Date;
+import java.util.Base64;
+import jakarta.annotation.PostConstruct;
+import javax.crypto.SecretKey;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtUtil {
-    private String secretKey = "secret";  // Secret key để ký JWT token
 
-    // Tạo JWT token với username, ngày tạo và thời gian hết hạn
+    @Value("${jwt.secret}")
+    private String base64Secret;
+
+    private SecretKey secretKey;
+
+    // Chạy sau khi object được khởi tạo -> decode secretKey từ base64
+    @PostConstruct
+    public void init() {
+        byte[] keyBytes = Base64.getDecoder().decode(base64Secret);
+        this.secretKey = Keys.hmacShaKeyFor(keyBytes);
+    }
+
     public String generateToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // Token hết hạn sau 1 giờ
-                .signWith(SignatureAlgorithm.HS256, secretKey)  // Dùng thuật toán HS256 để ký
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 giờ
+                .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // Lấy username từ JWT token
     public String extractUsername(String token) {
-        Claims claims = Jwts.parser()  // Sử dụng JwtParserBuilder
-                .setSigningKey(secretKey)  // Cung cấp secret key
-                .build()  // Xây dựng parser
-                .parseClaimsJws(token)  // Giải mã token
-                .getBody();  // Lấy Claims (thông tin trong token)
+        Claims claims = Jwts.parser()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
 
-        return claims.getSubject();  // Trả về username từ claims
+        return claims.getSubject();
     }
 
-    // Kiểm tra token có hợp lệ không
     public boolean validateToken(String token, UserDetails userDetails) {
-        // Kiểm tra username trong token có trùng với username trong userDetails không
         return extractUsername(token).equals(userDetails.getUsername());
     }
 }
+
+

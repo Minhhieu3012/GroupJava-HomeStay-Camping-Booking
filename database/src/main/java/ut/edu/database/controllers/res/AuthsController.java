@@ -9,7 +9,7 @@ package ut.edu.database.controllers.res;
 //import ut.edu.database.controllers.auth.AuthService;
 //
 //@RestController
-//@RequestMapping("/auth")
+//@RequestMapping("/auths")
 //public class AuthsController {
 //
 //    private final AuthService authService;

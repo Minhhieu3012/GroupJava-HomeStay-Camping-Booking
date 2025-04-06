@@ -53,8 +53,8 @@ public class AuthService {
             return ResponseEntity.badRequest().body(new AuthResponse("Incorrect Password"));
         }
 
-        // ✅ Tạo JWT token bằng JwtUtil
-        String token = jwtUtil.generateToken(user.getEmail());
+        // Tạo JWT token bằng JwtUtil
+        String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
 
         return ResponseEntity.ok(new AuthResponse(token));
     }

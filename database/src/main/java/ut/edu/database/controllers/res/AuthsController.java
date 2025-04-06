@@ -1,36 +1,6 @@
 package ut.edu.database.controllers.res;
 
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.*;
-//import ut.edu.database.dtos.AuthResponse;
-//import ut.edu.database.dtos.LoginRequest;
-//import ut.edu.database.dtos.RegisterRequest;
-//import ut.edu.database.controllers.auth.AuthService;
-//
-//@RestController
-//@RequestMapping("/auths")
-//public class AuthsController {
-//
-//    private final AuthService authService;
-//
-//    @Autowired
-//    public AuthsController(AuthService authService) {
-//        this.authService = authService;
-//    }
-//
-//    // Endpoint đăng ký người dùng mới
-//    @PostMapping("/register")
-//    public ResponseEntity<String> register(@RequestBody RegisterRequest registerRequest) {
-//        return authService.register(registerRequest);
-//    }
-//
-//    // Endpoint đăng nhập và nhận JWT token
-//    @PostMapping("/login")
-//    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest) {
-//        return authService.login(loginRequest);
-//    }
-//}
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,6 +21,7 @@ import ut.edu.database.dtos.AuthResponse;
 import ut.edu.database.dtos.LoginRequest;
 import ut.edu.database.dtos.RegisterRequest;
 import ut.edu.database.jwt.JwtUtil;
+import ut.edu.database.models.Role;
 import ut.edu.database.services.UserService;
 
 @RestController
@@ -64,14 +36,18 @@ public class AuthsController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/login")
+    @PostMapping(value= "/login",produces = "application/json" )
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
             );
             UserDetails userDetails = userService.loadUserByUsername(request.getUsername());
-            String token = jwtUtil.generateToken(userDetails.getUsername());
+            //Extract the role from UserDetails
+            String role = userDetails.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.joining(","));
+            String token = jwtUtil.generateToken(userDetails.getUsername(), Role.valueOf(role));
             return ResponseEntity.ok(new AuthResponse(token));
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Sai thông tin đăng nhập");

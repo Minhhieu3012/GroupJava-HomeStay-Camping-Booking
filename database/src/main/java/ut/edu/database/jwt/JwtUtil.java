@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import ut.edu.database.models.Role;
 
 @Component
 public class JwtUtil {
@@ -31,9 +32,10 @@ public class JwtUtil {
     }
 
     // Tạo JWT token với username
-    public String generateToken(String username) {
+    public String generateToken(String username, Role role) {
         return Jwts.builder()
                 .setSubject(username)
+                .claim("role", role.name()) // chuyển enum thành chuỗi (ADMIN, CUSTOMER...)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 giờ
                 .signWith(secretKey, SignatureAlgorithm.HS256)
@@ -56,15 +58,19 @@ public class JwtUtil {
         return extractUsername(token).equals(userDetails.getUsername());
     }
 
-
-    public String extractRole(String token) {
-        return Jwts.parser()
-                .setSigningKey(secretKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .get("role", String.class);
+    public Role extractRole(String token) {
+        String roleStr = extractClaims(token).get("role", String.class);
+        return Role.valueOf(roleStr); //convert từ String về enum Role
     }
+
+//    public String extractRole(String token) {
+//        return Jwts.parser()
+//                .setSigningKey(secretKey)
+//                .build()
+//                .parseClaimsJws(token)
+//                .getBody()
+//                .get("role", String.class);
+//    }
 
     // Kiểm tra token đã hết hạn chưa
     private boolean isTokenExpired(String token) {

@@ -27,7 +27,7 @@ public class AdminController {
 
         // Cắt bỏ "Bearer " để lấy token thực sự
         String token = authHeader.substring(7);
-        String role  = jwtUtil.extractRole(token);
+        String role  = String.valueOf(jwtUtil.extractRole(token));
         return "Token: " + token; // Test xem có nhận được token không
     }
 }

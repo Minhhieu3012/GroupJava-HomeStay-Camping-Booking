@@ -1,6 +1,7 @@
 package ut.edu.database.controllers.auth;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import ut.edu.database.jwt.JwtUtil;
 import ut.edu.database.models.Role;
 import ut.edu.database.dtos.LoginRequest;
 import ut.edu.database.dtos.RegisterRequest;
@@ -14,12 +15,14 @@ import org.springframework.http.ResponseEntity;
 @Service
 public class AuthService {
     private final UserService userService;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     @Autowired
-    public AuthService(UserService userService, BCryptPasswordEncoder passwordEncoder) {
+    public AuthService(UserService userService, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
     }
 
     //register user
@@ -50,8 +53,9 @@ public class AuthService {
             return ResponseEntity.badRequest().body(new AuthResponse("Incorrect Password"));
         }
 
-        // Tạo JWT token và trả về
-        String token = "JWT token se duoc tao tai day"; // Cần tích hợp logic tạo JWT ở đây
+        // ✅ Tạo JWT token bằng JwtUtil
+        String token = jwtUtil.generateToken(user.getEmail());
+
         return ResponseEntity.ok(new AuthResponse(token));
     }
 }

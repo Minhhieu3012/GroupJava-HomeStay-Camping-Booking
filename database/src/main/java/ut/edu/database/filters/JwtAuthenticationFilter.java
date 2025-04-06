@@ -1,11 +1,12 @@
 package ut.edu.database.filters;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -39,16 +40,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             // Check if the user is not already authenticated
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = userService.loadUserByUsername(username);
+                // Trích xuất role từ token và tạo authority
+                String role = jwtUtil.extractRole(token).name(); // ADMIN, CUSTOMER,...
+                List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
 
-                // Validate the token
-                if (jwtUtil.validateToken(token, userDetails)) {
-                    // Create an authentication object and set it in the SecurityContext
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                            userDetails, null, userDetails.getAuthorities());
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }
+                // Tạo authentication object
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(username, null, authorities);
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                // Set vào security context
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
 

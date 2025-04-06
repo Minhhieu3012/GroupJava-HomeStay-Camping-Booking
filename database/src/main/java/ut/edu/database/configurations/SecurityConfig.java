@@ -32,6 +32,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless session
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/**").hasRole("ADMIN") // Only ADMIN can access /admin/**
+                        .requestMatchers("/customer/**").hasRole("CUSTOMER")
+                        .requestMatchers("/owner/**").hasRole("OWNER")
                         .requestMatchers("/user/**").authenticated()   // Any authenticated user can access /user/**
                         .anyRequest().permitAll()                     // All other requests are open to everyone
                 )

@@ -1,25 +1,37 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
-    <!--      th:include="master/masterpage">-->
+<html lang="en">
+
+<head>
     <div th:replace="master/css::css"></div>
+</head>
 
-    <body>
-        <div class="container-xxl bg-white p-0">
-            <div class="container-fluid bg-dark px-0">
-                <div class="row gx-0">
-                    <div class="col-lg-9">
-                        <div th:replace="master/header::header"></div>
+<body>
+<div class="container-xxl bg-white p-0">
 
-                        <div th:replace="master/navbar::navbar"></div>
-                    </div>
-                </div>
+    <div class="container-fluid bg-dark px-0">
+        <div class="row gx-0">
+            <div th:replace="master/logo::logo"></div>
+
+            <div class="col-lg-9">
+                <div th:replace="master/header::header"></div>
+
+                <div th:replace="master/navbar::navbar"></div>
             </div>
-            <th:block th:fragment="content">
-                <!--Nội dung trang con -->
-                <h2>HELLO</h2>
-            </th:block>
-
-            <div th:replace="master/footer::footer"></div>
         </div>
-    </body>
+    </div>
+
+    <th:block th:fragment="content">
+        <!--Nội dung trang con -->
+        <h2>
+            HELOOO
+        </h2>
+    </th:block>
+    <div th:replace="master/footer::footer"></div>
+    <a href="home" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+</div>
+
+
+</body>
+
 </html>

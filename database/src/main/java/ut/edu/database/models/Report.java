@@ -3,6 +3,7 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import ut.edu.database.enums.ReportStatus;
 
 @Entity
 @Table(name = "Reports")
@@ -123,9 +124,4 @@ public class Report {
         this.status = status;
     }
 
-    public enum ReportStatus {
-        PENDING,
-        APPROVED,
-        REJECTED
-    }
 }

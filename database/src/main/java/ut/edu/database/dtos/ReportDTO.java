@@ -2,7 +2,7 @@ package ut.edu.database.dtos;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import ut.edu.database.models.Report.ReportStatus;
+import ut.edu.database.enums.ReportStatus;
 
 public class ReportDTO {
     private Long id;

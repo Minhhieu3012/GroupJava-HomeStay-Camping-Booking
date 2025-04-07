@@ -3,6 +3,7 @@ package ut.edu.database.controllers.res;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ut.edu.database.enums.ReportStatus;
 import ut.edu.database.models.Report;
 import ut.edu.database.services.ReportService;
 
@@ -36,7 +37,7 @@ public class ReportController {
 
     // Thêm endpoint mới (nếu cần)
     @GetMapping("/status/{status}")
-    public List<Report> getReportsByStatus(@PathVariable Report.ReportStatus status) {
+    public List<Report> getReportsByStatus(@PathVariable ReportStatus status) {
         return reportService.getReportsByStatus(status);
     }
 

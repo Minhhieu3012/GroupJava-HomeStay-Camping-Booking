@@ -2,6 +2,7 @@ package ut.edu.database.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ut.edu.database.enums.ReportStatus;
 import ut.edu.database.models.Report;
 import ut.edu.database.repositories.ReportRepository;
 
@@ -38,7 +39,7 @@ public class ReportService {
         return reportRepository.findByPropertyId(propertyId);
     }
 
-    public List<Report> getReportsByStatus(Report.ReportStatus status) {
+    public List<Report> getReportsByStatus(ReportStatus status) {
         return reportRepository.findByStatus(status);
     }
 

@@ -5,6 +5,7 @@ import ut.edu.database.models.Property;
 import ut.edu.database.models.User;
 import ut.edu.database.repositories.PropertyRepository;
 import org.springframework.stereotype.Service;
+import ut.edu.database.enums.PropertyStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -58,7 +59,7 @@ public class PropertyService {
         return propertyRepository.findByLocationContainingIgnoreCase(location);
     }
     //lay ds bat dong san theo status
-    public List<Property> filterByStatus(Property.PropertyStatus status) {
+    public List<Property> filterByStatus(PropertyStatus status) {
         if (status == null) {
             throw new IllegalArgumentException("Status cannot be null");
         }

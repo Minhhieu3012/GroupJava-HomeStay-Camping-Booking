@@ -1,6 +1,6 @@
 package ut.edu.database.dtos;
 
-import ut.edu.database.models.Role;
+import ut.edu.database.enums.Role;
 
 public class RegisterRequest {
     private String email;

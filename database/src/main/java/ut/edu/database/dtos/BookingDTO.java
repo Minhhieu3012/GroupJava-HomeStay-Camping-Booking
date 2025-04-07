@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import ut.edu.database.models.Booking;
-import ut.edu.database.models.Booking.BookingStatus;
+import ut.edu.database.enums.BookingStatus;
 public class BookingDTO {
     private Long id;
     private Long userID;

@@ -1,6 +1,6 @@
 package ut.edu.database.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
-import ut.edu.database.models.Role;
+import ut.edu.database.enums.Role;
 import ut.edu.database.models.User;
 import org.springframework.stereotype.Repository;
 import java.util.List;

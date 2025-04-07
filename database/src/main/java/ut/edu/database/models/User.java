@@ -3,7 +3,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import ut.edu.database.models.Role;
+import ut.edu.database.enums.Role;
 
 import java.util.List;
 

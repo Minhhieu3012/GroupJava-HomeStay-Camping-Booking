@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import ut.edu.database.models.Role;
+import ut.edu.database.enums.Role;
 
 @Component
 public class JwtUtil {

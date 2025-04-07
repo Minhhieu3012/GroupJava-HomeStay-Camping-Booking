@@ -2,6 +2,7 @@ package ut.edu.database.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import ut.edu.database.enums.PropertyStatus;
 import ut.edu.database.models.Property;
 import ut.edu.database.models.User;
 import java.util.List;
@@ -16,5 +17,6 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
     List<Property> findByOwner(User owner);
 
     // Tìm kiếm theo trạng thái (AVAILABLE/BOOKED)
-    List<Property> findByStatus(Property.PropertyStatus status);
+    List<Property> findByStatus(PropertyStatus status);
+
 }

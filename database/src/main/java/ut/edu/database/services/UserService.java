@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import ut.edu.database.dtos.RegisterRequest;
-import ut.edu.database.models.Role;
+import ut.edu.database.enums.Role;
 import ut.edu.database.models.User;
 import ut.edu.database.repositories.UserRepository;
 import org.springframework.stereotype.Service;

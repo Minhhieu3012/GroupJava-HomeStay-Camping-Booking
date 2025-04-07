@@ -1,8 +1,8 @@
 package ut.edu.database.controllers.auth;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
+import ut.edu.database.enums.Role;
 import ut.edu.database.jwt.JwtUtil;
-import ut.edu.database.models.Role;
 import ut.edu.database.dtos.LoginRequest;
 import ut.edu.database.dtos.RegisterRequest;
 import ut.edu.database.dtos.AuthResponse;

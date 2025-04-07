@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import ut.edu.database.enums.BookingStatus;
 
 @Entity
 @Table(name = "Booking")
@@ -109,10 +110,4 @@ public class Booking {
         this.status = status;
     }
 
-    //define enum BookingStatus
-    public enum BookingStatus {
-        PROCESSING,
-        COMPLETED,
-        CANCELLED
-    }
 }

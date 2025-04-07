@@ -1,9 +1,9 @@
 package propertyregistration.models;
 
-
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,11 +20,12 @@ public class Payment {
     @JoinColumn(name = "booking_id", nullable = false)
     private Booking booking;
 
-    private double totalAmount;  // Tổng tiền khách thanh toán
-    private double adminFee;     // Phí quản lý 20%
-    private double hostAmount;   // Số tiền chủ homestay nhận được
-    private String paymentStatus; // Trạng thái thanh toán: PENDING, COMPLETED, FAILED
+    private BigDecimal totalAmount;  // Tổng tiền khách thanh toán
+    private BigDecimal adminFee;     // Phí quản lý 20%
+    private BigDecimal hostAmount;   // Số tiền chủ homestay nhận được
+
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
 
     private LocalDateTime paymentDate;
 }
-

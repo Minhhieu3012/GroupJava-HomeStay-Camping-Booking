@@ -1,8 +1,9 @@
 package ut.edu.database.models;
 
+import ut.edu.database.enums.PropertyStatus;
+
 import jakarta.persistence.*;
 import lombok.*;
-import ut.edu.database.enums.PropertyStatus;
 
 import java.math.BigDecimal;
 import java.util.List;

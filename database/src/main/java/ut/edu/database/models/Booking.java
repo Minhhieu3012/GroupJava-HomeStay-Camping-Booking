@@ -1,12 +1,19 @@
 package ut.edu.database.models;
 import jakarta.persistence.*;
 
+import ut.edu.database.enums.BookingStatus;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import ut.edu.database.enums.BookingStatus;
 
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "Booking")
 public class Booking {
@@ -40,74 +47,5 @@ public class Booking {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private BookingStatus status; //vd: processing, completed, canceled
-
-    //Constructors
-    public Booking() {
-
-    }
-    public Booking(User user, Property property, LocalDate startDate, LocalDate endDate, List<String> additionalServices, BigDecimal totalPrice, BookingStatus status) {
-        this.user = user;
-        this.property = property;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.additionalServices = additionalServices;
-        this.totalPrice = totalPrice;
-        this.status = status;
-    }
-
-    //Getters
-
-    public Long getId() {
-        return id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public Property getProperty() {
-        return property;
-    }
-
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public List<String> getAdditionalServices() {
-        return additionalServices;
-    }
-
-    //Setters
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
-    }
-
-    public BookingStatus getStatus() {
-        return status;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    public void setAdditionalServices(List<String> additionalServices) {
-        this.additionalServices = additionalServices;
-    }
-
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public void setStatus(BookingStatus status) {
-        this.status = status;
-    }
 
 }

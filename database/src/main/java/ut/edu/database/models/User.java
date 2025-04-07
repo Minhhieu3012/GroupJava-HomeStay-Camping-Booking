@@ -1,12 +1,19 @@
 package ut.edu.database.models;
+
+import lombok.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+
 import ut.edu.database.enums.Role;
 
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "Users")
 public class User {
@@ -41,78 +48,4 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Review> reviews;
-
-
-    //Constructors
-    public User() {
-
-    }
-    public User(String username, String email, String password, Role role) {
-        this.username = username;
-        this.email = email;
-        this.password = password; //co the ma hoa bang BCrypt trc khi luu
-        this.role = role;
-    }
-
-    //Getters
-    public List<Property> getProperties() {
-        return properties;
-    }
-
-    public List<Booking> getBookings() {
-        return bookings;
-    }
-
-    public List<Review> getReviews() {
-        return reviews;
-    }
-
-    public Long getId() { //truy cap ma dinh danh user
-        return id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() { //tuy chon (co the co hoac khong)
-        return password;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    //Setters
-    public void setProperties(List<Property> properties) {
-        this.properties = properties;
-    }
-
-    public void setBookings(List<Booking> bookings) {
-        this.bookings = bookings;
-    }
-
-    public void setReviews(List<Review> reviews) {
-        this.reviews = reviews;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
 }

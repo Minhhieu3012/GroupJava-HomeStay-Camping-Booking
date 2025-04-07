@@ -1,5 +1,6 @@
 package ut.edu.database.services;
 import org.springframework.beans.factory.annotation.Autowired;
+import ut.edu.database.enums.BookingStatus;
 import ut.edu.database.models.Booking;
 import ut.edu.database.repositories.BookingRepository;
 import org.springframework.stereotype.Service;
@@ -46,7 +47,7 @@ public class BookingService {
     //lay ds booking theo status
     public List<Booking> getBookingByStatus(String status) {
         try {
-            Booking.BookingStatus bookingStatus = Booking.BookingStatus.valueOf(status.toUpperCase());
+            BookingStatus bookingStatus = BookingStatus.valueOf(status.toUpperCase());
             return bookingRepository.findByStatus(bookingStatus); // truyen enum truc tiep
         } catch(IllegalArgumentException e) {
             throw new RuntimeException("Invalid booking status: " + status);

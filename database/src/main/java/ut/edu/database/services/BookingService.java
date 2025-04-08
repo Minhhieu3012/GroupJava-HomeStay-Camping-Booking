@@ -31,6 +31,7 @@ public class BookingService {
     public List<Booking> getAllBookings() {
         return bookingRepository.findAll();
     }
+
     // Trả về danh sách BookingDTO để gửi ra ngoài cho client
     public List<BookingDTO> getAllBookingDTOs() {
         return bookingRepository.findAll()
@@ -51,6 +52,7 @@ public class BookingService {
         }
         return bookingRepository.findByUserId(userId);
     }
+
     //lay ds booking theo property id
     public List<Booking> getBookingByPropertyId(Long propertyId) {
         if(propertyId == null || propertyId <= 0){
@@ -90,7 +92,8 @@ public class BookingService {
         }
         return bookingRepository.save(booking);
     }
-    //
+
+    //tao bookingDTO moi
     public Booking createBookingFromDTO(BookingDTO dto) {
         if (dto == null) {
             throw new IllegalArgumentException("Start date must be before end date");
@@ -110,7 +113,6 @@ public class BookingService {
 
         return bookingRepository.save(booking);
     }
-
 
     //update booking theo id
     public Booking updateBooking(Long id, Booking updatedBooking) {

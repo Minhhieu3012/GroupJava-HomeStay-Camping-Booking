@@ -36,23 +36,27 @@ public class AuthsController {
     @Autowired
     private UserService userService;
 
-    @PostMapping(value= "/login",produces = "application/json" )
+    @PostMapping(value= "/login", produces = "application/json")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
             );
             UserDetails userDetails = userService.loadUserByUsername(request.getUsername());
-            //Extract the role from UserDetails
+
             String role = userDetails.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.joining(","));
+
             String token = jwtUtil.generateToken(userDetails.getUsername(), Role.valueOf(role));
-            return ResponseEntity.ok(new AuthResponse(token));
+
+            // Trả về đầy đủ token, username, role
+            return ResponseEntity.ok(new AuthResponse(token, userDetails.getUsername(), role));
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Sai thông tin đăng nhập");
         }
     }
+
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody RegisterRequest RegisterRequest) {
         String result = userService.registerUser(RegisterRequest);

@@ -1,9 +1,9 @@
 package ut.edu.database.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+@Getter
+@Setter
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,6 +16,12 @@ public class AuthResponse {
     // Constructor cho trường hợp chỉ có message
     public AuthResponse(String message) {
         this.message = message;
+    }
+
+    public AuthResponse(String token, String username, String role) {
+        this.token = token;
+        this.username = username;
+        this.role = role;
     }
 }
 

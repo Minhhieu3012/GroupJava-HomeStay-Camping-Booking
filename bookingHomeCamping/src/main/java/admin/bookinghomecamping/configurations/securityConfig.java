@@ -1,4 +1,4 @@
-package admin.bookinghomecamping.configurations;
+/*package admin.bookinghomecamping.configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,7 +39,7 @@ public class securityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-}
+}*/
 
 //********** CÁI NÀY TUI TẠO ĐỂ RUN WEB ĐỪNG XÓA NHAAA !!!!!!!!!!!!!!!!!
 

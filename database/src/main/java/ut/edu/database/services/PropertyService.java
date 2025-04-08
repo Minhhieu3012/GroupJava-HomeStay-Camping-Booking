@@ -30,6 +30,7 @@ public class PropertyService {
         return propertyRepository.findById(id);
     }
 
+
     // Cập nhật bất động sản
     public Optional<Property> updateProperty(Long id, Property updatedProperty) {
         return propertyRepository.findById(id).map(existingProperty -> {

@@ -37,8 +37,8 @@ public class Booking {
 
     //luu ds dich vu vao bang rieng
     @ElementCollection
-    @CollectionTable(name = "booking_services", joinColumns = @JoinColumn(name = "booking_id"))
-    @Column(name = "service")
+    @CollectionTable(name = "booking_services", joinColumns = @JoinColumn(name = "booking_id", nullable = false))
+    @Column(name = "service", nullable = false)
     private List<String> additionalServices = new ArrayList<>();
 
     @Column(nullable = false, precision = 10, scale = 2)

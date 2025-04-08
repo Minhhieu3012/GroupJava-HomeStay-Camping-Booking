@@ -1,6 +1,8 @@
 package ut.edu.database.services;
 import org.springframework.beans.factory.annotation.Autowired;
+import ut.edu.database.dtos.BookingDTO;
 import ut.edu.database.enums.BookingStatus;
+import ut.edu.database.mapper.BookingMapper;
 import ut.edu.database.models.Booking;
 import ut.edu.database.repositories.BookingRepository;
 import org.springframework.stereotype.Service;
@@ -13,15 +15,28 @@ import java.util.Optional;
 public class BookingService {
     //Constructor Injection
     private  final BookingRepository bookingRepository;
+    private final BookingMapper bookingMapper;
+    private final UserService userService;
+    private final PropertyService propertyService;
 
     @Autowired
-    public BookingService(BookingRepository bookingRepository) {
+    public BookingService(BookingRepository bookingRepository, BookingMapper bookingMapper, UserService userService, PropertyService propertyService) {
         this.bookingRepository = bookingRepository;
+        this.bookingMapper = bookingMapper;
+        this.userService = userService;
+        this.propertyService = propertyService;
     }
 
-    //lay ds tat ca cac booking
+    // Trả về danh sách Booking Entity
     public List<Booking> getAllBookings() {
         return bookingRepository.findAll();
+    }
+    // Trả về danh sách BookingDTO để gửi ra ngoài cho client
+    public List<BookingDTO> getAllBookingDTOs() {
+        return bookingRepository.findAll()
+                .stream()
+                .map(bookingMapper::toDTO)
+                .toList();
     }
 
     // Lấy booking theo ID
@@ -75,6 +90,27 @@ public class BookingService {
         }
         return bookingRepository.save(booking);
     }
+    //
+    public Booking createBookingFromDTO(BookingDTO dto) {
+        if (dto == null) {
+            throw new IllegalArgumentException("BookingDTO is null");
+        }
+
+        Booking booking = bookingMapper.toEntity(dto);
+
+        // set user và property từ ID
+        booking.setUser(
+                userService.getUserById(dto.getUserID())
+                        .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserID()))
+        );
+        booking.setProperty(
+                propertyService.getPropertyById(dto.getPropertyID())
+                        .orElseThrow(() -> new RuntimeException("Property not found with ID: " + dto.getPropertyID()))
+        );
+
+        return bookingRepository.save(booking);
+    }
+
 
     //update booking theo id
     public Optional<Booking> updateBooking(Long id, Booking updatedBooking) {

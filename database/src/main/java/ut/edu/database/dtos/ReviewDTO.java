@@ -10,8 +10,8 @@ import lombok.Data;
 @NoArgsConstructor
 public class ReviewDTO {
     private Long id;
-    private Long userId;
-    private Long propertyId;
+    private Long userID;
+    private Long propertyID;
     private Byte rating;
     private String comment;
     private LocalDate reviewDate;

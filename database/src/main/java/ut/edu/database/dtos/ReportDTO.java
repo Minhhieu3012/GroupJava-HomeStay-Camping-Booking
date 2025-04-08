@@ -13,7 +13,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class ReportDTO {
     private Long id;
-    private Long propertyId;
+    private Long propertyID;
     private BigDecimal totalRevenue;
     private BigDecimal managementFee;
     private BigDecimal occupancyRate;

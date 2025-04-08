@@ -18,5 +18,5 @@ public class PropertyDTO {
     private String image;
     private String description;
     private PropertyStatus status;
-    private Long ownerId;
+    private Long owner_id;
 }

@@ -11,11 +11,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/bookings")
 public class BookingController {
+
     private final BookingService bookingService;
 
     //Constructor injection de de dang bao mat hon
     @Autowired
-    private BookingController(BookingService bookingService) {
+    public BookingController(BookingService bookingService) {
         this.bookingService = bookingService;
     }
 
@@ -37,15 +38,15 @@ public class BookingController {
     //tao dat cho moi
     @PostMapping
     public ResponseEntity<Booking> createBooking(@RequestBody Booking booking) {
+        Booking createdBooking = bookingService.createBooking(booking);
         return ResponseEntity.ok(bookingService.createBooking(booking));
     }
 
     //update dat cho
     @PutMapping("/{id}")
     public ResponseEntity<Booking> updateBooking(@PathVariable Long id, @RequestBody Booking updatedBooking) {
-        return bookingService.updateBooking(id, updatedBooking)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Booking updated = bookingService.updateBooking(id, updatedBooking);
+        return ResponseEntity.ok(updated);
     }
 
     //delete dat cho

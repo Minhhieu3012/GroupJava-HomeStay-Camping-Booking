@@ -93,7 +93,7 @@ public class BookingService {
     //
     public Booking createBookingFromDTO(BookingDTO dto) {
         if (dto == null) {
-            throw new IllegalArgumentException("BookingDTO is null");
+            throw new IllegalArgumentException("Start date must be before end date");
         }
 
         Booking booking = bookingMapper.toEntity(dto);
@@ -113,16 +113,17 @@ public class BookingService {
 
 
     //update booking theo id
-    public Optional<Booking> updateBooking(Long id, Booking updatedBooking) {
-        return bookingRepository.findById(id).map(existingBooking -> {
+    public Booking updateBooking(Long id, Booking updatedBooking) {
+        Booking existingBooking = bookingRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Booking not found with id: " + id));
             // Cập nhật tất cả các thông tin có thể sửa đổi
             existingBooking.setStatus(updatedBooking.getStatus());
             existingBooking.setStartDate(updatedBooking.getStartDate());
             existingBooking.setEndDate(updatedBooking.getEndDate());
             existingBooking.setAdditionalServices(updatedBooking.getAdditionalServices());
             existingBooking.setTotalPrice(updatedBooking.getTotalPrice());
+
             return bookingRepository.save(existingBooking);
-        });
     }
 
     // Xoa booking theo id

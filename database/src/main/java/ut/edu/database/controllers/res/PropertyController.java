@@ -1,60 +1,72 @@
 package ut.edu.database.controllers.res;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ut.edu.database.models.Property;
+import org.springframework.security.access.prepost.PreAuthorize;
+
+import ut.edu.database.dtos.PropertyDTO;
 import ut.edu.database.services.PropertyService;
 
 import java.util.List;
+import java.util.Optional;
+
 
 @RestController
-@RequestMapping("/properties")
+@RequestMapping("/api/properties")
+@RequiredArgsConstructor
 public class PropertyController {
     private final PropertyService propertyService;
 
-    //constructor injection
-    @Autowired
-    public PropertyController(PropertyService propertyService) {
-        this.propertyService = propertyService;
-    }
-
-    //lay tat ca bat dong san
+    //GET: lay tat ca bat dong san
     @GetMapping
-    public ResponseEntity<List<Property>> getAllProperties() {
-        List<Property> properties = propertyService.getAllProperties();
-        return ResponseEntity.ok(properties); //200 ok
+    public ResponseEntity<List<PropertyDTO>> getAllProperties() {
+        return ResponseEntity.ok(propertyService.getAllPropertyDTOs()); //200 ok
     }
 
-    //lay bat dong san theo id
+    //GET: lay bat dong san theo id
     @GetMapping("/{id}")
-    public ResponseEntity<Property> getProperty(@PathVariable Long id) {
-        return propertyService.getPropertyById(id)
-                .map(ResponseEntity::ok)
+    public ResponseEntity<PropertyDTO> getById(@PathVariable Long id) {
+        Optional<PropertyDTO> property = propertyService.getPropertyDTOById(id);
+        return property.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    //tao bat dong san moi
+    //POST: tao moi - chi owner
     @PostMapping
-    public ResponseEntity<Property> createProperty(@RequestBody Property property) {
-        Property savedProperty = propertyService.createProperty(property);
-        return ResponseEntity.ok(savedProperty); //200 ok
+    @PreAuthorize("hasRole('OWNER')")
+    public ResponseEntity<PropertyDTO> createProperty(@RequestBody PropertyDTO dto) {
+        return ResponseEntity.ok(propertyService.createPropertyDTO(dto));
     }
 
-    //update thong tin bat dong san theo id
+    //PUT: cap nhat - chi owner
     @PutMapping("/{id}")
-    public ResponseEntity<Property> updateProperty(@PathVariable Long id, @RequestBody Property updatedProperty) {
-        return propertyService.updateProperty(id,updatedProperty)
-                .map(ResponseEntity::ok)
+    @PreAuthorize("hasRole('OWNER')")
+    public ResponseEntity<PropertyDTO> update(@PathVariable Long id, @RequestBody PropertyDTO dto) {
+        Optional<PropertyDTO> updated = propertyService.updateProperty(id,dto);
+        return updated.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    //delete bat dong san
+    //DELETE: xoa - chi admin
     @DeleteMapping("/{id}")
-    public ResponseEntity<Property> deleteProperty(@PathVariable Long id) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         if(propertyService.deleteProperty(id)) {
             return ResponseEntity.noContent().build(); //204 no content khi xoa thanh cong
         }
         return ResponseEntity.notFound().build();// 404 khong tim thay
+    }
+
+    //loc theo vi tri
+    @GetMapping("/search")
+    public ResponseEntity<List<PropertyDTO>> filterByLocation(@RequestParam String location) {
+        return ResponseEntity.ok(propertyService.filterByLocation(location));
+    }
+
+    //loc theo trang thai
+    @GetMapping("/status")
+    public ResponseEntity<List<PropertyDTO>> filterByStatus(@RequestParam String status) {
+        return ResponseEntity.ok(propertyService.filterByStatus(status));
     }
 }

@@ -3,13 +3,11 @@ package ut.edu.database.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import org.mapstruct.factory.Mappers;
 import ut.edu.database.dtos.BookingDTO;
 import ut.edu.database.models.Booking;
 
 @Mapper(componentModel = "spring")
 public interface BookingMapper {
-    BookingMapper INSTANCE = Mappers.getMapper(BookingMapper.class);
 
     //ENTITY --> DTO
     @Mapping(source = "user.id", target = "userID")

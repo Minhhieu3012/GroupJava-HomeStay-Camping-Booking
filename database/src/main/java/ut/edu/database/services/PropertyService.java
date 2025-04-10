@@ -1,89 +1,98 @@
 package ut.edu.database.services;
 import jakarta.transaction.Transactional;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import ut.edu.database.models.Property;
-import ut.edu.database.models.User;
-import ut.edu.database.repositories.PropertyRepository;
 import org.springframework.stereotype.Service;
+
+import ut.edu.database.dtos.PropertyDTO;
+import ut.edu.database.mapper.PropertyMapper;
+import ut.edu.database.models.Property;
 import ut.edu.database.enums.PropertyStatus;
+import ut.edu.database.repositories.PropertyRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PropertyService {
     //Constructor Injection
     private final PropertyRepository propertyRepository;
+    private final PropertyMapper propertyMapper;
 
     @Autowired
-    public PropertyService(PropertyRepository propertyRepository) {
+    public PropertyService(PropertyRepository propertyRepository, PropertyMapper propertyMapper) {
         this.propertyRepository = propertyRepository;
+        this.propertyMapper = propertyMapper;
     }
 
     // Lấy tất cả bất động sản
-    public List<Property> getAllProperties() {
-        return propertyRepository.findAll();
+    public List<PropertyDTO> getAllPropertyDTOs() {
+        return propertyRepository.findAll().stream()
+                .map(propertyMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     // Lấy bất động sản theo ID
-    public Optional<Property> getPropertyById(Long id) {
-        return propertyRepository.findById(id);
+    public Optional<PropertyDTO> getPropertyDTOById(Long id) {
+        return propertyRepository.findById(id)
+                .map(propertyMapper::toDTO);
     }
 
 
     // Cập nhật bất động sản
-    public Optional<Property> updateProperty(Long id, Property updatedProperty) {
-        return propertyRepository.findById(id).map(existingProperty -> {
-            existingProperty.setName(updatedProperty.getName());
-            existingProperty.setLocation(updatedProperty.getLocation());
-            existingProperty.setStatus(updatedProperty.getStatus());
-            existingProperty.setPrice(updatedProperty.getPrice());
-            existingProperty.setImage(updatedProperty.getImage());
-            existingProperty.setDescription(updatedProperty.getDescription());
-            return propertyRepository.save(existingProperty);
+    public Optional<PropertyDTO> updateProperty(Long id, PropertyDTO updatedDTO) {
+        return propertyRepository.findById(id).map(existing -> {
+            existing.setName(updatedDTO.getName());
+            existing.setLocation(updatedDTO.getLocation());
+            existing.setPrice(updatedDTO.getPrice());
+            existing.setDescription(updatedDTO.getDescription());
+            existing.setImage(updatedDTO.getImage());
+            existing.setStatus(updatedDTO.getStatus());
+
+            return propertyMapper.toDTO(propertyRepository.save(existing));
         });
-    }
-
-    // Lấy properties theo chủ sở hữu (dùng User object thay vì ownerId)
-    public List<Property> getPropertiesByOwner(User owner) {
-        if (owner == null) {
-            throw new IllegalArgumentException("Owner cannot be null");
-        }
-        return propertyRepository.findByOwner(owner);
-    }
-
-    //tim bat dong san theo vi tri
-    public List<Property> getPropertiesByLocation(String location) {
-        if(location == null || location.isBlank()){
-            throw new IllegalArgumentException("Invalid location");
-        } //cho phep tim chuoi con
-        return propertyRepository.findByLocationContainingIgnoreCase(location);
-    }
-    //lay ds bat dong san theo status
-    public List<Property> filterByStatus(PropertyStatus status) {
-        if (status == null) {
-            throw new IllegalArgumentException("Status cannot be null");
-        }
-        return propertyRepository.findByStatus(status);
     }
 
     //tao bat dong san moi
     @Transactional  //dam bao giao dich db duoc thuc hien hoan chinh
                     //neu xay ra loi trong qua trinh save, moi thu se duoc rollback (tranh luu du lieu ko hop le)
-    public Property createProperty(Property property) {
-        if (property == null || property.getName() == null || property.getLocation() == null ||
-                property.getPrice() == null || property.getImage() == null || property.getDescription() == null) {
+    public PropertyDTO createPropertyDTO(PropertyDTO dto) {
+        Property property = propertyMapper.toEntity(dto);
+        property.setStatus(PropertyStatus.AVAILABLE); //trang thai mac dinh
+        if (property.getName() == null || property.getLocation() == null || property.getPrice() == null || property.getImage() == null || property.getDescription() == null) {
             throw new IllegalArgumentException("Property and its required fields cannot be null");
         }
-        return propertyRepository.save(property);
-    }
+        return propertyMapper.toDTO(propertyRepository.save(property));
 
-    // Xóa bất động sản theo ID
+    }
+    // Xóa (neu admin cho phep)
     public boolean deleteProperty(Long id) {
         if (propertyRepository.existsById(id)) {
             propertyRepository.deleteById(id);
             return true;
         }
         return false;
+    }
+
+    //loc theo vi tri
+    public List<PropertyDTO> filterByLocation(String location) {
+        return propertyRepository.findByLocationContainingIgnoreCase(location).stream()
+                .map(propertyMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    //loc theo trang thai
+    public List<PropertyDTO> filterByStatus(String status) {
+        try{
+            PropertyStatus enumStatus = PropertyStatus.valueOf(status.toUpperCase());
+            return propertyRepository.findByStatus(enumStatus).stream()
+                    .map(propertyMapper::toDTO)
+                    .collect(Collectors.toList());
+        }catch (IllegalArgumentException e){
+            throw new IllegalArgumentException("Invalid status: "+status);
+        }
     }
 }

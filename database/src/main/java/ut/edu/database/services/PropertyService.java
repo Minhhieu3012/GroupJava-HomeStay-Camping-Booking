@@ -3,7 +3,6 @@ import jakarta.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ut.edu.database.dtos.PropertyDTO;
@@ -17,16 +16,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PropertyService {
     //Constructor Injection
     private final PropertyRepository propertyRepository;
     private final PropertyMapper propertyMapper;
-
-    @Autowired
-    public PropertyService(PropertyRepository propertyRepository, PropertyMapper propertyMapper) {
-        this.propertyRepository = propertyRepository;
-        this.propertyMapper = propertyMapper;
-    }
 
     // Lấy tất cả bất động sản
     public List<PropertyDTO> getAllPropertyDTOs() {
@@ -41,6 +35,10 @@ public class PropertyService {
                 .map(propertyMapper::toDTO);
     }
 
+    // Dành cho nội bộ logic nghiệp vụ
+    public Optional<Property> getPropertyById(Long id) {
+        return propertyRepository.findById(id);
+    }
 
     // Cập nhật bất động sản
     public Optional<PropertyDTO> updateProperty(Long id, PropertyDTO updatedDTO) {

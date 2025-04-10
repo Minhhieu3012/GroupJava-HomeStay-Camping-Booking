@@ -1,17 +1,24 @@
 package ut.edu.database.services;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import lombok.RequiredArgsConstructor;
+
 import ut.edu.database.dtos.BookingDTO;
 import ut.edu.database.enums.BookingStatus;
 import ut.edu.database.mapper.BookingMapper;
 import ut.edu.database.models.Booking;
+import ut.edu.database.models.Property;
+import ut.edu.database.models.User;
 import ut.edu.database.repositories.BookingRepository;
+
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class BookingService {
     //Constructor Injection
     private  final BookingRepository bookingRepository;
@@ -19,62 +26,46 @@ public class BookingService {
     private final UserService userService;
     private final PropertyService propertyService;
 
-    @Autowired
-    public BookingService(BookingRepository bookingRepository, BookingMapper bookingMapper, UserService userService, PropertyService propertyService) {
-        this.bookingRepository = bookingRepository;
-        this.bookingMapper = bookingMapper;
-        this.userService = userService;
-        this.propertyService = propertyService;
-    }
-
-    // Trả về danh sách Booking Entity
-    public List<Booking> getAllBookings() {
-        return bookingRepository.findAll();
-    }
-
     // Trả về danh sách BookingDTO để gửi ra ngoài cho client
     public List<BookingDTO> getAllBookingDTOs() {
         return bookingRepository.findAll()
                 .stream()
                 .map(bookingMapper::toDTO)
-                .toList();
+                .collect(Collectors.toList());
+    }
+
+    public BookingDTO bookingToDTO(Booking booking) {
+        return bookingMapper.toDTO(booking);
+    }
+
+    public Long getUserIdByEmail(String email) {
+        return userService.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email))
+                .getId();
     }
 
     // Lấy booking theo ID
-    public Optional<Booking> getBookingById(Long id) {
-        return bookingRepository.findById(id);
+    public Optional<BookingDTO> getBookingDTOById(Long id) {
+        return bookingRepository.findById(id)
+                .map(bookingMapper::toDTO);
     }
 
-    //lay ds booking theo user id
-    public List<Booking> getBookingByUserId(Long userId) {
-        if(userId == null || userId <= 0){
-            throw new IllegalArgumentException("Invalid user id");
-        }
-        return bookingRepository.findByUserId(userId);
-    }
-
-    //lay ds booking theo property id
-    public List<Booking> getBookingByPropertyId(Long propertyId) {
-        if(propertyId == null || propertyId <= 0){
-            throw new IllegalArgumentException("Invalid property id");
-        }
-        return bookingRepository.findByPropertyId(propertyId);
-    }
-
-    //lay ds booking theo status
-    public List<Booking> getBookingByStatus(String status) {
+    //lay ds theo status
+    public List<BookingDTO> filterByStatus(String status) {
         try {
-            BookingStatus bookingStatus = BookingStatus.valueOf(status.toUpperCase());
-            return bookingRepository.findByStatus(bookingStatus); // truyen enum truc tiep
+            BookingStatus enumStatus = BookingStatus.valueOf(status.toUpperCase());
+            return bookingRepository.findByStatus(enumStatus).stream() // truyen enum truc tiep
+                    .map(bookingMapper::toDTO)
+                    .collect(Collectors.toList());
         } catch(IllegalArgumentException e) {
-            throw new RuntimeException("Invalid booking status: " + status);
+            throw new RuntimeException("Invalid status: " +status);
         }
     }
 
-    // Lấy danh sách dịch vụ bổ sung của một booking
-    public List<String> getAdditionalServices(Long bookingId) {
+    // Lấy ds dịch vụ bổ sung
+    public BookingDTO getAdditionalServices(Long bookingId) {
         return bookingRepository.findById(bookingId)
-                .map(Booking::getAdditionalServices)
+                .map(bookingMapper::toDTO)
                 .orElseThrow(() -> new RuntimeException("Booking not found with id: " + bookingId));
     }
 
@@ -86,30 +77,20 @@ public class BookingService {
     }
 
     // Tạo booking mới
-    public Booking createBooking(Booking booking) {
-        if (booking == null) {
-            throw new IllegalArgumentException("Invalid booking data");
-        }
-        return bookingRepository.save(booking);
-    }
-
-    //tao bookingDTO moi
-    public Booking createBookingFromDTO(BookingDTO dto) {
+    public Booking createBookingDTO(BookingDTO dto) {
         if (dto == null) {
+            throw new IllegalArgumentException("BookingDTO is null");
+        }
+        if (dto.getStartDate().isAfter(dto.getEndDate())) {
             throw new IllegalArgumentException("Start date must be before end date");
         }
-
         Booking booking = bookingMapper.toEntity(dto);
-
-        // set user và property từ ID
-        booking.setUser(
-                userService.getUserById(dto.getUserID())
-                        .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserID()))
-        );
-        booking.setProperty(
-                propertyService.getPropertyById(dto.getPropertyID())
-                        .orElseThrow(() -> new RuntimeException("Property not found with ID: " + dto.getPropertyID()))
-        );
+        User user = userService.getUserById(dto.getUserID())
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserID()));
+        Property property = propertyService.getPropertyById(dto.getPropertyID())
+                .orElseThrow(() -> new RuntimeException("Property not found with ID: " + dto.getPropertyID()));
+        booking.setUser(user);
+        booking.setProperty(property);
 
         return bookingRepository.save(booking);
     }
@@ -135,5 +116,12 @@ public class BookingService {
             return true;
         }
         return false; // khong tim thay booking, tra ve false
+    }
+
+    //ham ho tro kiem tra ID
+    private void validateId(Long id, String label) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("Invalid " + label + " ID");
+        }
     }
 }

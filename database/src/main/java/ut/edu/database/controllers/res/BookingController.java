@@ -1,60 +1,103 @@
 package ut.edu.database.controllers.res;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import ut.edu.database.dtos.BookingDTO;
+import ut.edu.database.mapper.BookingMapper;
 import ut.edu.database.models.Booking;
 import ut.edu.database.services.BookingService;
 
 import java.util.List;
 
+
 @RestController
-@RequestMapping("/bookings")
+@RequestMapping("/api/bookings")
+@RequiredArgsConstructor
 public class BookingController {
 
     private final BookingService bookingService;
+    private final BookingMapper bookingMapper;
 
-    //Constructor injection de de dang bao mat hon
-    @Autowired
-    public BookingController(BookingService bookingService) {
-        this.bookingService = bookingService;
-    }
-
-    //lay tat ca dat cho
+    //GET: lay tat ca dat cho
     @GetMapping
-    public ResponseEntity<List<Booking>> getAllBookings() {
-        List<Booking> bookings = bookingService.getAllBookings();
-        return ResponseEntity.ok(bookings);
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<BookingDTO>> getAllBookings() {
+        return ResponseEntity.ok(bookingService.getAllBookingDTOs());
     }
 
-    //lay dat cho theo id
+    //GET: lay dat cho theo id
+    //xem booking cu the
     @GetMapping("/{id}")
-    public ResponseEntity<Booking> getBookingById(@PathVariable Long id) {
-        return bookingService.getBookingById(id)
-                .map(ResponseEntity::ok) //neu tim thay, tra ve 200 ok
-                .orElse(ResponseEntity.notFound().build()); //khong tim thay thi tra ve 404 not found
-    }
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN')")
+    public ResponseEntity<BookingDTO> getBookingById(@PathVariable Long id, @AuthenticationPrincipal UserDetails user) {
+        BookingDTO booking = bookingService.getBookingDTOById(id)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
 
-    //tao dat cho moi
-    @PostMapping
-    public ResponseEntity<Booking> createBooking(@RequestBody Booking booking) {
-        Booking createdBooking = bookingService.createBooking(booking);
-        return ResponseEntity.ok(bookingService.createBooking(booking));
-    }
+        boolean isOwner = booking.getUserID().equals(user.getUsername());
+        boolean isAdmin = user.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 
-    //update dat cho
-    @PutMapping("/{id}")
-    public ResponseEntity<Booking> updateBooking(@PathVariable Long id, @RequestBody Booking updatedBooking) {
-        Booking updated = bookingService.updateBooking(id, updatedBooking);
-        return ResponseEntity.ok(updated);
-    }
-
-    //delete dat cho
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Booking> deleteBooking(@PathVariable Long id) {
-        if(bookingService.deleteBooking(id)) {
-            return ResponseEntity.noContent().build(); //tra ve 204 No content neu xoa thanh cong
+        if (!isOwner && !isAdmin) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        return ResponseEntity.notFound().build(); //tra ve 404 neu khong tim thay
+        return ResponseEntity.ok(booking);
+    }
+
+    //POST: tao dat cho moi
+    //CUSTOMER: Tạo mới booking
+    @PostMapping
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<BookingDTO> createBooking(@RequestBody BookingDTO dto) {
+        Booking booking = bookingService.createBookingDTO(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookingService.bookingToDTO(booking));
+    }
+
+    // CUSTOMER: Cập nhật booking của chính mình
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<BookingDTO> updateBooking(@PathVariable Long id,
+                                                    @RequestBody BookingDTO updatedDTO,
+                                                    @AuthenticationPrincipal UserDetails user) {
+        // Lấy booking cũ dưới dạng DTO
+        BookingDTO existingDTO = bookingService.getBookingDTOById(id)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        // So sánh email để xác thực quyền
+        if (!existingDTO.getUserID().equals(bookingService.getUserIdByEmail(user.getUsername()))) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        // Gán ID vào DTO (đảm bảo chính xác)
+        updatedDTO.setId(id);
+        updatedDTO.setUserID(existingDTO.getUserID());
+        updatedDTO.setPropertyID(existingDTO.getPropertyID());
+
+        Booking updatedBooking = bookingMapper.toEntity(updatedDTO);
+        Booking saved = bookingService.updateBooking(id, updatedBooking);
+
+        return ResponseEntity.ok(bookingMapper.toDTO(saved));
+    }
+
+    // CUSTOMER or ADMIN: Xóa booking
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteBooking(@PathVariable Long id, @AuthenticationPrincipal UserDetails user) {
+        BookingDTO booking = bookingService.getBookingDTOById(id)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        boolean isOwner = booking.getUserID().equals(bookingService.getUserIdByEmail(user.getUsername()));
+        boolean isAdmin = user.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!isOwner && !isAdmin) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        bookingService.deleteBooking(id);
+        return ResponseEntity.noContent().build();
     }
 }

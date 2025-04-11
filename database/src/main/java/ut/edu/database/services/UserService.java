@@ -92,6 +92,12 @@ public class UserService implements UserDetailsService {
         return userRepository.existsByEmail(email);
     }
 
+    public Long getUserIdByEmail(String email) {
+        return findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email))
+                .getId();
+    }
+
     //lay ds user theo vai tro
     public List<User> getUsersByRole(Role role) {
         if(role == null){

@@ -1,64 +1,59 @@
 package ut.edu.database.controllers.res;
 
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import ut.edu.database.models.Review;
+import org.springframework.http.ResponseEntity;
+
+import ut.edu.database.dtos.ReviewDTO;
 import ut.edu.database.services.ReviewService;
+import ut.edu.database.services.UserService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/reviews")
+@RequestMapping("/api/reviews")
+@RequiredArgsConstructor
 public class ReviewController {
     private final ReviewService reviewService;
+    private final UserService userService;
 
-    @Autowired
-    public ReviewController(ReviewService reviewService) {
-        this.reviewService = reviewService;
-    };
-
-    //lay tat ca danh gia
+    //Bat ki ai cung xem duoc review
     @GetMapping
-    public ResponseEntity<List<Review>> getAllReviews() {
+    public ResponseEntity<List<ReviewDTO>> getAllReviews() {
         return ResponseEntity.ok(reviewService.getAllReviews());
     }
 
-    //lay danh gia theo id
-    @GetMapping("/{id}")
-    public ResponseEntity<Review> getReviewById(@PathVariable Long id) {
-        return reviewService.getReviewById(id)
-                .map(ResponseEntity::ok) //200 ok
-                .orElse(ResponseEntity.notFound().build()); // 404 not found
+    //loc theo property
+    @GetMapping("/property/{propertyId}")
+    public ResponseEntity<List<ReviewDTO>> getByPropertyId(@PathVariable Long propertyId) {
+        return ResponseEntity.ok(reviewService.getReviewsByPropertyId(propertyId));
     }
 
-    //tao danh gia moi
+    //loc theo user
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<ReviewDTO>> getByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(reviewService.getReviewsByUserId(userId));
+    }
+
+    //CUSTOMER: tao review moi (sau khi dang nhap)
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Review createReview(@Valid @RequestBody Review review) {
-        return reviewService.createReview(review);
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<ReviewDTO> createReview(@RequestBody ReviewDTO dto, @AuthenticationPrincipal UserDetails user) {
+        Long userId = userService.getUserIdByEmail(user.getUsername());
+        dto.setUserID(userId);
+        ReviewDTO saved = reviewService.createReview(dto);
+        return ResponseEntity.ok(saved);
     }
 
-    //cap nhat danh gia
-    @PutMapping("/{id}")
-    public ResponseEntity<Review> updateReview(@PathVariable Long id, @Valid @RequestBody Review updatedReview) {
-        try{
-            return reviewService.updateReview(id,updatedReview)
-                    .map(ResponseEntity::ok)
-                    .orElse(ResponseEntity.notFound().build());
-        }catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-    //xoa danh gia theo id
+    //ADMIN xoa review
     @DeleteMapping("/{id}")
-    public ResponseEntity<Review> deleteReview(@PathVariable Long id) {
-        if(reviewService.deleteReview(id)) {
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.notFound().build();
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        reviewService.deleteReview(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -1,95 +1,52 @@
 package ut.edu.database.services;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import ut.edu.database.dtos.RegisterRequest;
+import ut.edu.database.dtos.UserDTO;
 import ut.edu.database.enums.Role;
+import ut.edu.database.mapper.UserMapper;
 import ut.edu.database.models.User;
 import ut.edu.database.repositories.UserRepository;
-import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.security.crypto.password.PasswordEncoder;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserService implements UserDetailsService {
-    //Constructor Injection
+
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+    // Get all users (Admin)
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
-    //tim user theo email
-    public Optional<User> findByEmail(String email) {
-        if(email == null || email.isBlank()){
-            throw new IllegalArgumentException("Invalid email");
-        }
-        return userRepository.findByEmail(email);
+    // Get user by ID
+    public Optional<UserDTO> getUserDTOById(Long id) {
+        return userRepository.findById(id).map(userMapper::toDTO);
     }
 
-    //lay ds all user
-    public List<User> getAllUsers(){
-        return userRepository.findAll();
-    }
-
-    //lay user theo ID
-    public Optional<User> getUserById(Long id){
-        if(id == null || id <= 0){
-            throw new IllegalArgumentException("Invalid user id");
-        }
+    public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }
 
-    //Tao moi user
-    public User createUser(User user) {
-        if(user == null || user.getEmail() == null || user.getPassword() == null){
-            throw new IllegalArgumentException("Invalid user");
-        }
-        if(existByEmail(user.getEmail())){
-            throw new IllegalArgumentException("Email already exists");
-        }
-        user.setPassword(passwordEncoder.encode(user.getPassword())); // ma hoa mat khau
-        return userRepository.save(user);
-    }
-    //Update thong tin user
-    public User updateUser(Long id, User updatedUser) {
-        Optional<User> existingUserOpt = userRepository.findById(id);
-        if(existingUserOpt.isPresent()) {
-            User existingUser = existingUserOpt.get();
-            existingUser.setUsername(updatedUser.getUsername());
-            existingUser.setEmail(updatedUser.getEmail());
-            existingUser.setRole(updatedUser.getRole());
-
-            if (updatedUser.getPassword() != null && !updatedUser.getPassword().isBlank()) {
-                existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword())); // Ma hoa lai mk
-            }
-            return userRepository.save(existingUser);
-        }
-        throw new IllegalArgumentException("User not found");
-    }
-    //Xoa user theo ID
-    public void deleteUser(Long id) {
-        if(!userRepository.existsById(id)){
-            throw new IllegalArgumentException("User not found");
-        }
-        userRepository.deleteById(id);
-    }
-
-    //kiem tra nguoi dung co ton tai bang email
-    public boolean existByEmail(String email) {
-        if(email == null || email.isBlank()){
-            return false;
-        }
-        return userRepository.existsByEmail(email);
+    // Tìm theo email (dùng cho phân quyền)
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     public Long getUserIdByEmail(String email) {
@@ -98,40 +55,32 @@ public class UserService implements UserDetailsService {
                 .getId();
     }
 
-    //lay ds user theo vai tro
-    public List<User> getUsersByRole(Role role) {
-        if(role == null){
-            throw new IllegalArgumentException("Invalid role");
-        }
-        return userRepository.findByRole(role);
-    }
-
-    // Phương thức để mã hóa mật khẩu trước khi lưu vào cơ sở dữ liệu
-    public void save(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(), user.getPassword(), Collections.singleton(new SimpleGrantedAuthority(user.getRole().toString()))
-        );
-    }
-    public String registerUser(RegisterRequest registerRequest) {
-        if (userRepository.existsByUsername(registerRequest.getUsername())) {
-            return "User already exists!";
+    // Đăng ký (đã dùng ở AuthController)
+    public String registerUser(RegisterRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            return "Email đã tồn tại!";
         }
 
         User user = new User();
-        user.setEmail(registerRequest.getEmail());
-        user.setUsername(registerRequest.getUsername());
-        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setRole(registerRequest.getRole());
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(Role.CUSTOMER);
 
         userRepository.save(user);
-        return "User registered successfully!";
+        return "Đăng ký thành công!";
     }
+
+
+    // Admin xoá người dùng
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+    }
+
 }

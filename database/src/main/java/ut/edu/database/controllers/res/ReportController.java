@@ -1,84 +1,64 @@
 package ut.edu.database.controllers.res;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import ut.edu.database.dtos.ReportDTO;
 import ut.edu.database.enums.ReportStatus;
-import ut.edu.database.models.Report;
 import ut.edu.database.services.ReportService;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/reports")
+@RequestMapping("/api/reports")
+@RequiredArgsConstructor
 public class ReportController {
+
     private final ReportService reportService;
 
-    //Constructor Injection
-    @Autowired
-    public ReportController(ReportService reportService) {
-        this.reportService = reportService;
-    }
-
-    //lay tat ca bao cao
+    //ADMIN: lay tat ca bao cao
     @GetMapping
-    public List<Report> getAllReports() {
-        return reportService.getAllReports();  // Lấy tất cả reports
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<ReportDTO>> getAllReports() {
+        return ResponseEntity.ok(reportService.getAllReports());  // Lấy tất cả reports
     }
 
-    @GetMapping("/filter")
-    public List<Report> getReportsByDateRange(
-            @RequestParam LocalDate startDate,
-            @RequestParam LocalDate endDate
-    ){
-            return reportService.getReportsByDateRange(startDate, endDate);
-    }
-
-    // Thêm endpoint mới (nếu cần)
-    @GetMapping("/status/{status}")
-    public List<Report> getReportsByStatus(@PathVariable ReportStatus status) {
-        return reportService.getReportsByStatus(status);
-    }
-
-
-    //lay bao cao theo id
+    //ADMIN: lay bao cao theo ID
     @GetMapping("/{id}")
-    public ResponseEntity<Report> getReportById(@PathVariable Long id) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ReportDTO> getById(@PathVariable Long id){
         return reportService.getReportById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    //tao bao cao moi
-    @PostMapping
-    public ResponseEntity<Report> createReport(@RequestBody Report report, Long propertyId) {
-        try{
-            Report savedReport = reportService.createReport(report, propertyId);
-            return ResponseEntity.ok(savedReport); //200 ok
-        }catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build(); //bao loi 404 khi du lieu ko hop le
-        }
+    //ADMIN: Tao bao cao
+    @PostMapping("/create")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ReportDTO> createReport(
+            @RequestParam Long propertyId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        return ResponseEntity.ok(reportService.createReport(propertyId, startDate, endDate));
     }
 
-    //cap nhat bao cao theo id
-    @PutMapping("/{id}")
-    public ResponseEntity<Report> updateReport(@PathVariable Long id, @RequestBody Report updatedReport) {
-        try{
-            return reportService.updateReport(id,updatedReport)
-                    .map(ResponseEntity::ok)
-                    .orElse(ResponseEntity.notFound().build());
-        }catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+    //ADMIN: loc theo trang thai
+    @GetMapping("/status/{status}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<ReportDTO>> getByStatus(@PathVariable ReportStatus status) {
+        return ResponseEntity.ok(reportService.getReportsByStatus(status));
     }
 
-    //delete bao cao
+    //ADMIN: xoa report
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReport(@PathVariable Long id) {
-        if(reportService.deleteReport(id)) {
-            return ResponseEntity.noContent().build(); //204 no content khi xoa thanh cong
-        }
-        return ResponseEntity.notFound().build();
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        reportService.deleteReport(id);
+        return ResponseEntity.noContent().build();
     }
 }

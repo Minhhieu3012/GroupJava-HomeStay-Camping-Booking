@@ -1,85 +1,105 @@
 package ut.edu.database.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
+
+import ut.edu.database.dtos.ReportDTO;
+import ut.edu.database.mapper.ReportMapper;
 import ut.edu.database.enums.ReportStatus;
 import ut.edu.database.models.Report;
+import ut.edu.database.models.Property;
+import ut.edu.database.models.Booking;
 import ut.edu.database.repositories.ReportRepository;
+import ut.edu.database.repositories.PropertyRepository;
+import ut.edu.database.repositories.BookingRepository;
 
+import java.awt.print.Book;
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ReportService {
+
     private final ReportRepository reportRepository;
+    private final BookingRepository bookingRepository;
+    private final PropertyRepository propertyRepository;
+    private final ReportMapper reportMapper;
 
-    @Autowired
-    public ReportService(ReportRepository reportRepository) {
-        this.reportRepository = reportRepository;
-    }
+    private static final BigDecimal MANAGEMENT_FEE_PERCENT = BigDecimal.valueOf(100);
 
-    // Thay thế phương thức sử dụng findByPeriod
-    public List<Report> getReportsByDateRange(LocalDate start, LocalDate end) {
-        return reportRepository.findByStartDateBetween(start, end);
-    }
 
     // Lấy tất cả báo cáo
-    public List<Report> getAllReports() {
-        return reportRepository.findAll();
+    public List<ReportDTO> getAllReports() {
+        return reportRepository.findAll()
+                .stream()
+                .map(reportMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     // Lấy báo cáo theo ID
-    public Optional<Report> getReportById(Long id) {  // Sửa từ List<Report> -> Optional<Report>
-        return reportRepository.findById(id);
+    public Optional<ReportDTO> getReportById(Long id) {  // Sửa từ List<Report> -> Optional<Report>
+        return reportRepository.findById(id).map(reportMapper::toDTO);
     }
 
-    // Lấy báo cáo theo propertyId
-    public List<Report> getReportsByPropertyId(Long propertyId) {
-        return reportRepository.findByPropertyId(propertyId);
+
+    // Loc theo propertyId
+    public List<ReportDTO> getReportsByProperty(Long propertyId) {
+        return reportRepository.findByPropertyId(propertyId)
+                .stream()
+                .map(reportMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public List<Report> getReportsByStatus(ReportStatus status) {
-        return reportRepository.findByStatus(status);
+    //loc theo trang thai
+    public List<ReportDTO> getReportsByStatus(ReportStatus status) {
+        return reportRepository.findByStatus(status)
+                .stream()
+                .map(reportMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
-    // Tạo báo cáo mới
-    public Report createReport(Report report, Long propertyId) {
-        if (report.getProperty() == null
-                || report.getTotalRevenue() == null
-                || report.getManagementFee() == null
-                || report.getOccupancyRate() == null
-                || report.getReportDate() == null
-                || report.getStatus() == null
-                || report.getStartDate() == null
-                || report.getEndDate() == null
-                || report.getStartDate().isAfter(report.getEndDate())  // Kiểm tra ngày
-        ) {
-            throw new IllegalArgumentException("Invalid report!");
-        }
-        return reportRepository.save(report);
-    }
+    // Tạo báo cáo theo property va khoang thoi gian
+    public ReportDTO createReport(Long propertyId, LocalDate startDate, LocalDate endDate) {
+        Property property = propertyRepository.findById(propertyId)
+                .orElseThrow(() -> new RuntimeException("Property not found"));
+        List<Booking> bookings = bookingRepository.findByPropertyId(propertyId).stream()
+                .filter(b -> !b.getStartDate().isAfter(endDate) && !b.getEndDate().isBefore(startDate))
+                .toList();
+        BigDecimal totalRevenue = bookings.stream()
+                .map(Booking::getTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal managementFee = totalRevenue.multiply(MANAGEMENT_FEE_PERCENT);
+        long totalDays = startDate.until(endDate).getDays()+1;
+        long bookeddays = bookings.stream()
+                .mapToLong(b->b.getEndDate().toEpochDay()-b.getStartDate().toEpochDay()+1)
+                .sum();
+        BigDecimal occupancyRate = totalDays > 0
+                ? BigDecimal.valueOf(bookeddays)
+                .divide(BigDecimal.valueOf(totalDays), 2, RoundingMode.HALF_UP)
+                : BigDecimal.ZERO;
+        Report report = Report.builder()
+                .property(property)
+                .totalRevenue(totalRevenue)
+                .managementFee(managementFee)
+                .occupancyRate(occupancyRate)
+                .startDate(startDate)
+                .endDate(endDate)
+                .reportDate(LocalDate.now())
+                .status(ReportStatus.APPROVED)
+                .build();
 
-    // Cập nhật báo cáo
-    public Optional<Report> updateReport(Long id, Report updatedReport) {
-        return reportRepository.findById(id).map(existingReport -> {
-            existingReport.setTotalRevenue(updatedReport.getTotalRevenue());
-            existingReport.setManagementFee(updatedReport.getManagementFee());
-            existingReport.setOccupancyRate(updatedReport.getOccupancyRate());
-            existingReport.setStatus(updatedReport.getStatus());
-            existingReport.setReportDate(updatedReport.getReportDate());
-            existingReport.setStartDate(updatedReport.getStartDate());
-            existingReport.setEndDate(updatedReport.getEndDate());
-            return reportRepository.save(existingReport);
-        });
+        return reportMapper.toDTO(reportRepository.save(report));
     }
 
     // Xóa báo cáo theo ID
-    public boolean deleteReport(Long id) {
-        if (reportRepository.existsById(id)) {
-            reportRepository.deleteById(id);
-            return true;
-        }
-        return false;
+    public void deleteReport(Long id) {
+        reportRepository.deleteById(id);
     }
 }

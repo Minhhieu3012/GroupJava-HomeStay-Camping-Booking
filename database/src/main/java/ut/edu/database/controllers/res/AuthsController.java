@@ -46,6 +46,7 @@ public class AuthsController {
 
             String role = userDetails.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
+                    .map(r -> r.replace("ROLE_", "")) // Bỏ tiền tố "ROLE_"
                     .collect(Collectors.joining(","));
 
             String token = jwtUtil.generateToken(userDetails.getUsername(), Role.valueOf(role));

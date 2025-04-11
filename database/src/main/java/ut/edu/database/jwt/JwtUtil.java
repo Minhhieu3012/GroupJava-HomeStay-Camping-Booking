@@ -54,9 +54,15 @@ public class JwtUtil {
     }
 
     // Kiểm tra token hợp lệ
-    public boolean validateToken(String token, UserDetails userDetails) {
-        return extractUsername(token).equals(userDetails.getUsername());
+    public boolean validateToken(String token, String username) {
+        try {
+            final String tokenUsername = extractUsername(token);
+            return (tokenUsername.equals(username) && !isTokenExpired(token));
+        } catch (Exception e) {
+            return false;
+        }
     }
+
 
     public Role extractRole(String token) {
         String roleStr = extractClaims(token).get("role", String.class);

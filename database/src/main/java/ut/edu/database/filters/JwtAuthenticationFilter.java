@@ -35,25 +35,34 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7); // Extract the token
-            String username = jwtUtil.extractUsername(token); // Extract username from token
+            try {
+                String token = authHeader.substring(7); // Extract the token
+                String username = jwtUtil.extractUsername(token); // Extract username from token
+                String role = jwtUtil.extractRole(token).name(); //ADMIN, CUSTOMER, OWNER
 
-            // Check if the user is not already authenticated
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                // Trích xuất role từ token và tạo authority
-                String role = jwtUtil.extractRole(token).name(); // ADMIN, CUSTOMER,...
-                List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
+                // Check if the user is not already authenticated
+                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                    // Kiểm tra token hợp lệ (signature, expiration, username khớp)
+                    if (jwtUtil.validateToken(token, username)) {
+                        // Chuyển vai trò sang ROLE_ prefix cho Spring Security
+                        List<SimpleGrantedAuthority> authorities = List.of(
+                                new SimpleGrantedAuthority("ROLE_" + role)
+                        );
 
-                // Tạo authentication object
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(username, null, authorities);
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        // Tạo authentication object
+                        UsernamePasswordAuthenticationToken authentication =
+                                new UsernamePasswordAuthenticationToken(username, null, authorities);
+                        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                // Set vào security context
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                        // Set vào security context
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    }
+                }
+            } catch (Exception e) {
+                // Không cho lỗi JWT làm crash hệ thống
+                logger.warn("JWT token error: {}"+e.getMessage());
             }
         }
-
         chain.doFilter(request, response); // Continue the filter chain
     }
 }

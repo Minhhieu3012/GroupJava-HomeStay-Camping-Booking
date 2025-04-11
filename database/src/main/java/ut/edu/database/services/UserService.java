@@ -73,6 +73,20 @@ public class UserService implements UserDetailsService {
         return "Đăng ký thành công!";
     }
 
+    //cap nhat user
+    public UserDTO updateUser(Long id, UserDTO dto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+
+        user.setUsername(dto.getUsername());
+        user.setEmail(dto.getEmail());
+        user.setRole(dto.getRole());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+
+        return userMapper.toDTO(userRepository.save(user));
+    }
+
+
     // Admin xoá người dùng
     public void deleteUser(Long id) {
         userRepository.deleteById(id);

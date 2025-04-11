@@ -33,6 +33,15 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    //ADMIN: cap nhat thong tin user (role, status,...)
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+        UserDTO updatedUser = userService.updateUser(id, userDTO);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+
     //ADMIN: xoa user
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")

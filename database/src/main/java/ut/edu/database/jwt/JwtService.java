@@ -20,14 +20,14 @@ public class JwtService {
 
     private SecretKey secretKey;
 
-    // ✅ Init key từ Base64 secret khi Spring inject xong
+    // Init key từ Base64 secret khi Spring inject xong
     @PostConstruct
     public void init() {
         byte[] keyBytes = Base64.getDecoder().decode(base64Secret);
         this.secretKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    // ✅ Tạo token mới từ UserDetails
+    // Tạo token mới từ UserDetails
     public String generateToken(UserDetails userDetails) {
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
@@ -38,29 +38,29 @@ public class JwtService {
                 .compact();
     }
 
-    // ✅ Trích xuất username (email)
+    // Trích xuất username (email)
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    // ✅ Kiểm tra token hợp lệ
+    // Kiểm tra token hợp lệ
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
-    // ✅ Trích xuất claim bất kỳ
+    // Trích xuất claim bất kỳ
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    // ✅ Kiểm tra token hết hạn chưa
+    // Kiểm tra token hết hạn chưa
     private boolean isTokenExpired(String token) {
         return extractClaim(token, Claims::getExpiration).before(new Date());
     }
 
-    // ✅ Lấy toàn bộ claim từ token
+    // Lấy toàn bộ claim từ token
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .setSigningKey(secretKey)

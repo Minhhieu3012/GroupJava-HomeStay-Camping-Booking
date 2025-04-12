@@ -25,7 +25,7 @@ import ut.edu.database.jwt.JwtUtil;
 import ut.edu.database.services.UserService;
 
 @RestController
-@RequestMapping("/auths")
+@RequestMapping("/api/auths")
 public class AuthsController {
     @Autowired
     private AuthenticationManager authenticationManager;

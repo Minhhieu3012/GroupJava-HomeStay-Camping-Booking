@@ -1,7 +1,5 @@
 package admin.bookinghomecamping.controller;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import admin.bookinghomecamping.models.admin;
 import admin.bookinghomecamping.services.adminService;
@@ -18,7 +16,6 @@ import java.util.Optional;
 public class adminController {
     @Autowired
     private adminService adminService;
-
     /*method REST
     GET:->  lấy dữ liệu
     Get {id}
@@ -41,40 +38,10 @@ public class adminController {
     public long saveAdmin(@RequestBody admin admin) {
         return adminService.CreateAdmin(admin);
     }
-
     @DeleteMapping("/admin/{id}")
     String deleteAdmin(@PathVariable long id) {
         adminService.deleteAdmin(id);
         return "Admin deleted";
     }
-
-    @Controller
-    public class baoCaoDoanhThuController {
-        @RequestMapping("/admin/bao-cao-doanh-thu")
-        public String baoCaoDoanhThu() {
-            return "bookingHomeCamping/BaoCaoDoanhThu";
-        }
-    }
-    @Controller
-    public class PhiDichVuController{
-        @RequestMapping("/admin/quan-li-phi-dich-vu")
-        public String phiDichVu() {
-            return "bookingHomeCamping/QuanLiPhiDichVu";
-        }
-    }
-    @Controller
-    public class TKChuHomestayController{
-        @RequestMapping("/admin/quan-li-tai-khoan-chu-homestay")
-        public String taiKhoanChuHomestay() {
-            return "bookingHomeCamping/QuanLiTKChuHomestay";
-        }
-    }
-    @Controller
-    public class TKNguoiDungController{
-        @RequestMapping("/admin/quan-li-tai-khoan-nguoi-dung")
-        public String taiKhoanNguoiDung() {
-            return "bookingHomeCamping/QuanLiTKNguoiDung";}
-        }
-    }
-
+}
 

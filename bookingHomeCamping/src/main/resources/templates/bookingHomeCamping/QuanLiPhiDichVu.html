@@ -1,10 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <div th:replace="master/css::css"></div>
 </head>
+
 <body>
+<div class="container-xxl bg-white p-0">
+
+    <div class="container-fluid bg-dark px-0">
+        <div class="row gx-0">
+            <div th:replace="master/logo::logo"></div>
+
+            <div class="col-lg-9">
+                <div th:replace="master/header::header"></div>
+
+                <div th:replace="master/navbar::navbar"></div>
+            </div>
+        </div>
+    </div>
+
+    <th:block th:fragment="content">
+        <!--Nội dung trang con -->
+        <div class="service-fee-report">
+            <h2 class="report-title-service-fee">Quản lý phí dịch vụ</h2>
+
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>ID Giao dịch</th>
+                    <th>Khách hàng</th>
+                    <th>Tổng tiền</th>
+                    <th>Phí quản lý (20%)</th>
+                    <th>Chủ nhà nhận</th>
+                    <th>Chi tiết</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>GD001</td>
+                    <td>Ngô Gia Cò</td>
+                    <td>1.000.000 VND</td>
+                    <td>200.000 VND</td>
+                    <td>800.000 VND</td>
+                    <td><a href="#" class="btn btn-sm btn-primary">Xem</a></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>GD002</td>
+                    <td>Phan Minh MU</td>
+                    <td>2.000.000 VND</td>
+                    <td>400.000 VND</td>
+                    <td>1.600.000 VND</td>
+                    <td><a href="#" class="btn btn-sm btn-primary">Xem</a></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>GD003</td>
+                    <td>Lê Ngô Hữu Kền</td>
+                    <td>1.500.000 VND</td>
+                    <td>300.000 VND</td>
+                    <td>1.200.000 VND</td>
+                    <td><a href="#" class="btn btn-sm btn-primary">Xem</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </th:block>
+    <div th:replace="master/footer::footer"></div>
+    <a href="home" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+</div>
+
 
 </body>
+
 </html>

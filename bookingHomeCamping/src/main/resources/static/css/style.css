@@ -492,3 +492,57 @@
     padding-right: 0;
     border-right: none;
 }
+.report-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.cards {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.card {
+    background-color: #f8f9fa;
+    padding: 20px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    width: 280px;
+    text-align: center;
+}
+
+.card h3 {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 20px;
+    font-weight: bold;
+    color: #2E8B57;
+}
+.chart-container {
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+#revenueChart {
+    width: 100% !important;
+    height: auto !important;
+}
+.report-title-service-fee{
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    color: #333;
+}

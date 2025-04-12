@@ -40,7 +40,7 @@ public class ReviewController {
     }
 
     //CUSTOMER: tao review moi (sau khi dang nhap)
-    @PostMapping
+    @PostMapping("/create")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<ReviewDTO> createReview(@RequestBody ReviewDTO dto, @AuthenticationPrincipal UserDetails user) {
         Long userId = userService.getUserIdByEmail(user.getUsername());
@@ -50,7 +50,7 @@ public class ReviewController {
     }
 
     //ADMIN xoa review
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         reviewService.deleteReview(id);

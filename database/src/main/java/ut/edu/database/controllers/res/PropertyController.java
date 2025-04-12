@@ -33,14 +33,14 @@ public class PropertyController {
     }
 
     //POST: tao moi - chi owner
-    @PostMapping
+    @PostMapping("/create")
     @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<PropertyDTO> createProperty(@RequestBody PropertyDTO dto) {
         return ResponseEntity.ok(propertyService.createPropertyDTO(dto));
     }
 
     //PUT: cap nhat - chi owner
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<PropertyDTO> update(@PathVariable Long id, @RequestBody PropertyDTO dto) {
         Optional<PropertyDTO> updated = propertyService.updateProperty(id,dto);
@@ -49,7 +49,7 @@ public class PropertyController {
     }
 
     //DELETE: xoa - chi admin
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         if(propertyService.deleteProperty(id)) {

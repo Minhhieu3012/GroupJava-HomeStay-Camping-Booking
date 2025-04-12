@@ -55,7 +55,7 @@ public class ReportController {
     }
 
     //ADMIN: xoa report
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         reportService.deleteReport(id);

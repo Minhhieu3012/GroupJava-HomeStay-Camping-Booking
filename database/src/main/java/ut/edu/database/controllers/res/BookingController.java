@@ -50,7 +50,7 @@ public class BookingController {
 
     //POST: tao dat cho moi
     //CUSTOMER: Tạo mới booking
-    @PostMapping
+    @PostMapping("/create")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<BookingDTO> createBooking(@RequestBody BookingDTO dto) {
         Booking booking = bookingService.createBookingDTO(dto);
@@ -58,7 +58,7 @@ public class BookingController {
     }
 
     // CUSTOMER: Cập nhật booking của chính mình
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<BookingDTO> updateBooking(@PathVariable Long id,
                                                     @RequestBody BookingDTO updatedDTO,
@@ -84,7 +84,7 @@ public class BookingController {
     }
 
     // CUSTOMER or ADMIN: Xóa booking
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN')")
     public ResponseEntity<Void> deleteBooking(@PathVariable Long id, @AuthenticationPrincipal UserDetails user) {
         BookingDTO booking = bookingService.getBookingDTOById(id)

@@ -1,10 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <div th:replace="master/css::css"></div>
 </head>
+
 <body>
+<div class="container-xxl bg-white p-0">
+
+    <div class="container-fluid bg-dark px-0">
+        <div class="row gx-0">
+            <div th:replace="master/logo::logo"></div>
+
+            <div class="col-lg-9">
+                <div th:replace="master/header::header"></div>
+
+                <div th:replace="master/navbar::navbar"></div>
+            </div>
+        </div>
+    </div>
+
+    <th:block th:fragment="content">
+        <!--Nội dung trang con -->
+        <h2>
+            <div class="report">
+                <h2 class="report-title">Báo cáo doanh thu</h2>
+                <div class="cards">
+                    <div class="card">
+                        <h3>Tổng doanh thu</h3>
+                        <p id="totalRevenue">120.000.000 VND</p>
+                    </div>
+                    <div class="card">
+                        <h3>Phí quản lý (20%)</h3>
+                        <p id="adminFee">24.000.000 VND</p>
+                    </div>
+                    <div class="card">
+                        <h3>Tỷ lệ lấp đầy</h3>
+                        <p id="fillRate">75%</p>
+                    </div>
+                </div>
+
+<!--                <div style="max-width: 1000px; margin: 20px auto;">-->
+                    <canvas class="chart-container" id="revenueChart"></canvas>
+<!--                </div>-->
+
+            </div>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script>
+                const ctx = document.getElementById('revenueChart').getContext('2d');
+                const chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4'],
+                        datasets: [{
+                            label: 'Doanh thu (VND)',
+                            data: [30000000, 25000000, 40000000, 25000000],
+                            backgroundColor: '#4CAF50'
+                        }]
+                    }
+                });
+            </script>
+
+
+        </h2>
+    </th:block>
+    <div th:replace="master/footer::footer"></div>
+    <a href="home" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+</div>
+
 
 </body>
+
 </html>

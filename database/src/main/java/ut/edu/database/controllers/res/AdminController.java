@@ -1,33 +1,70 @@
 package ut.edu.database.controllers.res;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
+
+import ut.edu.database.services.*;
 import ut.edu.database.jwt.JwtUtil;
-import ut.edu.database.services.UserService;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
+@RequiredArgsConstructor
 public class AdminController {
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private JwtUtil jwtUtil;
+
+    private final JwtUtil jwtUtil;
+    private final UserService userService;
+    private final BookingService bookingService;
+    private final PropertyService propertyService;
+    private final ReportService reportService;
+    private final ReviewService reviewService;
+
+    // Xem profile admin
     @GetMapping("/profile")
-    public String getUserProfile(HttpServletRequest request) {
-        // Lấy token từ header Authorization
-        String authHeader = request.getHeader("Authorization");
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> getProfile(@AuthenticationPrincipal UserDetails user, HttpServletRequest request) {
+        String token = request.getHeader("Authorization").substring(7);
+        String email = jwtUtil.extractUsername(token);
+        String role = jwtUtil.extractRole(token).name();
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return "Missing or invalid token!";
-        }
+        Map<String, String> profile = new HashMap<>();
+        profile.put("email", email);
+        profile.put("role", role);
+        profile.put("token", token);
 
-        // Cắt bỏ "Bearer " để lấy token thực sự
-        String token = authHeader.substring(7);
-        String role  = String.valueOf(jwtUtil.extractRole(token));
-        return "Token: " + token; // Test xem có nhận được token không
+        return ResponseEntity.ok(profile);
+    }
+
+    // Thống kê hệ thống
+    @GetMapping("/stats")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> getSystemStats() {
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("totalUsers", userService.getAllUsers().size());
+        stats.put("totalBookings", bookingService.getAllBookingDTOs().size());
+        stats.put("totalProperties", propertyService.getAllPropertyDTOs().size());
+        stats.put("totalReports", reportService.getAllReports().size());
+        stats.put("totalReviews", reviewService.getAllReviews().size());
+
+        return ResponseEntity.ok(stats);
+    }
+
+    // Danh sách role + quyền (hiển thị phân quyền hệ thống)
+    @GetMapping("/roles")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> getRolesInfo() {
+        Map<String, String[]> roles = new HashMap<>();
+        roles.put("ADMIN", new String[]{"Quản lý toàn bộ hệ thống", "Xem + Xóa dữ liệu"});
+        roles.put("OWNER", new String[]{"Tạo/Cập nhật homestay", "Xem booking của mình"});
+        roles.put("CUSTOMER", new String[]{"Đặt phòng", "Gửi đánh giá", "Hủy booking của mình"});
+
+        return ResponseEntity.ok(roles);
     }
 }

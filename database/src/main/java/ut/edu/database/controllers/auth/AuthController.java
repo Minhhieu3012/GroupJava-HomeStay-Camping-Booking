@@ -6,6 +6,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
+//GET	http://localhost:8080/auth/register-user (Trả về giao diện đăng ký, truy cập bằng trình duyệt)
+//GET	http://localhost:8080/auth/login-user	(Trả về giao diện login, truy cập bằng trình duyệt)
+//POST	http://localhost:8080/auth/register-user	(Gửi form đăng ký, HTML form submit (Not Postman)
+
 @Controller //MVC
 public class AuthController {
     //Define register user name

@@ -33,7 +33,6 @@ public class AuthService {
         User user = new User(req.email, hashedPassword, req.role);
         user.setName(req.name);
         user.setPhone(req.phone);
-
         return userRepository.save(user);
     }
 

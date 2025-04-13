@@ -56,4 +56,11 @@ public class ReviewController {
         reviewService.deleteReview(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/owner")
+    @PreAuthorize("hasRole('OWNER')")
+    public ResponseEntity<List<ReviewDTO>> getReviewsForOwner(@AuthenticationPrincipal UserDetails user) {
+        return ResponseEntity.ok(reviewService.getReviewsForOwnerProperty(user.getUsername()));
+    }
+
 }

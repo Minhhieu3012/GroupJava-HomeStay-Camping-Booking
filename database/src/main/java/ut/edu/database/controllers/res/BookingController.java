@@ -100,4 +100,11 @@ public class BookingController {
         bookingService.deleteBooking(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/owner")
+    @PreAuthorize("hasRole('OWNER')")
+    public ResponseEntity<List<BookingDTO>> getBookingsForOwner(@AuthenticationPrincipal UserDetails user) {
+        return ResponseEntity.ok(bookingService.getBookingsForOwnerProperty(user.getUsername()));
+    }
+
 }

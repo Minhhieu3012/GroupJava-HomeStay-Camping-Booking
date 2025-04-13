@@ -2,6 +2,8 @@ package ut.edu.database.controllers.res;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -69,4 +71,12 @@ public class PropertyController {
     public ResponseEntity<List<PropertyDTO>> filterByStatus(@RequestParam String status) {
         return ResponseEntity.ok(propertyService.filterByStatus(status));
     }
+
+    // Lấy danh sách property của chính Owner đang đăng nhập
+    @GetMapping("/owner")
+    @PreAuthorize("hasRole('OWNER')")
+    public ResponseEntity<List<PropertyDTO>> getMyProperties(@AuthenticationPrincipal UserDetails user) {
+        return ResponseEntity.ok(propertyService.getPropertiesByOwnerEmail(user.getUsername()));
+    }
+
 }

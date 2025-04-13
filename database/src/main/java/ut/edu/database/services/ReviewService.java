@@ -89,5 +89,17 @@ public class ReviewService {
     public Optional<ReviewDTO> getReviewById(Long id) {
         return reviewRepository.findById(id).map(reviewMapper::toDTO);
     }
+
+    public List<ReviewDTO> getReviewsForOwnerProperty(String ownerEmail) {
+        List<Review> reviews = reviewRepository.findAll().stream()
+                .filter(review -> review.getProperty() != null
+                        && review.getProperty().getOwner() != null
+                        && review.getProperty().getOwner().getEmail().equals(ownerEmail))
+                .toList();
+
+        return reviews.stream()
+                .map(reviewMapper::toDTO)
+                .toList();
+    }
 }
 

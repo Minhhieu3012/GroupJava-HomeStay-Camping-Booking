@@ -124,4 +124,17 @@ public class BookingService {
             throw new IllegalArgumentException("Invalid " + label + " ID");
         }
     }
+
+    public List<BookingDTO> getBookingsForOwnerProperty(String ownerEmail) {
+        List<Booking> bookings = bookingRepository.findAll().stream()
+                .filter(booking -> booking.getProperty() != null
+                        && booking.getProperty().getOwner() != null
+                        && booking.getProperty().getOwner().getEmail().equals(ownerEmail))
+                .toList();
+
+        return bookings.stream()
+                .map(bookingMapper::toDTO)
+                .toList();
+    }
+
 }

@@ -93,4 +93,12 @@ public class PropertyService {
             throw new IllegalArgumentException("Invalid status: "+status);
         }
     }
+
+    public List<PropertyDTO> getPropertiesByOwnerEmail(String email) {
+        return propertyRepository.findByOwnerEmail(email)
+                .stream()
+                .map(propertyMapper::toDTO)
+                .toList();
+    }
+
 }

@@ -62,5 +62,4 @@ public class ReviewController {
     public ResponseEntity<List<ReviewDTO>> getReviewsForOwner(@AuthenticationPrincipal UserDetails user) {
         return ResponseEntity.ok(reviewService.getReviewsForOwnerProperty(user.getUsername()));
     }
-
 }

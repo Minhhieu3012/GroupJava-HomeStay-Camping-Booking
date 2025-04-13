@@ -71,7 +71,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email; // bạn đăng nhập bằng email
+        return username; // bạn đăng nhập bằng email
     }
 
     @Override

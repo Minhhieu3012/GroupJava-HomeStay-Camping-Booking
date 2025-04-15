@@ -9,7 +9,9 @@ import ut.edu.database.dtos.PropertyDTO;
 import ut.edu.database.mapper.PropertyMapper;
 import ut.edu.database.models.Property;
 import ut.edu.database.enums.PropertyStatus;
+import ut.edu.database.models.User;
 import ut.edu.database.repositories.PropertyRepository;
+import ut.edu.database.repositories.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +23,7 @@ public class PropertyService {
     //Constructor Injection
     private final PropertyRepository propertyRepository;
     private final PropertyMapper propertyMapper;
+    private final UserRepository userRepository;
 
     // Lấy tất cả bất động sản
     public List<PropertyDTO> getAllPropertyDTOs() {
@@ -58,8 +61,12 @@ public class PropertyService {
     @Transactional  //dam bao giao dich db duoc thuc hien hoan chinh
                     //neu xay ra loi trong qua trinh save, moi thu se duoc rollback (tranh luu du lieu ko hop le)
     public PropertyDTO createPropertyDTO(PropertyDTO dto) {
+        //Kiểm tra owner tồn tại
+        User owner = userRepository.findById(dto.getOwner_id())
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy chủ sở hữu với ID: " + dto.getOwner_id()));
         Property property = propertyMapper.toEntity(dto);
         property.setStatus(PropertyStatus.AVAILABLE); //trang thai mac dinh
+        property.setOwner(owner);
         if (property.getName() == null || property.getLocation() == null || property.getPrice() == null || property.getImage() == null || property.getDescription() == null) {
             throw new IllegalArgumentException("Property and its required fields cannot be null");
         }

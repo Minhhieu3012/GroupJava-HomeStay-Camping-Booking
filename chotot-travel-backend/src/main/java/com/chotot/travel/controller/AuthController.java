@@ -5,9 +5,7 @@ import com.chotot.travel.dto.RegisterRequest;
 import com.chotot.travel.dto.UpdateProfileRequest;
 import com.chotot.travel.model.User;
 import com.chotot.travel.service.AuthService;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -34,4 +32,16 @@ public class AuthController {
         return authService.updateProfile(token, request);
     }
 
+    //  để đăng xuất
+    @PostMapping("/logout")
+    public String logout(@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        return authService.logout(token);
+    }
+
+    //  để làm mới token
+    @PostMapping("/refresh-token")
+    public String refreshToken(@RequestBody String expiredToken) {
+        return authService.refreshToken(expiredToken);
+    }
 }

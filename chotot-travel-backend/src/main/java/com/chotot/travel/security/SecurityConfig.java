@@ -22,12 +22,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                // Tắt CSRF để dễ dàng làm việc với các API
                 .csrf(csrf -> csrf.disable())
+                // Cấu hình các endpoint không yêu cầu xác thực
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/register", "/auth/login").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/auth/register", "/auth/login").permitAll()  // Đảm bảo các endpoint này không yêu cầu xác thực
+                        .anyRequest().authenticated()  // Các endpoint khác yêu cầu xác thực
                 )
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // 🔥 Thêm filter
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);  // Thêm bộ lọc JWT
 
         return http.build();
     }

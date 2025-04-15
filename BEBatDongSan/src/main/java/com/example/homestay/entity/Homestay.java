@@ -1,4 +1,4 @@
-package propertyregistration.models;
+package com.example.homestay.entity;
 
 
 import jakarta.persistence.*;
@@ -6,7 +6,6 @@ import lombok.*;
 
 import java.util.List;
 
-@Entity
 @Table(name = "homestays")
 @Getter
 @Setter

@@ -1,10 +1,10 @@
-package propertyregistration.controller;
+package com.example.homestay.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import propertyregistration.models.Homestay;
-import propertyregistration.service.PropertyService;
+import com.example.homestay.entity.Homestay;
+import com.example.homestay.service.PropertyService;
 
 import java.util.List;
 import java.util.Optional;

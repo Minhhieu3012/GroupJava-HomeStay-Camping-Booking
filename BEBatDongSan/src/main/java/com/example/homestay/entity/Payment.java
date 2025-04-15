@@ -1,4 +1,4 @@
-package propertyregistration.models;
+package com.example.homestay.entity;
 
 import lombok.*;
 
@@ -6,12 +6,11 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Payment {
+public class  Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

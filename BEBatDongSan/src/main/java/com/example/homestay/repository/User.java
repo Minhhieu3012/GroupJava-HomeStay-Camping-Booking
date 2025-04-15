@@ -1,4 +1,4 @@
-package propertyregistration.repository;
+package com.example.homestay.repository;
 
 import com.example.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;

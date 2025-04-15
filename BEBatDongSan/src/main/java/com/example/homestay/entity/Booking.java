@@ -1,4 +1,4 @@
-package propertyregistration.models;
+package com.example.homestay.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -6,7 +6,6 @@ import lombok.*;
 import java.time.LocalDate;
 import java.util.List;
 
-@Entity
 @Table(name = "bookings")
 @Getter
 @Setter
@@ -15,7 +14,7 @@ import java.util.List;
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long homestayId;
 
     private LocalDate startDate;
     private LocalDate endDate;

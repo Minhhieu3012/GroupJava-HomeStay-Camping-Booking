@@ -1,10 +1,9 @@
-package propertyregistration.service;
+package com.example.homestay.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import propertyregistration.models.Homestay;
-import propertyregistration.repository.HomestayRepository;
-import propertyregistration.service.PropertyService;
+import com.example.homestay.entity.Homestay;
+import com.example.homestay.repository.HomestayRepository;
 
 import java.util.List;
 import java.util.Optional;

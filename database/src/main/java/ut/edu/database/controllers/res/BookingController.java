@@ -1,4 +1,8 @@
 package ut.edu.database.controllers.res;
+//Muc tieu:
+//Xu li API lien quan den dat cho
+//Ap dung phan quyen ROLE_CUSTOMER, ROLE_OWNER, ROLE_ADMIN
+//su dung DTO va mapper de bao ve du lieu khi tra ra
 
 import lombok.RequiredArgsConstructor;
 
@@ -8,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
 import ut.edu.database.dtos.BookingDTO;
 import ut.edu.database.mapper.BookingMapper;
 import ut.edu.database.models.Booking;
@@ -15,8 +20,7 @@ import ut.edu.database.services.BookingService;
 
 import java.util.List;
 
-
-@RestController
+@RestController //tra JSON thay vi giao dien
 @RequestMapping("/api/bookings")
 @RequiredArgsConstructor
 public class BookingController {
@@ -27,6 +31,7 @@ public class BookingController {
     //GET: lay tat ca dat cho
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
+    //tra ve List<BookingDTO> chu khong phai entity
     public ResponseEntity<List<BookingDTO>> getAllBookings() {
         return ResponseEntity.ok(bookingService.getAllBookingDTOs());
     }

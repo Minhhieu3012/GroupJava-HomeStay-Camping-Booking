@@ -1,6 +1,8 @@
 package ut.edu.database.controllers.res;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import ut.edu.database.dtos.PropertyDTO;
 import ut.edu.database.services.PropertyService;
+import ut.edu.database.services.UserService;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +21,9 @@ import java.util.Optional;
 @RequestMapping("/api/properties")
 @RequiredArgsConstructor
 public class PropertyController {
+
     private final PropertyService propertyService;
+    private final UserService userService;
 
     //GET: lay tat ca bat dong san
     @GetMapping
@@ -44,7 +49,14 @@ public class PropertyController {
     //PUT: cap nhat - chi owner
     @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('OWNER')")
-    public ResponseEntity<PropertyDTO> update(@PathVariable Long id, @RequestBody PropertyDTO dto) {
+    public ResponseEntity<PropertyDTO> update(@PathVariable Long id, @RequestBody PropertyDTO dto, @AuthenticationPrincipal UserDetails user) {
+        PropertyDTO existing = propertyService.getPropertyDTOById(id)
+                .orElseThrow(() -> new RuntimeException("Property not found"));
+
+        Long currentUserId = userService.getUserIdByEmail(user.getUsername());
+        if (!existing.getOwner_id().equals(currentUserId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         Optional<PropertyDTO> updated = propertyService.updateProperty(id,dto);
         return updated.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

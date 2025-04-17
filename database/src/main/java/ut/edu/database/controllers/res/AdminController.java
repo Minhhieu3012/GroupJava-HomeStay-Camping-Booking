@@ -28,8 +28,9 @@ public class AdminController {
 
     // Xem profile admin
     @GetMapping("/profile")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')") //chi co nguoi dung co role admin moi goi duoc
     public ResponseEntity<?> getProfile(@AuthenticationPrincipal UserDetails user, HttpServletRequest request) {
+        //lay token tu header
         String token = request.getHeader("Authorization").substring(7);
         String email = jwtUtil.extractUsername(token);
         String role = jwtUtil.extractRole(token).name();
@@ -46,6 +47,7 @@ public class AdminController {
     @GetMapping("/stats")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getSystemStats() {
+        //gom toan bo tong quan vao 1 API duy nhat cho admin dashboard
         Map<String, Object> stats = new HashMap<>();
         stats.put("totalUsers", userService.getAllUsers().size());
         stats.put("totalBookings", bookingService.getAllBookingDTOs().size());

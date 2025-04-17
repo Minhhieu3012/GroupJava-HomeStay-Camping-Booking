@@ -27,13 +27,15 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.getAllReviews());
     }
 
-    //loc theo property
+    //loc theo propertyId
+    //lay tat ca review ung voi 1 homestay cu the
     @GetMapping("/property/{propertyId}")
     public ResponseEntity<List<ReviewDTO>> getByPropertyId(@PathVariable Long propertyId) {
         return ResponseEntity.ok(reviewService.getReviewsByPropertyId(propertyId));
     }
 
-    //loc theo user
+    //loc theo userId
+    //Lấy review của một user cụ thể (vd: admin or FE muốn hiển thị ds review của 1 nguoi dùng nào đó)
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<ReviewDTO>> getByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(reviewService.getReviewsByUserId(userId));
@@ -43,7 +45,7 @@ public class ReviewController {
     @PostMapping("/create")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<ReviewDTO> createReview(@RequestBody ReviewDTO dto, @AuthenticationPrincipal UserDetails user) {
-        Long userId = userService.getUserIdByEmail(user.getUsername());
+        Long userId = userService.getUserIdByEmail(user.getUsername()); // = email
         dto.setUserID(userId);
         ReviewDTO saved = reviewService.createReview(dto);
         return ResponseEntity.ok(saved);
@@ -57,6 +59,7 @@ public class ReviewController {
         return ResponseEntity.noContent().build();
     }
 
+    // owner xem cac review ve homestay cua minh
     @GetMapping("/owner")
     @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<List<ReviewDTO>> getReviewsForOwner(@AuthenticationPrincipal UserDetails user) {

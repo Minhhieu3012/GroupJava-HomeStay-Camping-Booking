@@ -1,4 +1,5 @@
 package ut.edu.database.configurations;
+//Cấu hình Swagger UI để test API trực quan (swagger-ui.html)
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;

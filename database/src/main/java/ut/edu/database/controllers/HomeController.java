@@ -1,4 +1,5 @@
 package ut.edu.database.controllers;
+//Thường để xử lí route gốc hoặc tài nguyên public (/api/home, /api)
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

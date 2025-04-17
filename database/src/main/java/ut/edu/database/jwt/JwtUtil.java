@@ -1,4 +1,5 @@
 package ut.edu.database.jwt;
+//Các tiện ích phụ như trích xuất thông tin từ token
 
 import java.util.Date;
 import java.util.Base64;

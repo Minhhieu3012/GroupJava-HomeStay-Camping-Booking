@@ -1,4 +1,5 @@
 package ut.edu.database.jwt;
+// Tạo, validate token JWT
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

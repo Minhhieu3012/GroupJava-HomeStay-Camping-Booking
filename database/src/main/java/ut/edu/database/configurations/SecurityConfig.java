@@ -1,4 +1,5 @@
 package ut.edu.database.configurations;
+//Cấu hình bảo mật Spring Security - quản lý xác thực và phân quyền
 //muc tieu:
 // bao ve API
 // kich hoat phan quyen qua Jwt

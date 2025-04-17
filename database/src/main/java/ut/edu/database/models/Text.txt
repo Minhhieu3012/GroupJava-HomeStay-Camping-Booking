@@ -1,0 +1,3 @@
+- Đây là domain layer, tương ứng với bảng trong db.
+    + Chứa các entity (đối tượng ánh xạ với bảng trong database)
+	+ Entity ánh xạ với bảng trong db, dùng với JPA

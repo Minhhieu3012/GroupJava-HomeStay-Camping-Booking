@@ -1,4 +1,5 @@
 package ut.edu.database.filters;
+//Bộ lọc kiểm tra Jwt trong mỗi request, xác thực người dùng trước 	khi xử lí controller.
 
 import java.io.IOException;
 import java.util.List;

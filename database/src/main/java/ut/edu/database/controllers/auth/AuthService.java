@@ -1,4 +1,9 @@
 package ut.edu.database.controllers.auth;
+//muc tieu:
+//tach business logic cua Auth ra khoi controller
+//gom 2 chuc nang:
+//register -> dki user moi
+//login -> kiem tra login va tra ve token
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,11 +21,12 @@ import ut.edu.database.repositories.UserRepository;
 
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor //tu tao constructor co chuc cac final field
 public class AuthService {
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
+    //3 dependency:
+    private final UserRepository userRepository; //truy van user tu db
+    private final PasswordEncoder passwordEncoder; //ma hoa/match password
+    private final JwtUtil jwtUtil; //de tao token
 
 
     //Register User
@@ -30,19 +36,15 @@ public class AuthService {
             return ResponseEntity.badRequest().body("Email Already Exist");
         }
 
-//        //ma hoa mk
-//        String encodedPassword = passwordEncoder.encode(registerRequest.getPassword());
-//        //tao moi user
-//        Role role = Role.CUSTOMER; // hoặc Role.valueOf("CUSTOMER")
-//        User user = new User(registerRequest.getUsername(), registerRequest.getEmail(), encodedPassword, Role.CUSTOMER);
-
+        //dung builder pattern de tao moi user
         User user = User.builder()
                 .username(registerRequest.getUsername())
                 .email(registerRequest.getEmail())
-                .password(passwordEncoder.encode(registerRequest.getPassword()))
+                .password(passwordEncoder.encode(registerRequest.getPassword())) //ma hoa password (bang BCrypt)
                 .role(Role.CUSTOMER) // default role
                 .build();
 
+        //luu user vao db
         userRepository.save(user);
         return ResponseEntity.ok("Successfully registered");
     }
@@ -59,7 +61,6 @@ public class AuthService {
 
         // Tạo JWT token bằng JwtUtil
         String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
-
         return ResponseEntity.ok(new AuthResponse(token));
     }
 }

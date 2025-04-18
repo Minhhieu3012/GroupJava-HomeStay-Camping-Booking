@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 import ut.edu.database.enums.PropertyStatus;
 import ut.edu.database.models.Property;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface PropertyRepository extends JpaRepository<Property, Long> {

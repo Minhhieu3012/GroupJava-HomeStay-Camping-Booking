@@ -14,11 +14,9 @@ import ut.edu.database.repositories.ReportRepository;
 import ut.edu.database.repositories.PropertyRepository;
 import ut.edu.database.repositories.BookingRepository;
 
-import java.awt.print.Book;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.math.RoundingMode;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

@@ -1,3 +1,0 @@
-- Xử lý các HTTP request từ client (frontend, Postman, etc...)
-+ Auth: (xử lí các yêu cầu xác thực, login, register)
-+ Res: (xử lí các nghiệp vụ chính, mỗi controller gắn với một domain cụ thể)

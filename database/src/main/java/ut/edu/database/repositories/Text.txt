@@ -1,3 +1,0 @@
-+ Tầng giao tiếp với csdl (data accesss layer).
-+ Làm việc với database, tương tác trực tiếp với các entity thông qua interface JpaRepository.
-+ Các interface mở rộng JpaRepo hoặc CrudRepo.

@@ -70,15 +70,6 @@ public class JwtUtil {
         return Role.valueOf(roleStr); //convert từ String về enum Role
     }
 
-//    public String extractRole(String token) {
-//        return Jwts.parser()
-//                .setSigningKey(secretKey)
-//                .build()
-//                .parseClaimsJws(token)
-//                .getBody()
-//                .get("role", String.class);
-//    }
-
     // Kiểm tra token đã hết hạn chưa
     private boolean isTokenExpired(String token) {
         return extractClaims(token).getExpiration().before(new Date());

@@ -1,0 +1,3 @@
+- Enums:
+    + Các loại trạng thái (enum)
+    + Lưu các kiểu enums cố định trong hệ thống

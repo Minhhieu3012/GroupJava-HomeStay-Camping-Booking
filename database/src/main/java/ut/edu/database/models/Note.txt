@@ -1,0 +1,5 @@
+- Model layer:
+    + Đại diện bảng trong DB
+    + Đây là domain layer, tương ứng với bảng trong db.
+    + Chứa các entity (đối tượng ánh xạ với bảng trong db)
+	+ Entity ánh xạ với bảng trong db, dùng với JPA

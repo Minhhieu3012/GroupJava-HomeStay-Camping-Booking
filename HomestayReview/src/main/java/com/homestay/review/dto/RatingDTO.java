@@ -2,11 +2,11 @@ package com.homestay.review.dto;
 
 public class RatingDTO {
 
-
     private Long homestayId;
     private int ratingValue;
     private String comment;
 
+    // Getters and Setters
     public Long getHomestayId() {
         return homestayId;
     }

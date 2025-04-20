@@ -22,9 +22,9 @@
 
     <th:block th:fragment="content">
         <!--Nội dung trang con -->
-        <div class="service-fee-report">
-            <h2 class="report-title-service-fee">Quản lý phí dịch vụ</h2>
-
+        <div class="service-fee-report container mt-5">
+            <h2 class="report-title-service-fee mb-4">Quản lý phí dịch vụ</h2>
+        
             <table class="table table-bordered table-striped">
                 <thead class="table-dark">
                 <tr>
@@ -38,32 +38,14 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>GD001</td>
-                    <td>Ngô Gia Cò</td>
-                    <td>1.000.000 VND</td>
-                    <td>200.000 VND</td>
-                    <td>800.000 VND</td>
-                    <td><a href="#" class="btn btn-sm btn-primary">Xem</a></td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>GD002</td>
-                    <td>Phan Minh MU</td>
-                    <td>2.000.000 VND</td>
-                    <td>400.000 VND</td>
-                    <td>1.600.000 VND</td>
-                    <td><a href="#" class="btn btn-sm btn-primary">Xem</a></td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>GD003</td>
-                    <td>Lê Ngô Hữu Kền</td>
-                    <td>1.500.000 VND</td>
-                    <td>300.000 VND</td>
-                    <td>1.200.000 VND</td>
-                    <td><a href="#" class="btn btn-sm btn-primary">Xem</a></td>
+                <tr th:each="transaction, iterStat : ${transactions}">
+                    <td th:text="${iterStat.count}"></td>
+                    <td th:text="${transaction.id}"></td>
+                    <td th:text="${transaction.customerName}"></td>
+                    <td th:text="${#numbers.formatDecimal(transaction.totalAmount, 0, 'COMMA', 3, 'POINT')} + ' VND'"></td>
+                    <td th:text="${#numbers.formatDecimal(transaction.totalAmount * 0.2, 0, 'COMMA', 3, 'POINT')} + ' VND'"></td>
+                    <td th:text="${#numbers.formatDecimal(transaction.totalAmount * 0.8, 0, 'COMMA', 3, 'POINT')} + ' VND'"></td>
+                    <td><a th:href="@{'/admin/transaction-detail/' + ${transaction.id}}" class="btn btn-sm btn-primary">Xem</a></td>
                 </tr>
                 </tbody>
             </table>

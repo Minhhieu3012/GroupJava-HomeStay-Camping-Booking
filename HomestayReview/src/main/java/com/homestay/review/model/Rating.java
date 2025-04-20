@@ -1,8 +1,6 @@
 package com.homestay.review.model;
 
-
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 
 @Entity

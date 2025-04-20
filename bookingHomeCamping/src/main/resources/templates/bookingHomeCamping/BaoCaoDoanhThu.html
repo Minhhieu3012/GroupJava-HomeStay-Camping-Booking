@@ -8,59 +8,88 @@
 <body>
 <div class="container-xxl bg-white p-0">
 
-    <div class="container-fluid bg-dark px-0">
-        <div class="row gx-0">
-            <div th:replace="master/logo::logo"></div>
-
-            <div class="col-lg-9">
-                <div th:replace="master/header::header"></div>
-
-                <div th:replace="master/navbar::navbar"></div>
-            </div>
-        </div>
-    </div>
-
     <th:block th:fragment="content">
         <!--Nội dung trang con -->
-            <div class="report">
-                <h2 class="report-title">Báo cáo doanh thu</h2>
-                <div class="cards">
-                    <div class="card">
-                        <h3>Tổng doanh thu</h3>
-                        <p id="totalRevenue">120.000.000 VND</p>
+        <div class="container-xxl bg-white p-0">
+
+            <div class="container-fluid bg-dark px-0">
+                <div class="row gx-0">
+                    <div th:replace="master/logo::logo"></div>
+
+                    <div class="col-lg-9">
+                        <div th:replace="master/header::header"></div>
+
+                        <div th:replace="master/navbar::navbar"></div>
                     </div>
-                    <div class="card">
-                        <h3>Phí quản lý (20%)</h3>
-                        <p id="adminFee">24.000.000 VND</p>
-                    </div>
-                    <div class="card">
-                        <h3>Tỷ lệ lấp đầy</h3>
-                        <p id="fillRate">75%</p>
+                </div>
+            </div>
+
+            <th:block th:fragment="content">
+                <h1>Báo cáo doanh thu</h1>
+
+                <!-- Bảng số liệu -->
+                <div class="report">
+                    <h2 class="report-title">Bảng số liệu</h2>
+                    <div class="cards">
+                        <div class="card">
+                            <h3>Tổng doanh thu</h3>
+                            <p id="totalRevenue">0 VND</p>
+                        </div>
+                        <div class="card">
+                            <h3>Phí quản lý (20%)</h3>
+                            <p id="adminFee">0 VND</p>
+                        </div>
+                        <div class="card">
+                            <h3>Tỷ lệ lấp đầy</h3>
+                            <p id="fillRate">0%</p>
+                        </div>
                     </div>
                 </div>
 
-<!--                <div style="max-width: 1000px; margin: 20px auto;">-->
-                    <canvas class="chart-container" id="revenueChart"></canvas>
-<!--                </div>-->
+                <!-- Biểu đồ doanh thu -->
+                <h3>Biểu đồ doanh thu theo tháng</h3>
+                <canvas id="revenueChart" width="600" height="300"></canvas>
 
-            </div>
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-            <script>
-                const ctx = document.getElementById('revenueChart').getContext('2d');
-                const chart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4','Tháng 5','Tháng 6','Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'],
-                        datasets: [{
-                            label: 'Doanh thu (VND)',
-                            data: [30000000, 25000000, 40000000, 25000000, 3500000, 25470000, 5000000, 4000000, 6000000, 3560000, 1450000, 15600000],
-                            backgroundColor: '#4CAF50'
-                        }]
-                    }
-                });
-            </script>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <script>
+                    fetch('/api/admin/revenue-report')
+                        .then(res => res.json())
+                        .then(data => {
+                            const labels = data.map(item => 'Tháng ' + item.month);
+                            const values = data.map(item => item.totalRevenue);
+
+                            // Vẽ biểu đồ doanh thu
+                            const ctx = document.getElementById('revenueChart').getContext('2d');
+                            new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    labels: labels,
+                                    datasets: [{
+                                        label: 'Doanh thu (VND)',
+                                        data: values,
+                                        backgroundColor: '#4CAF50'
+                                    }]
+                                }
+                            });
+
+                            // Tính toán tổng doanh thu, phí quản lý và tỷ lệ lấp đầy
+                            const total = values.reduce((sum, v) => sum + v, 0);
+                            const adminFee = total * 0.2;
+                            const fillRate = 0.75;  // Giả sử tỷ lệ lấp đầy là 75%
+
+                            // Gán vào HTML
+                            document.getElementById('totalRevenue').innerText = total.toLocaleString('vi-VN') + ' VND';
+                            document.getElementById('adminFee').innerText = adminFee.toLocaleString('vi-VN') + ' VND';
+                            document.getElementById('fillRate').innerText = Math.round(fillRate * 100) + '%';
+                        });
+                </script>
+            </th:block>
+
+            <div th:replace="master/footer::footer"></div>
+            <a href="home" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+        </div>
     </th:block>
-    <div th:replace="master/footer::footer"></div>
     <a href="home" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 
 </div>

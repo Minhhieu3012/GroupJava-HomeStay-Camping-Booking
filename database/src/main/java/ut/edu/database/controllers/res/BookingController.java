@@ -100,7 +100,7 @@ public class BookingController {
         }
     }
 
-    // CUSTOMER or ADMIN: Xóa booking
+    // CUSTOMER or ADMIN or OWNER: Xóa booking
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN') or hasRole('OWNER')")
     public ResponseEntity<Void> deleteBooking(@PathVariable Long id, @AuthenticationPrincipal UserDetails user) {

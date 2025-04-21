@@ -1,0 +1,5 @@
+- Tầng DTO layer:
+    + Truyền dữ liệu ra/vào (API <-> Service)
+    + Truyền dữ liệu qua lại giữa FE và BE.
+    + Là các class trung gian dùng để nhận/gửi dữ liệu từ/to client thay vì lộ trực tiếp entity, giúp bảo mật, dễ mapping và validate dữ liệu.
+    + Dữ liệu của các model tương ứng, đã được rút gọn và định dạng phục vụ API.

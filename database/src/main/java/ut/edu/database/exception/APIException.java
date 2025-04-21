@@ -1,7 +1,13 @@
 package ut.edu.database.exception;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.http.HttpStatus;
+
+@Getter
+@AllArgsConstructor
 public class APIException extends RuntimeException {
-  public APIException(String message) {
-    super(message);
-  }
+    private String message;
+    private HttpStatus httpStatus;
 }

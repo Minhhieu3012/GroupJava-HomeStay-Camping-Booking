@@ -1,0 +1,5 @@
+- Tầng Service layer (business logic)
+    + Xử lý nghiệp vụ
+    + Nơi chứa logic nghiệp vụ, xử lý chính các bài toán trong hệ thống.
+    + Controller gọi vào service, service gọi repository.
+    + Chứa logic nghiệp vụ thực sự của từng tính năng.

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import ut.edu.database.dtos.PropertyDTO;
+import ut.edu.database.models.User;
+import ut.edu.database.repositories.UserRepository;
 import ut.edu.database.services.PropertyService;
 import ut.edu.database.services.UserService;
 
@@ -24,6 +26,7 @@ public class PropertyController {
 
     private final PropertyService propertyService;
     private final UserService userService;
+    private final UserRepository userRepository;
 
     //GET: lay tat ca bat dong san
     @GetMapping
@@ -42,14 +45,20 @@ public class PropertyController {
     //POST: tao moi - chi owner
     @PostMapping("/create")
     @PreAuthorize("hasRole('OWNER')")
-    public ResponseEntity<PropertyDTO> createProperty(@RequestBody PropertyDTO dto) {
-        return ResponseEntity.ok(propertyService.createPropertyDTO(dto));
+    public ResponseEntity<PropertyDTO> createProperty(@RequestBody PropertyDTO dto, @AuthenticationPrincipal UserDetails userDetails) {
+        User owner = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return ResponseEntity.ok(propertyService.createPropertyDTO(dto, owner));
     }
 
     //PUT: cap nhat - chi owner
     @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<PropertyDTO> update(@PathVariable Long id, @RequestBody PropertyDTO dto, @AuthenticationPrincipal UserDetails user) {
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(null); // Or create a custom error DTO
+        }
         PropertyDTO existing = propertyService.getPropertyDTOById(id)
                 .orElseThrow(() -> new RuntimeException("Property not found"));
 
@@ -87,8 +96,12 @@ public class PropertyController {
     // Lấy danh sách property của chính Owner đang đăng nhập
     @GetMapping("/owner")
     @PreAuthorize("hasRole('OWNER')")
-    public ResponseEntity<List<PropertyDTO>> getMyProperties(@AuthenticationPrincipal UserDetails user) {
-        return ResponseEntity.ok(propertyService.getPropertiesByOwnerEmail(user.getUsername()));
+    public ResponseEntity<List<PropertyDTO>> getMyProperties(@AuthenticationPrincipal UserDetails userDetails) {
+        User user = userRepository.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+
+        return ResponseEntity.ok(propertyService.getPropertiesByOwnerEmail(user.getEmail()));
     }
+
 
 }

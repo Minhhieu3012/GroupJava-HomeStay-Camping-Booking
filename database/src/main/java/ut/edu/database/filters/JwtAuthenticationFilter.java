@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -51,12 +52,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         );
 
                         // Tạo authentication object
-                        UsernamePasswordAuthenticationToken authentication =
-                                new UsernamePasswordAuthenticationToken(username, null, authorities);
-                        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        if(jwtUtil.validateToken(token,username)) {
+                            UserDetails userDetails = userService.loadUserByUsername(username); //lay userDetail that su
+                            List<SimpleGrantedAuthority> authorities1 = List.of(
+                                    new SimpleGrantedAuthority("ROLE_" + role)
+                            );
+                            UsernamePasswordAuthenticationToken authentication =
+                                    new UsernamePasswordAuthenticationToken(userDetails, null, authorities1);
+                            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                        // Set vào security context
-                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                            // Set vào security context
+                            SecurityContextHolder.getContext().setAuthentication(authentication);
+                        }
                     }
                 }
             } catch (Exception e) {

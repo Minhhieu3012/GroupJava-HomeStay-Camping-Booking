@@ -60,17 +60,19 @@ public class PropertyService {
     //tao bat dong san moi
     @Transactional  //dam bao giao dich db duoc thuc hien hoan chinh
                     //neu xay ra loi trong qua trinh save, moi thu se duoc rollback (tranh luu du lieu ko hop le)
-    public PropertyDTO createPropertyDTO(PropertyDTO dto) {
+    public PropertyDTO createPropertyDTO(PropertyDTO dto, User userDetail) {
         //Kiểm tra owner tồn tại
-        User owner = userRepository.findById(dto.getOwner_id())
+        User owner = userRepository.findByUsername(userDetail.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy chủ sở hữu với ID: " + dto.getOwner_id()));
+
         Property property = propertyMapper.toEntity(dto);
-        property.setStatus(PropertyStatus.AVAILABLE); //trang thai mac dinh
         property.setOwner(owner);
+        property.setStatus(PropertyStatus.AVAILABLE); //trang thai mac dinh
         if (property.getName() == null || property.getLocation() == null || property.getPrice() == null || property.getImage() == null || property.getDescription() == null) {
             throw new IllegalArgumentException("Property and its required fields cannot be null");
         }
-        return propertyMapper.toDTO(propertyRepository.save(property));
+        Property saved = propertyRepository.save(property);
+        return propertyMapper.toDTO(saved);
 
     }
     // Xóa (neu admin cho phep)

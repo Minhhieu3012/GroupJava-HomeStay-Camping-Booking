@@ -38,9 +38,17 @@ public class BookingService {
         return bookingMapper.toDTO(booking);
     }
 
-    public Long getUserIdByEmail(String email) {
-        return userService.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + email))
+    // Update this method to handle both email and username
+    public Long getUserIdByEmail(String usernameOrEmail) {
+        // First try by username
+        Optional<User> userByUsername = userService.findByUsername(usernameOrEmail);
+        if (userByUsername.isPresent()) {
+            return userByUsername.get().getId();
+        }
+        
+        // If not found by username, try by email
+        return userService.findByEmail(usernameOrEmail)
+                .orElseThrow(() -> new RuntimeException("User not found with username or email: " + usernameOrEmail))
                 .getId();
     }
 

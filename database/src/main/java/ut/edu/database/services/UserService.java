@@ -52,9 +52,10 @@ public class UserService implements UserDetailsService {
     }
 
     public Long getUserIdByEmail(String email) {
-        return findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + email))
-                .getId();
+        User user = userRepository.findByEmail(email)
+        .orElseGet(() -> userRepository.findByEmail(email) // ⚠️ You're calling findByEmail twice
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email)));
+        return user.getId();
     }
 
     // Đăng ký (đã dùng ở AuthController)
@@ -102,5 +103,10 @@ public class UserService implements UserDetailsService {
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole().name())
                 )
         );
+    }
+
+    // Add this method to UserService
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }

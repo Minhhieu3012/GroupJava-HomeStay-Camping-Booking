@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import ut.edu.database.dtos.BookingDTO;
 import ut.edu.database.mapper.BookingMapper;
 import ut.edu.database.models.Booking;
+import ut.edu.database.models.User;
 import ut.edu.database.services.BookingService;
+import ut.edu.database.services.UserService;
 
 import java.util.List;
 
@@ -27,6 +29,7 @@ public class BookingController {
 
     private final BookingService bookingService;
     private final BookingMapper bookingMapper;
+    private final UserService userService;
 
     //GET: lay tat ca dat cho
     @GetMapping
@@ -39,15 +42,15 @@ public class BookingController {
     //GET: lay dat cho theo id
     //xem booking cu the
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('CUSTOMER')  or hasRole('ADMIN')")
     public ResponseEntity<BookingDTO> getBookingById(@PathVariable Long id, @AuthenticationPrincipal UserDetails user) {
         BookingDTO booking = bookingService.getBookingDTOById(id)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
-
+        boolean isCustomer = user.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_CUSTOMER"));
         boolean isOwner = booking.getUserID().equals(user.getUsername());
         boolean isAdmin = user.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 
-        if (!isOwner && !isAdmin) {
+        if (!isOwner && !isAdmin && !isCustomer) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.ok(booking);
@@ -68,24 +71,33 @@ public class BookingController {
     public ResponseEntity<BookingDTO> updateBooking(@PathVariable Long id,
                                                     @RequestBody BookingDTO updatedDTO,
                                                     @AuthenticationPrincipal UserDetails user) {
-        // Lấy booking cũ dưới dạng DTO
-        BookingDTO existingDTO = bookingService.getBookingDTOById(id)
-                .orElseThrow(() -> new RuntimeException("Booking not found"));
+        try {
+            // Lấy booking cũ dưới dạng DTO
+            BookingDTO existingDTO = bookingService.getBookingDTOById(id)
+                    .orElseThrow(() -> new RuntimeException("Booking not found"));
 
-        // So sánh email để xác thực quyền
-        if (!existingDTO.getUserID().equals(bookingService.getUserIdByEmail(user.getUsername()))) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            // Get current user from database
+            User currentUser = userService.findByUsername(user.getUsername())
+                    .orElseGet(() -> userService.findByEmail(user.getUsername())
+                            .orElseThrow(() -> new RuntimeException("User not found")));
+
+            // Compare user IDs for authorization
+            if (!existingDTO.getUserID().equals(currentUser.getId())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            // Gán ID vào DTO (đảm bảo chính xác)
+            updatedDTO.setId(id);
+            updatedDTO.setUserID(currentUser.getId());
+            updatedDTO.setPropertyID(existingDTO.getPropertyID());
+
+            Booking updatedBooking = bookingMapper.toEntity(updatedDTO);
+            Booking saved = bookingService.updateBooking(id, updatedBooking);
+
+            return ResponseEntity.ok(bookingMapper.toDTO(saved));
+        } catch (Exception e) {
+            throw e;
         }
-
-        // Gán ID vào DTO (đảm bảo chính xác)
-        updatedDTO.setId(id);
-        updatedDTO.setUserID(existingDTO.getUserID());
-        updatedDTO.setPropertyID(existingDTO.getPropertyID());
-
-        Booking updatedBooking = bookingMapper.toEntity(updatedDTO);
-        Booking saved = bookingService.updateBooking(id, updatedBooking);
-
-        return ResponseEntity.ok(bookingMapper.toDTO(saved));
     }
 
     // CUSTOMER or ADMIN: Xóa booking

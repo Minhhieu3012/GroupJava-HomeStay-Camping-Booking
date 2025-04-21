@@ -26,6 +26,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
     private final PropertyRepository propertyRepository;
+    private final UserService userService;
 
 
     // Lấy tất cả đánh giá
@@ -92,11 +93,12 @@ public class ReviewService {
         return reviewRepository.findById(id).map(reviewMapper::toDTO);
     }
 
-    public List<ReviewDTO> getReviewsForOwnerProperty(String ownerEmail) {
+    public List<ReviewDTO> getReviewsForOwnerProperty(String usernameOrEmail) {
+        Long ownerId = userService.getUserIdByUsername(usernameOrEmail);
         List<Review> reviews = reviewRepository.findAll().stream()
                 .filter(review -> review.getProperty() != null
                         && review.getProperty().getOwner() != null
-                        && review.getProperty().getOwner().getEmail().equals(ownerEmail))
+                        && review.getProperty().getOwner().getId().equals(ownerId))
                 .toList();
 
         return reviews.stream()

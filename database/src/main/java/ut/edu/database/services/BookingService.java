@@ -133,11 +133,12 @@ public class BookingService {
         }
     }
 
-    public List<BookingDTO> getBookingsForOwnerProperty(String ownerEmail) {
+    public List<BookingDTO> getBookingsForOwnerProperty(String usernameOrEmail) {
+        Long ownerId = userService.getUserIdByUsername(usernameOrEmail); //dung ham co san
         List<Booking> bookings = bookingRepository.findAll().stream()
                 .filter(booking -> booking.getProperty() != null
                         && booking.getProperty().getOwner() != null
-                        && booking.getProperty().getOwner().getEmail().equals(ownerEmail))
+                        && booking.getProperty().getOwner().getId().equals(ownerId))
                 .toList();
 
         return bookings.stream()

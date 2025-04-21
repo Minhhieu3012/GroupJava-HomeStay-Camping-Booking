@@ -45,7 +45,7 @@ public class ReviewController {
     @PostMapping("/create")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<ReviewDTO> createReview(@RequestBody ReviewDTO dto, @AuthenticationPrincipal UserDetails user) {
-        Long userId = userService.getUserIdByEmail(user.getUsername()); // = email
+        Long userId = userService.getUserIdByUsername(user.getUsername());
         dto.setUserID(userId);
         ReviewDTO saved = reviewService.createReview(dto);
         return ResponseEntity.ok(saved);

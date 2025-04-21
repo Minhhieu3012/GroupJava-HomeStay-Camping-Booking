@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -46,8 +47,8 @@ public class PropertyController {
     @PostMapping("/create")
     @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<PropertyDTO> createProperty(@RequestBody PropertyDTO dto, @AuthenticationPrincipal UserDetails userDetails) {
-        User owner = userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User owner = userRepository.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return ResponseEntity.ok(propertyService.createPropertyDTO(dto, owner));
     }
 
@@ -62,7 +63,7 @@ public class PropertyController {
         PropertyDTO existing = propertyService.getPropertyDTOById(id)
                 .orElseThrow(() -> new RuntimeException("Property not found"));
 
-        Long currentUserId = userService.getUserIdByEmail(user.getUsername());
+        Long currentUserId = userService.getUserIdByUsername(user.getUsername());
         if (!existing.getOwner_id().equals(currentUserId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }

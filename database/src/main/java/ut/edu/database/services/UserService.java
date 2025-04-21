@@ -51,10 +51,10 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(email);
     }
 
-    public Long getUserIdByEmail(String email) {
-        User user = userRepository.findByEmail(email)
-        .orElseGet(() -> userRepository.findByEmail(email) // ⚠️ You're calling findByEmail twice
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + email)));
+    public Long getUserIdByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+        .orElseGet(() -> userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + username + "!")));
         return user.getId();
     }
 

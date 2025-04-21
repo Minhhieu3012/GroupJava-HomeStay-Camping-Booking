@@ -46,26 +46,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     // Kiểm tra token hợp lệ (signature, expiration, username khớp)
                     if (jwtUtil.validateToken(token, username)) {
+                        UserDetails userDetails = userService.loadUserByUsername(username); //lay userDetail that su
                         // Chuyển vai trò sang ROLE_ prefix cho Spring Security
                         List<SimpleGrantedAuthority> authorities = List.of(
                                 new SimpleGrantedAuthority("ROLE_" + role)
                         );
+                        UsernamePasswordAuthenticationToken authentication =
+                                new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
 
-                        // Tạo authentication object
-                        if(jwtUtil.validateToken(token,username)) {
-                            UserDetails userDetails = userService.loadUserByUsername(username); //lay userDetail that su
-                            List<SimpleGrantedAuthority> authorities1 = List.of(
-                                    new SimpleGrantedAuthority("ROLE_" + role)
-                            );
-                            UsernamePasswordAuthenticationToken authentication =
-                                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                            // Set vào security context
-                            SecurityContextHolder.getContext().setAuthentication(authentication);
+                        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        // Set vào security context
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
                         }
                     }
-                }
             } catch (Exception e) {
                 // Không cho lỗi JWT làm crash hệ thống
                 logger.warn("JWT token error: {}"+e.getMessage());

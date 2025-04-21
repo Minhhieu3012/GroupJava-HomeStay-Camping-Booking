@@ -30,7 +30,7 @@ public class ReportService {
     private final PropertyRepository propertyRepository;
     private final ReportMapper reportMapper;
 
-    private static final BigDecimal MANAGEMENT_FEE_PERCENT = BigDecimal.valueOf(100);
+    private static final BigDecimal MANAGEMENT_FEE_PERCENT = BigDecimal.valueOf(0.2);
 
 
     // Lấy tất cả báo cáo
@@ -75,11 +75,16 @@ public class ReportService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal managementFee = totalRevenue.multiply(MANAGEMENT_FEE_PERCENT);
         long totalDays = startDate.until(endDate).getDays()+1;
-        long bookeddays = bookings.stream()
-                .mapToLong(b->b.getEndDate().toEpochDay()-b.getStartDate().toEpochDay()+1)
+        long bookedDays = bookings.stream()
+                .mapToLong(b -> {
+                    LocalDate from = b.getStartDate().isBefore(startDate) ? startDate : b.getStartDate();
+                    LocalDate to = b.getEndDate().isAfter(endDate) ? endDate : b.getEndDate();
+                    return from.until(to).getDays() + 1;
+                })
                 .sum();
+
         BigDecimal occupancyRate = totalDays > 0
-                ? BigDecimal.valueOf(bookeddays)
+                ? BigDecimal.valueOf(bookedDays)
                 .divide(BigDecimal.valueOf(totalDays), 2, RoundingMode.HALF_UP)
                 : BigDecimal.ZERO;
         Report report = Report.builder()

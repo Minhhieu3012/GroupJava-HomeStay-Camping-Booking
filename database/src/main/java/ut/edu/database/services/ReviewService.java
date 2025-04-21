@@ -70,8 +70,10 @@ public class ReviewService {
         Property property = propertyRepository.findById(dto.getPropertyID())
                 .orElseThrow(() -> new IllegalArgumentException("Property not found"));
 
+
         //set lai thong tin de dam bao dung
         Review review = reviewMapper.toEntity(dto);
+        review.setId(null); //Bắt buộc xóa ID nếu có => tránh Hibernate hiểu nhầm là UPDATE
         review.setUser(user);
         review.setProperty(property);
         review.setRating(dto.getRating());

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <div th:replace="master/css::css"></div>
+</head>
+
+<body>
+<div class="container-xxl bg-white p-0">
+
+    <div class="container-fluid bg-dark px-0">
+        <div class="row gx-0">
+            <div th:replace="master/logo::logo"></div>
+
+            <div class="col-lg-9">
+                <div th:replace="master/header::header"></div>
+
+                <div th:replace="master/navbar::navbar"></div>
+            </div>
+        </div>
+    </div>
+
+    <th:block th:fragment="content">
+        <div class="container mt-5">
+            <h2 class="homestay-host-account mb-4">Giám sát tài khoản người dùng - Chủ Homestay</h2>
+
+            <table class="table table-bordered table-hover align-middle text-center">
+                <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Họ tên</th>
+                    <th>Email</th>
+                    <th>SĐT</th>
+                    <th>Loại tài khoản</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user, iterStat : ${users}">
+                    <td th:text="${iterStat.count}"></td>
+                    <td th:text="${user.fullName}"></td>
+                    <td th:text="${user.email}"></td>
+                    <td th:text="${user.phoneNumber}"></td>
+                    <td>
+                        <span th:text="${user.role == 'HOST' ? 'Chủ Homestay' : 'Người dùng'}"
+                              th:classappend="${user.role == 'HOST' ? 'badge bg-primary' : 'badge bg-secondary'}">
+                        </span>
+                    </td>
+                    <td>
+                        <span th:if="${user.active}" class="badge bg-success">Đang hoạt động</span>
+                        <span th:if="${!user.active}" class="badge bg-danger">Đã bị khóa</span>
+                    </td>
+                    <td>
+                        <form th:action="@{/admin/user/toggle-status}" method="post">
+                            <input type="hidden" name="userId" th:value="${user.id}"/>
+                            <button type="submit"
+                                    th:text="${user.active ? 'Khóa tài khoản' : 'Mở khóa'}"
+                                    th:class="${user.active ? 'btn btn-danger btn-sm' : 'btn btn-success btn-sm'}">
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </th:block>
+    <div th:replace="master/footer::footer"></div>
+    <a href="home" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+</div>
+
+
+</body>
+
+</html>

@@ -12,6 +12,7 @@ public class User {
 
     private String name;    // tên người dùng
     private String phone;   // số điện thoại
+    private boolean isVerified = false; // Mặc định chưa xác thực
 
     // Constructors
     public User() {}

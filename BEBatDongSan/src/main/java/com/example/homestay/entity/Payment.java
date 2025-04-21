@@ -27,4 +27,11 @@ public class  Payment {
     private PaymentStatus paymentStatus;
 
     private LocalDateTime paymentDate;
+
+    public void setStatus(String paid) {
+    }
+
+    public void setPaymentTime(LocalDateTime now) {
+    }
+
 }

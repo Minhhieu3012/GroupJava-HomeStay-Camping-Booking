@@ -9,5 +9,4 @@ public interface BookingService {
     List<Booking> getAllBookings();
     Booking getBookingById(Long id);
     void deleteBooking(Long id);
-    List<BookingExtraService> getExtrasByBookingId(Long bookingId);
 }

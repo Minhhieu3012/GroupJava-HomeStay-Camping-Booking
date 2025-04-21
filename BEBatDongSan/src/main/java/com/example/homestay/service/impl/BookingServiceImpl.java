@@ -2,6 +2,7 @@ package com.example.homestay.service.impl;
 
 import com.example.homestay.entity.Booking;
 import com.example.homestay.repository.BookingRepository;
+import com.example.homestay.service.BookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,22 +13,11 @@ import java.util.List;
 public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
-    private final BookingExtraServiceRepository extraServiceRepository;
 
     @Override
     public Booking createBooking(Booking booking, List<String> extraServices) {
         // Lưu booking trước
         Booking savedBooking = bookingRepository.save(booking);
-
-        // Sau đó lưu các dịch vụ bổ sung (nếu có)
-        if (extraServices != null) {
-            for (String service : extraServices) {
-                BookingExtraService extra = new BookingExtraService();
-                extra.setBooking(savedBooking);
-                extra.setService(service);
-                extraServiceRepository.save(extra);
-            }
-        }
 
         return savedBooking;
     }
@@ -48,8 +38,5 @@ public class BookingServiceImpl implements BookingService {
         bookingRepository.deleteById(id);
     }
 
-    @Override
-    public List<BookingExtraService> getExtrasByBookingId(Long bookingId) {
-        return extraServiceRepository.findByBookingId(bookingId);
-    }
+
 }

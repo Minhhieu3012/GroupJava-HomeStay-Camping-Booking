@@ -102,15 +102,16 @@ public class BookingController {
 
     // CUSTOMER or ADMIN: Xóa booking
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN') or hasRole('OWNER')")
     public ResponseEntity<Void> deleteBooking(@PathVariable Long id, @AuthenticationPrincipal UserDetails user) {
         BookingDTO booking = bookingService.getBookingDTOById(id)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
 
+        boolean isCustomer = user.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_CUSTOMER"));
         boolean isOwner = booking.getUserID().equals(bookingService.getUserIdByEmail(user.getUsername()));
         boolean isAdmin = user.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 
-        if (!isOwner && !isAdmin) {
+        if (!isOwner && !isAdmin && !isCustomer) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 

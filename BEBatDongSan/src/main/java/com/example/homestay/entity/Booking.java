@@ -1,46 +1,68 @@
 package com.example.homestay.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 
-import java.time.LocalDate;
-import java.util.List;
-
-@Table(name = "bookings")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity
+@Table(name = "booking")
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long homestayId;
+    private Long id;
 
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private Long propertyId;
+    private String customerName;
+    private String checkInDate;
+    private String checkOutDate;
 
-    private double totalPrice;
+    private String status; // <- Trường này rất quan trọng
 
-    @Enumerated(EnumType.STRING)
-    private BookingStatus status; // DANG_XU_LY, HOAN_THANH, HUY
+    // Getter và Setter cho status
+    public String getStatus() {
+        return status;
+    }
 
-    @ManyToOne
-    @JoinColumn(name = "homestay_id")
-    private Homestay homestay;
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    // Các getter và setter khác
+    public Long getId() {
+        return id;
+    }
 
-    @ManyToMany
-    @JoinTable(
-            name = "booking_services",
-            joinColumns = @JoinColumn(name = "booking_id"),
-            inverseJoinColumns = @JoinColumn(name = "service_id")
-    )
-    private List<Service> services;
-}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-enum BookingStatus {
-    DANG_XU_LY, HOAN_THANH, HUY
+    public Long getPropertyId() {
+        return propertyId;
+    }
+
+    public void setPropertyId(Long propertyId) {
+        this.propertyId = propertyId;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getCheckInDate() {
+        return checkInDate;
+    }
+
+    public void setCheckInDate(String checkInDate) {
+        this.checkInDate = checkInDate;
+    }
+
+    public String getCheckOutDate() {
+        return checkOutDate;
+    }
+
+    public void setCheckOutDate(String checkOutDate) {
+        this.checkOutDate = checkOutDate;
+    }
 }

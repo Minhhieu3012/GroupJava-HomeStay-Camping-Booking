@@ -1,68 +1,55 @@
-package com.example.homestay.service;
+package com.example.homestay.service.impl;
 
 import com.example.homestay.entity.Booking;
-import com.example.homestay.entity.Homestay;
-import com.example.homestay.entity.Service;
-import com.example.homestay.entity.User;
-import com.example.homestay.entity.Status;
 import com.example.homestay.repository.BookingRepository;
-import com.example.homestay.repository.HomestayRepository;
-import com.example.homestay.repository.ServiceRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
-    private final HomestayRepository homestayRepository;
-    private final ServiceRepository serviceRepository;
+    private final BookingExtraServiceRepository extraServiceRepository;
 
-    public BookingServiceImpl(BookingRepository bookingRepository,
-                              HomestayRepository homestayRepository,
-                              ServiceRepository serviceRepository) {
-        this.bookingRepository = bookingRepository;
-        this.homestayRepository = homestayRepository;
-        this.serviceRepository = serviceRepository;
+    @Override
+    public Booking createBooking(Booking booking, List<String> extraServices) {
+        // Lưu booking trước
+        Booking savedBooking = bookingRepository.save(booking);
+
+        // Sau đó lưu các dịch vụ bổ sung (nếu có)
+        if (extraServices != null) {
+            for (String service : extraServices) {
+                BookingExtraService extra = new BookingExtraService();
+                extra.setBooking(savedBooking);
+                extra.setService(service);
+                extraServiceRepository.save(extra);
+            }
+        }
+
+        return savedBooking;
     }
 
     @Override
-    public Booking createBooking(Long homestayId, LocalDate startDate, LocalDate endDate, List<Long> serviceIds, User user) {
-        Optional<Homestay> homestayOpt = homestayRepository.findById(homestayId);
-        if (homestayOpt.isEmpty()) {
-            throw new RuntimeException("Không tìm thấy homestay");
-        }
+    public List<Booking> getAllBookings() {
+        return bookingRepository.findAll();
+    }
 
-        boolean isBooked = bookingRepository.existsByHomestayIdAndDateRangeOverlap(homestayId, startDate, endDate);
-        if (isBooked) {
-            throw new RuntimeException("Homestay đã được đặt trong khoảng thời gian này");
-        }
+    @Override
+    public Booking getBookingById(Long id) {
+        return bookingRepository.findById(id).orElseThrow(() ->
+                new RuntimeException("Booking not found with id: " + id));
+    }
 
-        Homestay homestay = homestayOpt.get();
-        long numberOfDays = startDate.until(endDate).getDays();
-        double totalPrice = homestay.getPrice() * numberOfDays;
+    @Override
+    public void deleteBooking(Long id) {
+        bookingRepository.deleteById(id);
+    }
 
-        List<Service> services = serviceRepository.findAllById(serviceIds);
-        for (Service s : services) {
-            totalPrice += s.getPrice();
-        }
-
-        double adminFee = totalPrice * 0.2;
-        double ownerReceive = totalPrice - adminFee;
-
-        Booking booking = new Booking();
-        booking.setHomestay(homestay);
-        booking.setUser(user);
-        booking.setStartDate(startDate);
-        booking.setEndDate(endDate);
-        booking.setServices(services);
-        booking.setTotalPrice(totalPrice);
-        booking.setOwnerReceive(ownerReceive);
-        booking.setStatus(Status.PENDING);
-
-        return bookingRepository.save(booking);
+    @Override
+    public List<BookingExtraService> getExtrasByBookingId(Long bookingId) {
+        return extraServiceRepository.findByBookingId(bookingId);
     }
 }

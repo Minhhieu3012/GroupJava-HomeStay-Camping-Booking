@@ -1,52 +1,36 @@
 package com.example.homestay.service;
 
+import com.example.homestay.entity.Property;
+import com.example.homestay.entity.PropertyStatus;
+import com.example.homestay.repository.PropertyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.homestay.entity.Homestay;
-import com.example.homestay.repository.HomestayRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PropertyServiceImpl implements PropertyService {
 
     @Autowired
-    private HomestayRepository homestayRepository;
+    private PropertyRepository propertyRepository;
 
     @Override
-    public Homestay registerHomestay(Homestay homestay) {
-        return homestayRepository.save(homestay);
+    public Property saveProperty(Property property) {
+        return propertyRepository.save(property);
     }
 
     @Override
-    public Homestay updateHomestay(Long id, Homestay homestay) {
-        Optional<Homestay> existingHomestay = homestayRepository.findById(id);
-        if (existingHomestay.isPresent()) {
-            Homestay updatedHomestay = existingHomestay.get();
-            updatedHomestay.setName(homestay.getName());
-            updatedHomestay.setLocation(homestay.getLocation());
-            updatedHomestay.setPrice(homestay.getPrice());
-            updatedHomestay.setRooms(homestay.getRooms());
-            updatedHomestay.setAmenities(homestay.getAmenities());
-            updatedHomestay.setDescription(homestay.getDescription());
-            return homestayRepository.save(updatedHomestay);
-        }
-        return null;
+    public List<Property> getAllProperties() {
+        return propertyRepository.findAll();
     }
 
     @Override
-    public Optional<Homestay> getHomestayById(Long id) {
-        return homestayRepository.findById(id);
+    public List<Property> getByStatus(PropertyStatus status) {
+        return propertyRepository.findByStatus(status);
     }
 
     @Override
-    public List<Homestay> getAllHomestays() {
-        return homestayRepository.findAll();
-    }
-
-    @Override
-    public void deleteHomestay(Long id) {
-        homestayRepository.deleteById(id);
+    public Property getPropertyById(Long id) {
+        return propertyRepository.findById(id).orElse(null);
     }
 }

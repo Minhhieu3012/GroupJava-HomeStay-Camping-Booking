@@ -1,13 +1,19 @@
+//MOCK DATA
+
 package admin.bookinghomecamping.controller;
 
 import admin.bookinghomecamping.dto.RevenueReportDTO;
 import admin.bookinghomecamping.dto.TransactionDTO;
+//import admin.bookinghomecamping.repository.BookingRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/admin")
@@ -31,4 +37,19 @@ public class AdminReportController {
         return mockData;
     }
 }
+
+//DỮ LIỆU THẬT BAOCAODOANHTHU
+
+//@RestController
+//@RequestMapping("/api/admin")
+//public class AdminReportController {
+//
+//    @Autowired
+//    private BookingRepository bookingRepository;
+//
+//    @GetMapping("/revenue-report")
+//    public List<RevenueReportDTO> getRevenueReport() {
+//        return bookingRepository.getMonthlyRevenue();
+//    }
+//}
 

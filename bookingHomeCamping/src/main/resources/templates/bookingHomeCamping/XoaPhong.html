@@ -22,7 +22,36 @@
 
     <th:block th:fragment="content">
         <!--Nội dung trang con -->
-
+        <div class="container mt-5">
+            <h2>Danh sách phòng</h2>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên phòng</th>
+                    <th>Loại phòng</th>
+                    <th>Giá</th>
+                    <th>Địa chỉ</th>
+                    <th>Hành động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="room : ${roomList}">
+                    <td th:text="${room.id}"></td>
+                    <td th:text="${room.name}"></td>
+                    <td th:text="${room.type}"></td>
+                    <td th:text="${room.price} + ' VND'"></td>
+                    <td th:text="${room.address}"></td>
+                    <td>
+                        <form th:action="@{/admin/delete-room/{id}(id=${room.id})}" method="post"
+                              onsubmit="return confirm('Bạn có chắc chắn muốn xóa phòng này?');">
+                            <button class="btn btn-danger btn-sm" type="submit">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </th:block>
     <div th:replace="master/footer::footer"></div>
     <a href="home" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>

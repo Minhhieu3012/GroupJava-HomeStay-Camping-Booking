@@ -25,6 +25,7 @@
         <div class="container mt-5">
             <h2 class="mb-4">Thêm Phòng Mới</h2>
             <form th:action="@{/admin/add-room}" th:object="${room}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 <div class="form-group">
                     <label>Tên phòng</label>
                     <input type="text" th:field="*{name}" class="form-control">

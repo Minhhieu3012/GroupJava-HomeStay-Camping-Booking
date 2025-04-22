@@ -10,14 +10,17 @@ public class HomeController {
     public String layoutPage() {
         return "master/_layout";
     }
+
     @GetMapping("/about")
     public String aboutPage() {
         return "index";
     }
+
     @GetMapping("/home")
     public String HomePage() {
         return "home";//goi den html page
     }
+
     @GetMapping("/admin")
     public String adminPage() {
         return "home";//goi den html page

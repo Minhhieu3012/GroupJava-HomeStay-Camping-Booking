@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Trang chủ</title>
+</head>
+<body>
+
+<!-- Kế thừa layout từ masterpage -->
+<div th:replace="master/masterpage :: content(~{::section})">
+    <section th:fragment="content">
+        <div class="container mt-5">
+            <h1>🏡 Đây là trang HOME</h1>
+            <p>Nội dung của trang Home sẽ được hiển thị tại đây.</p>
+        </div>
+    </section>
+</div>
+
+</body>
+</html>

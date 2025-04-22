@@ -25,5 +25,28 @@ public class HomeController {
     public String adminPage() {
         return "home";//goi den html page
     }
+
+    @GetMapping("/bao-cao-doanh-thu")
+    public String baocaodoanhthuPage() {
+        return "bookingHomeCamping/BaoCaoDoanhThu";//goi den html page
+    }
+    @GetMapping("/quan-li-phi-dich-vu")
+    public String quanliphidichvuPage() {
+        return "bookingHomeCamping/QuanLiPhiDichVu";//goi den html page
+    }
+    @GetMapping("/quan-li-tk-host-user")
+    public String quanlitkchuhomestay_nguoidungPage() {
+        return "bookingHomeCamping/QuanLiTKChuHomestay-NguoiDung";//goi den html page
+    }
+    @GetMapping("/them-phong")
+    public String themphongPage() {
+        return "bookingHomeCamping/ThemPhong";//goi den html page
+    }
+    @GetMapping("/xoa-phong")
+    public String xoaphongPage() {
+        return "bookingHomeCamping/XoaPhong";//goi den html page
+    }
+
 }
+
 //Layout ...

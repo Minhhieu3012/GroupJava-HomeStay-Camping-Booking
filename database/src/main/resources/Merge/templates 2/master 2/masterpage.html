@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 
-<head>
-    <!--CSS-->
-    <div th:replace="master/css::css"></div>
-    <!--END CSS-->
-</head>
+<head th:replace="master/css::css"></head> <!-- Nhúng phần CSS từ file fragment -->
+
 <body>
 <div class="container-xxl bg-white p-0">
+
     <!-- Spinner Start -->
     <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
         <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
@@ -16,38 +14,35 @@
     </div>
     <!-- Spinner End -->
 
+    <!-- Header Start -->
     <div class="container-fluid bg-dark px-0">
         <div class="row gx-0">
-    <!--LOGO            -->
+            <!-- Logo -->
             <div th:replace="master/logo::logo"></div>
-    <!--END LOGO        -->
 
             <div class="col-lg-9">
-    <!--HEADER            -->
-               <div th:replace="master/header::header"></div>
-    <!--END HEADER                -->
+                <!-- Header -->
+                <div th:replace="master/header::header"></div>
 
-    <!--NAVBAR                -->
+                <!-- Navbar/Menu -->
                 <div th:replace="master/navbar::navbar"></div>
-    <!--END NAVBAR          -->
             </div>
         </div>
     </div>
+    <!-- Header End -->
 
-    <!--CONTENT-->
+    <!-- Content sẽ được trang con override -->
     <th:block th:fragment="content">
-        <!--Nội dung trang con -->
+        <!-- Nội dung sẽ được thay thế tại đây -->
     </th:block>
-    <!--END CONTENT    -->
 
-
-    <!-- Footer Start -->
-        <div th:replace="master/footer::footer"></div>
-    <!-- Footer End -->
-
+    <!-- Footer -->
+    <div th:replace="master/footer::footer"></div>
 
     <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top">
+        <i class="bi bi-arrow-up"></i>
+    </a>
 </div>
 
 <!-- JavaScript Libraries -->
@@ -61,9 +56,7 @@
 <script src="lib/tempusdominus/js/moment.min.js"></script>
 <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
 <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
-
-<!-- Template Javascript -->
 <script src="js/main.js"></script>
-</body>
 
+</body>
 </html>

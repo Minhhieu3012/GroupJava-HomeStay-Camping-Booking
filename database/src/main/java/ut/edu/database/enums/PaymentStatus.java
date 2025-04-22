@@ -1,4 +1,4 @@
-package ut.edu.database.Merge;
+package ut.edu.database.enums;
 
 public enum PaymentStatus {
     PAID,

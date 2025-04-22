@@ -1,7 +1,7 @@
 package ut.edu.database.services;
 
 import ut.edu.database.dtos.PaymentDTO;
-import ut.edu.database.entities.Payment;
+import ut.edu.database.models.Payment;
 import ut.edu.database.enums.PaymentStatus;
 import ut.edu.database.repositories.PaymentRepository;
 

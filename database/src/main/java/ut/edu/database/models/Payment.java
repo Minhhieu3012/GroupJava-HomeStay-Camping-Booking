@@ -1,4 +1,4 @@
-package ut.edu.database.entities;
+package ut.edu.database.models;
 
 import jakarta.persistence.*;
 import lombok.*;

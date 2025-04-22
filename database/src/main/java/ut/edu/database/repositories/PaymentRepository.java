@@ -1,6 +1,6 @@
 package ut.edu.database.repositories;
 
-import ut.edu.database.entities.Payment;
+import ut.edu.database.models.Payment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 

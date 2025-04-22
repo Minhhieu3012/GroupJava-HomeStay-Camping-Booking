@@ -1,3 +1,13 @@
+package ut.edu.database.controllers.res;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import ut.edu.database.dtos.PaymentDTO;
+import ut.edu.database.services.PaymentService;
+
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/payments")
 public class PaymentController {

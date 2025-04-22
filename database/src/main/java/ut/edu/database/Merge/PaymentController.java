@@ -1,12 +1,3 @@
-package ut.edu.database.Merge;
-
-import com.example.homestay.entity.Payment;
-import com.example.homestay.service.PaymentService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/payments")
 public class PaymentController {
@@ -15,13 +6,22 @@ public class PaymentController {
     private PaymentService paymentService;
 
     @PostMapping("/create")
-    public String createPayment(@RequestBody Payment payment) {
-        paymentService.createPayment(payment);
-        return "Payment recorded successfully!";
+    public PaymentDTO createPayment(@RequestBody PaymentDTO dto) {
+        return paymentService.createPayment(dto);
     }
 
     @GetMapping
-    public List<Payment> getAllPayments() {
+    public List<PaymentDTO> getAllPayments() {
         return paymentService.getAllPayments();
+    }
+
+    @GetMapping("/{id}")
+    public PaymentDTO getById(@PathVariable Long id) {
+        return paymentService.getPaymentById(id);
+    }
+
+    @GetMapping("/booking/{bookingId}")
+    public List<PaymentDTO> getByBookingId(@PathVariable Long bookingId) {
+        return paymentService.getPaymentsByBookingId(bookingId);
     }
 }

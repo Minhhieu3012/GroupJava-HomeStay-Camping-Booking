@@ -1,7 +1,7 @@
-package ut.edu.database.entities;
+package ut.edu.database.dtos;
 
-import jakarta.persistence.*;
 import lombok.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -11,22 +11,12 @@ import ut.edu.database.enums.PaymentStatus;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "payments")
-public class Payment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class PaymentDTO {
     private Long id;
-
-    @Column(nullable = false)
     private Long bookingId;
-
     private BigDecimal totalAmount;
     private BigDecimal adminFee;
     private BigDecimal hostAmount;
-
-    @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
-
     private LocalDateTime paymentDate;
 }

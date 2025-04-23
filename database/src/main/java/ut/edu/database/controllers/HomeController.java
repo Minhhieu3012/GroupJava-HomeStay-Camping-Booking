@@ -28,23 +28,23 @@ public class HomeController {
 
     @GetMapping("/bao-cao-doanh-thu")
     public String baocaodoanhthuPage() {
-        return "bookingHomeCamping/BaoCaoDoanhThu";//goi den html page
+        return "bookingHomeCamping-admin/BaoCaoDoanhThu";//goi den html page
     }
     @GetMapping("/quan-li-phi-dich-vu")
     public String quanliphidichvuPage() {
-        return "bookingHomeCamping/QuanLiPhiDichVu";//goi den html page
+        return "bookingHomeCamping-admin/QuanLiPhiDichVu";//goi den html page
     }
     @GetMapping("/quan-li-tk-host-user")
     public String quanlitkchuhomestay_nguoidungPage() {
-        return "bookingHomeCamping/QuanLiTKChuHomestay-NguoiDung";//goi den html page
+        return "bookingHomeCamping-admin/QuanLiTKChuHomestay-NguoiDung";//goi den html page
     }
     @GetMapping("/them-phong")
     public String themphongPage() {
-        return "bookingHomeCamping/ThemPhong";//goi den html page
+        return "bookingHomeCamping-admin/ThemPhong";//goi den html page
     }
     @GetMapping("/xoa-phong")
     public String xoaphongPage() {
-        return "bookingHomeCamping/XoaPhong";//goi den html page
+        return "bookingHomeCamping-admin/XoaPhong";//goi den html page
     }
 
 }

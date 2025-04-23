@@ -42,7 +42,7 @@ public class BookingController {
     //GET: lay dat cho theo id
     //xem booking cu the
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('CUSTOMER')  or hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('CUSTOMER','ADMIN')")
     public ResponseEntity<BookingDTO> getBookingById(@PathVariable Long id, @AuthenticationPrincipal UserDetails user) {
         BookingDTO booking = bookingService.getBookingDTOById(id)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
@@ -102,7 +102,7 @@ public class BookingController {
 
     // CUSTOMER or ADMIN or OWNER: Xóa booking
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN') or hasRole('OWNER')")
+    @PreAuthorize("hasAnyRole('CUSTOMER','ADMIN','OWNER')")
     public ResponseEntity<Void> deleteBooking(@PathVariable Long id, @AuthenticationPrincipal UserDetails user) {
         BookingDTO booking = bookingService.getBookingDTOById(id)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
@@ -126,7 +126,7 @@ public class BookingController {
     }
 
     @GetMapping("/status/{status}")
-    @PreAuthorize("hasAnyRole('ADMIN','OWNER')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<List<BookingDTO>> getBookingsByStatus(@PathVariable String status) {
         return ResponseEntity.ok(bookingService.filterByStatus(status));
     }

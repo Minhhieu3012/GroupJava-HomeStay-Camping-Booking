@@ -7,10 +7,12 @@ import ut.edu.database.enums.BookingStatus;
 import ut.edu.database.mapper.BookingMapper;
 import ut.edu.database.models.Booking;
 import ut.edu.database.models.Property;
+import ut.edu.database.models.ServicePackage;
 import ut.edu.database.models.User;
 import ut.edu.database.repositories.BookingRepository;
 
 import org.springframework.stereotype.Service;
+import ut.edu.database.repositories.ServicePackageRepository;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -25,6 +27,7 @@ public class BookingService {
     private final BookingMapper bookingMapper;
     private final UserService userService;
     private final PropertyService propertyService;
+    private final ServicePackageRepository servicePackageRepository;
 
     // Trả về danh sách BookingDTO để gửi ra ngoài cho client
     public List<BookingDTO> getAllBookingDTOs() {
@@ -70,20 +73,6 @@ public class BookingService {
         }
     }
 
-    // Lấy ds dịch vụ bổ sung
-    public BookingDTO getAdditionalServices(Long bookingId) {
-        return bookingRepository.findById(bookingId)
-                .map(bookingMapper::toDTO)
-                .orElseThrow(() -> new RuntimeException("Booking not found with id: " + bookingId));
-    }
-
-    // Lấy tổng giá booking
-    public BigDecimal getTotalPrice(Long bookingId) {
-        return bookingRepository.findById(bookingId)
-                .map(Booking::getTotalPrice)
-                .orElseThrow(() -> new RuntimeException("Booking not found with id: " + bookingId));
-    }
-
     // Tạo booking mới
     public Booking createBookingDTO(BookingDTO dto) {
         if (dto == null) {
@@ -93,12 +82,33 @@ public class BookingService {
             throw new IllegalArgumentException("Start date must be before end date");
         }
         Booking booking = bookingMapper.toEntity(dto);
+
         User user = userService.getUserById(dto.getUserID())
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserID()));
         Property property = propertyService.getPropertyById(dto.getPropertyID())
                 .orElseThrow(() -> new RuntimeException("Property not found with ID: " + dto.getPropertyID()));
+
         booking.setUser(user);
         booking.setProperty(property);
+
+        //Gan cac ServicePackage duoc chon
+        if(dto.getServicePackageIds() != null & !dto.getServicePackageIds().isEmpty()) {
+            List<ServicePackage> packages = dto.getServicePackageIds().stream()
+                    .map(id->servicePackageRepository.findById(id)
+                    .orElseThrow(()->new RuntimeException("ServicePackage not found: "+id)))
+                    .toList();
+            booking.setServicePackages(packages);
+        }
+
+        //Tinh toan totalPrice = basePrice + combo
+        long numberOfNights = java.time.temporal.ChronoUnit.DAYS.between(dto.getStartDate(), dto.getEndDate());
+        BigDecimal basePrice = property.getPrice().multiply(BigDecimal.valueOf(numberOfNights));
+        BigDecimal serviceTotal = booking.getServicePackages().stream()
+                .map(sp->BigDecimal.valueOf(sp.getPrice()))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        booking.setTotalPrice(basePrice.add(serviceTotal));
+        booking.setStatus(BookingStatus.PROCESSING); //default status
 
         return bookingRepository.save(booking);
     }
@@ -111,7 +121,6 @@ public class BookingService {
             existingBooking.setStatus(updatedBooking.getStatus());
             existingBooking.setStartDate(updatedBooking.getStartDate());
             existingBooking.setEndDate(updatedBooking.getEndDate());
-            existingBooking.setAdditionalServices(updatedBooking.getAdditionalServices());
             existingBooking.setTotalPrice(updatedBooking.getTotalPrice());
 
             return bookingRepository.save(existingBooking);
@@ -124,13 +133,6 @@ public class BookingService {
             return true;
         }
         return false; // khong tim thay booking, tra ve false
-    }
-
-    //ham ho tro kiem tra ID
-    private void validateId(Long id, String label) {
-        if (id == null || id <= 0) {
-            throw new IllegalArgumentException("Invalid " + label + " ID");
-        }
     }
 
     public List<BookingDTO> getBookingsForOwnerProperty(String usernameOrEmail) {

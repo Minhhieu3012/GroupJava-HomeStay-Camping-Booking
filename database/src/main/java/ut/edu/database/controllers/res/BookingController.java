@@ -125,4 +125,10 @@ public class BookingController {
         return ResponseEntity.ok(bookingService.getBookingsForOwnerProperty(user.getUsername()));
     }
 
+    @GetMapping("/status/{status}")
+    @PreAuthorize("hasAnyRole('ADMIN','OWNER')")
+    public ResponseEntity<List<BookingDTO>> getBookingsByStatus(@PathVariable String status) {
+        return ResponseEntity.ok(bookingService.filterByStatus(status));
+    }
+
 }

@@ -35,11 +35,11 @@ public class Booking {
     @Column(nullable = false)
     private LocalDate endDate;
 
-    //luu ds dich vu vao bang rieng
-    @ElementCollection
-    @CollectionTable(name = "booking_services", joinColumns = @JoinColumn(name = "booking_id", nullable = false))
-    @Column(name = "service", nullable = false)
-    private List<String> additionalServices = new ArrayList<>();
+    //luu ds combo cus chon vao booking
+    //tinh gia tong cong va tao bao cao chi tiet
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "booking_service_packages", joinColumns = @JoinColumn(name = "booking_id"), inverseJoinColumns = @JoinColumn(name = "service_package_id"))
+    private List<ServicePackage> servicePackages = new ArrayList<>();
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalPrice;  //day la tong price ma cus phai tra cho toan bo tgian dat cho

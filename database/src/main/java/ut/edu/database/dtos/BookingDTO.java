@@ -21,5 +21,6 @@ public class BookingDTO {
     private List<String> additionalServices;
     private BigDecimal totalPrice;
     private BookingStatus status;
+    private List<Long> servicePackageIds;
 
 }

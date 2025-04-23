@@ -10,10 +10,10 @@ import ut.edu.database.dtos.PaymentDTO;
 public interface PaymentMapper {
 
     //ENTITY --> DTO
-    @Mapping(source = "booking.id", target = "bookingID")
+    @Mapping(source = "booking.id", target = "bookingId")
     PaymentDTO toDTO (Payment payment);
 
     //DTO --> ENTITY
-    @Mapping(source = "bookingID", target = "booking.id")
+    @Mapping(source = "bookingId", target = "booking.id")
     Payment toEntity(PaymentDTO dto);
 }

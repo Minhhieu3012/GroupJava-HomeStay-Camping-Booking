@@ -1,29 +1,32 @@
 package ut.edu.database.services;
 
+import lombok.RequiredArgsConstructor;
 import ut.edu.database.dtos.PaymentDTO;
+import ut.edu.database.models.Booking;
 import ut.edu.database.models.Payment;
 import ut.edu.database.enums.PaymentStatus;
+import ut.edu.database.repositories.BookingRepository;
 import ut.edu.database.repositories.PaymentRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+
 @Service
+@RequiredArgsConstructor
 public class PaymentService {
 
-    @Autowired
-    private PaymentRepository paymentRepository;
+    private final PaymentRepository paymentRepository;
+    private final BookingRepository bookingRepository;
 
-    // Chuyển từ Entity -> DTO
+    // Entity -> DTO
     private PaymentDTO toDTO(Payment payment) {
         return new PaymentDTO(
                 payment.getId(),
-                payment.getBookingId(),
+                payment.getBooking().getId(),
                 payment.getTotalAmount(),
                 payment.getAdminFee(),
                 payment.getHostAmount(),
@@ -32,18 +35,24 @@ public class PaymentService {
         );
     }
 
-    // Chuyển từ DTO -> Entity
+    // DTO -> Entity
     private Payment toEntity(PaymentDTO dto) {
         Payment payment = new Payment();
         payment.setId(dto.getId());
-        payment.setBookingId(dto.getBookingId());
+
+        Booking booking = bookingRepository.findById(dto.getBookingId())
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+        payment.setBooking(booking);
+
         payment.setTotalAmount(dto.getTotalAmount());
         payment.setAdminFee(dto.getAdminFee());
         payment.setHostAmount(dto.getHostAmount());
         payment.setPaymentStatus(dto.getPaymentStatus());
         payment.setPaymentDate(dto.getPaymentDate());
+
         return payment;
     }
+
 
     public PaymentDTO createPayment(PaymentDTO dto) {
         Payment payment = toEntity(dto);
@@ -59,8 +68,9 @@ public class PaymentService {
     }
 
     public PaymentDTO getPaymentById(Long id) {
-        Optional<Payment> optional = paymentRepository.findById(id);
-        return optional.map(this::toDTO).orElse(null);
+        return paymentRepository.findById(id)
+                .map(this::toDTO)
+                .orElse(null);
     }
 
     public List<PaymentDTO> getPaymentsByBookingId(Long bookingId) {
@@ -70,3 +80,4 @@ public class PaymentService {
                 .collect(Collectors.toList());
     }
 }
+

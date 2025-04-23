@@ -1,6 +1,7 @@
 package ut.edu.database.controllers.res;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import ut.edu.database.dtos.PaymentDTO;
@@ -16,21 +17,26 @@ public class PaymentController {
     private PaymentService paymentService;
 
     @PostMapping("/create")
+    @PreAuthorize("hasAnyRole('CUSTOMER','OWNER')")
     public PaymentDTO createPayment(@RequestBody PaymentDTO dto) {
         return paymentService.createPayment(dto);
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public List<PaymentDTO> getAllPayments() {
         return paymentService.getAllPayments();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER','OWNER')")
     public PaymentDTO getById(@PathVariable Long id) {
         return paymentService.getPaymentById(id);
     }
 
+    //ROLE: OWNER (kiểm tra booking thuộc homestay của mình)
     @GetMapping("/booking/{bookingId}")
+    @PreAuthorize("hasRole('OWNER')")
     public List<PaymentDTO> getByBookingId(@PathVariable Long bookingId) {
         return paymentService.getPaymentsByBookingId(bookingId);
     }

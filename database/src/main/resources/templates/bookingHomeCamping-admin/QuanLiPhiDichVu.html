@@ -6,24 +6,26 @@
 </head>
 
 <body>
-<!--<div class="container-xxl bg-white p-0">-->
+<div id="app">
+    <div id="sidebar" class="active">
+        <div class="sidebar-wrapper active">
 
-<!--    <div class="container-fluid bg-dark px-0">-->
-<!--        <div class="row gx-0">-->
-<!--            <div th:replace="master-admin/logo::logo"></div>-->
+            <!--            START LOGO-->
+            <div th:replace="master-admin/logo::logo"></div>
+            <!--            END LOGO -->
 
-<!--            <div class="col-lg-9">-->
-<!--                <div th:replace="master-admin/header::header"></div>-->
+            <!--            START MENU-->
+            <div th:replace="master-admin/menu::menu"></div>
+            <!--            END MENU-->
+        </div>
+    </div>
+    <div id="main">
 
-<!--                <div th:replace="master-admin/menu::menu"></div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-
-    <th:block th:fragment="content">
+        <!--            NỘI DUNG CÁC TRANG ADMIN-->
+        <th:block th:fragment="content">
         <!--Nội dung trang con -->
         <div class="service-fee-report container mt-5">
-            <h2 class="report-title-service-fee mb-4">Quản lý phí dịch vụ</h2>
+            <h2 class="report-title-service-fee mb-4">QUẢN LÍ PHÍ DỊCH VỤ</h2>
         
             <table class="table table-bordered table-striped">
                 <thead class="table-dark">
@@ -50,10 +52,8 @@
                 </tbody>
             </table>
         </div>
-    </th:block>
-<!--    <div th:replace="master-admin/footer::footer"></div>-->
-<!--    <a href="home" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>-->
-
+        </th:block>
+    </div>
 </div>
 
 

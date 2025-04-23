@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <div th:replace="master-admin/css::css"></div>
+</head>
+
+<body>
+<div id="app">
+    <div id="sidebar" class="active">
+        <div class="sidebar-wrapper active">
+
+            <!--            START LOGO-->
+            <div th:replace="master-admin/logo::logo"></div>
+            <!--            END LOGO -->
+
+            <!--            START MENU-->
+            <div th:replace="master-admin/menu::menu"></div>
+            <!--            END MENU-->
+
+        </div>
+    </div>
+    <div id="main">
+
+        <th:block th:fragment="content">
+            <!--Nội dung trang con -->
+            <div class="container mt-5">
+                <h2>DANH SÁCH HOMESTAY</h2>
+                <table class="table table-dark">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên phòng</th>
+                        <th>Tên chủ phòng</th>
+                        <th>Loại phòng</th>
+                        <th>Giá</th>
+                        <th>Địa chỉ</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="room : ${roomList}">
+                        <td th:text="${room.id}"></td>
+                        <td th:text="${room.name}"></td>
+                        <td th:text="${room.type}"></td>
+                        <td th:text="${room.price} + ' VND'"></td>
+                        <td th:text="${room.address}"></td>
+                        <td>
+                            <form th:action="@{/admin/delete-room/{id}(id=${room.id})}" method="post"
+                                  onsubmit="return confirm('Bạn có chắc chắn muốn xóa phòng này?');">
+                                <button class="btn btn-danger btn-sm" type="submit">Xóa</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </th:block>
+
+    </div>
+</div>
+</body>
+
+</html>

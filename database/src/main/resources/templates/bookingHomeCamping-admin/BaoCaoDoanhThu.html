@@ -7,88 +7,29 @@
 </head>
 
 <body>
+<div id="app">
+    <div id="sidebar" class="active">
+        <div class="sidebar-wrapper active">
+
+            <!--            START LOGO-->
+            <div th:replace="master-admin/logo::logo"></div>
+            <!--            END LOGO -->
+
+            <!--            START MENU-->
+            <div th:replace="master-admin/menu::menu"></div>
+            <!--            END MENU-->
+
+        </div>
+    </div>
+    <div id="main">
 
 
-
-<!--        <h1>Báo cáo doanh thu</h1>-->
-
-<!--        &lt;!&ndash; Bảng số liệu &ndash;&gt;-->
-<!--        <div class="report">-->
-<!--            <h2 class="report-title">Bảng số liệu</h2>-->
-<!--            <div class="cards">-->
-<!--                <div class="card">-->
-<!--                    <h3>Tổng doanh thu</h3>-->
-<!--                    <p id="totalRevenue">0 VND</p>-->
-<!--                </div>-->
-<!--                <div class="card">-->
-<!--                    <h3>Phí quản lý (20%)</h3>-->
-<!--                    <p id="adminFee">0 VND</p>-->
-<!--                </div>-->
-<!--                <div class="card">-->
-<!--                    <h3>Tỷ lệ lấp đầy</h3>-->
-<!--                    <p id="fillRate">0%</p>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-
-<!--        &lt;!&ndash; Biểu đồ doanh thu &ndash;&gt;-->
-<!--        <h3>Biểu đồ doanh thu theo tháng</h3>-->
-<!--        <canvas id="revenueChart" width="600" height="300"></canvas>-->
-
-<!--        <div th:replace="master-admin/footer::footer"></div>-->
-<!--        <a href="home" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>-->
-
-<!--    </div>-->
-
-<!--    <script>-->
-<!--        fetch('/api/reports')-->
-<!--            .then(res => res.json())-->
-<!--            .then(data => {-->
-<!--                console.log("Dữ liệu:", data); // <- Gợi ý debug-->
-
-<!--                const labels = data.map(item => {-->
-<!--                    const date = new Date(item.reportDate);-->
-<!--                    return `Tháng ${date.getMonth() + 1}/${date.getFullYear()}`;-->
-<!--                });-->
-
-<!--                const revenues = data.map(item => parseFloat(item.totalRevenue));-->
-
-<!--                const ctx = document.getElementById('revenueChart').getContext('2d');-->
-<!--                new Chart(ctx, {-->
-<!--                    type: 'bar',-->
-<!--                    data: {-->
-<!--                        labels: labels,-->
-<!--                        datasets: [{-->
-<!--                            label: 'Doanh thu (VND)',-->
-<!--                            data: revenues,-->
-<!--                            backgroundColor: 'rgba(75, 192, 192, 0.6)'-->
-<!--                        }]-->
-<!--                    },-->
-<!--                    options: {-->
-<!--                        scales: {-->
-<!--                            y: {-->
-<!--                                beginAtZero: true,-->
-<!--                                ticks: {-->
-<!--                                    callback: value => value.toLocaleString('vi-VN') + ' VND'-->
-<!--                                }-->
-<!--                            }-->
-<!--                        }-->
-<!--                    }-->
-<!--                });-->
-
-<!--                // Hiển thị số liệu tổng-->
-<!--                const total = revenues.reduce((a, b) => a + b, 0);-->
-<!--                const adminFee = total * 0.2;-->
-
-<!--                const fillRate = data.length > 0 ? parseFloat(data[data.length - 1].occupancyRate) : 0;-->
-
-<!--                document.getElementById('totalRevenue').innerText = total.toLocaleString('vi-VN') + ' VND';-->
-<!--                document.getElementById('adminFee').innerText = adminFee.toLocaleString('vi-VN') + ' VND';-->
-<!--                document.getElementById('fillRate').innerText = Math.round(fillRate * 100) + '%';-->
-<!--            })-->
-<!--            .catch(err => console.error('Lỗi khi gọi API báo cáo:', err));-->
-<!--    </script>-->
-
+        <th:block th:fragment="content">
+            <!--            NỘI DUNG CÁC TRANG ADMIN-->
+        <div class="service-fee-report container mt-5">
+            <h2 class="report-title-service-fee mb-4">BÁO CÁO DOANH THU</h2>
+        </th:block>
+    </div>
 </div>
 </body>
 

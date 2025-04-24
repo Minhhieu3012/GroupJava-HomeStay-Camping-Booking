@@ -44,13 +44,13 @@ public class PropertyController {
             //1 tao ten file duy nhat
             String filename = UUID.randomUUID()+"_"+file.getOriginalFilename();
 
-            //2 duong dan luu anh (resources/static-admin/assets/images/properties)
-            String uploadDir = new ClassPathResource("static-admin/assets/images/properties").getFile().getAbsolutePath();
+            //2 duong dan luu anh (resources/static/properties)
+            String uploadDir = new ClassPathResource("static/properties").getFile().getAbsolutePath();
             File saveFile = new File(uploadDir + File.separator + filename);
             file.transferTo(saveFile); //luu file anh
 
             //3 luu url vao db
-            String imageUrl = "/images/properties/"+filename;
+            String imageUrl = "/static/properties/"+filename;
             property.setImage(imageUrl);
             propertyService.save(property); //co the goi lai repo.save()
 

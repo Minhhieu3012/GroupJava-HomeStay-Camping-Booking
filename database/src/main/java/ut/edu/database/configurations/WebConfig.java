@@ -9,7 +9,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         //cho phep client truy cap anh tu /images/**
-        registry.addResourceHandler("/images/**")
-                .addResourceLocations("classpath:/static-admin/assets/images/");
+        registry.addResourceHandler("/properties/**")
+                .addResourceLocations("classpath:/static/properties/");
+        registry.addResourceHandler("/services/**")
+                .addResourceLocations("classpath:/static/services/");
+        registry.addResourceHandler("/rooms/**")
+                .addResourceLocations("classpath:/static/rooms/");
     }
 }

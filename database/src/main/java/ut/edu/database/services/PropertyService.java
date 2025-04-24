@@ -110,4 +110,7 @@ public class PropertyService {
                 .toList();
     }
 
+    public Property save(Property property) {
+        return propertyRepository.save(property);
+    }
 }

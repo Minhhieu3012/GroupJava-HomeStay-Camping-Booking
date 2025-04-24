@@ -2,6 +2,7 @@ package ut.edu.database.controllers.res;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -10,14 +11,18 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import org.springframework.web.multipart.MultipartFile;
 import ut.edu.database.dtos.PropertyDTO;
+import ut.edu.database.models.Property;
 import ut.edu.database.models.User;
 import ut.edu.database.repositories.UserRepository;
 import ut.edu.database.services.PropertyService;
 import ut.edu.database.services.UserService;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 
 @RestController
@@ -29,6 +34,33 @@ public class PropertyController {
     private final UserService userService;
     private final UserRepository userRepository;
 
+
+    @PostMapping("/upload-img/{propertyId}")
+    @PreAuthorize("hasRole('OWNER')")
+    public ResponseEntity<String> uploadImg(@PathVariable Long propertyId, @RequestParam("file") MultipartFile file) {
+        try{
+            Property property = propertyService.getPropertyById(propertyId)
+                    .orElseThrow(() -> new RuntimeException("Property not found"));
+            //1 tao ten file duy nhat
+            String filename = UUID.randomUUID()+"_"+file.getOriginalFilename();
+
+            //2 duong dan luu anh (resources/static-admin/assets/images/properties)
+            String uploadDir = new ClassPathResource("static-admin/assets/images/properties").getFile().getAbsolutePath();
+            File saveFile = new File(uploadDir + File.separator + filename);
+            file.transferTo(saveFile); //luu file anh
+
+            //3 luu url vao db
+            String imageUrl = "/images/properties/"+filename;
+            property.setImage(imageUrl);
+            propertyService.save(property); //co the goi lai repo.save()
+
+            return ResponseEntity.ok("Upload thanh cong! URL: "+imageUrl);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Upload that bai: "+e.getMessage());
+        }
+    }
     //GET: lay tat ca bat dong san
     @GetMapping
     public ResponseEntity<List<PropertyDTO>> getAllProperties() {
@@ -99,10 +131,8 @@ public class PropertyController {
     @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<List<PropertyDTO>> getMyProperties(@AuthenticationPrincipal UserDetails userDetails) {
         User user = userRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+                .orElseThrow(() -> new RuntimeException("Khong tim thay user"));
 
         return ResponseEntity.ok(propertyService.getPropertiesByOwnerEmail(user.getEmail()));
     }
-
-
 }

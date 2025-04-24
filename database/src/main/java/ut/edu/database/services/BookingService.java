@@ -107,7 +107,15 @@ public class BookingService {
                 .map(sp->BigDecimal.valueOf(sp.getPrice()))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        booking.setTotalPrice(basePrice.add(serviceTotal));
+        BigDecimal totalPrice = basePrice.add(serviceTotal);
+        booking.setTotalPrice(totalPrice);
+
+        //tinh phi admin 20%, owner nhan 80%
+        BigDecimal adminFee = totalPrice.multiply(BigDecimal.valueOf(0.2));
+        BigDecimal ownerEarning = totalPrice.subtract(adminFee);
+        booking.setAdminFee(adminFee);
+        booking.setOwnerEarning(ownerEarning);
+
         booking.setStatus(BookingStatus.PROCESSING); //default status
 
         return bookingRepository.save(booking);

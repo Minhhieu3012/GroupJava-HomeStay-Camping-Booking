@@ -12,11 +12,15 @@ public interface BookingMapper {
     //ENTITY --> DTO
     @Mapping(source = "user.id", target = "userID")
     @Mapping(source = "property.id", target = "propertyID")
+    @Mapping(source = "adminFee", target = "adminFee")
+    @Mapping(source = "ownerEarning", target = "ownerEarning")
     BookingDTO toDTO (Booking booking);
 
     //DTO --> ENTITY
     @Mapping(source = "userID", target = "user.id") //can set thu cong o service
     @Mapping(source = "propertyID", target = "property.id")
+    @Mapping(source = "adminFee", target = "adminFee")
+    @Mapping(source = "ownerEarning", target = "ownerEarning")
     Booking toEntity(BookingDTO dto);
 
 }

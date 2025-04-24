@@ -16,6 +16,7 @@ public class PropertyDTO {
     private String location;
     private BigDecimal price;
     private String image;
+    private String[] roomImages;
     private String description;
     private PropertyStatus status;
     private Long owner_id;

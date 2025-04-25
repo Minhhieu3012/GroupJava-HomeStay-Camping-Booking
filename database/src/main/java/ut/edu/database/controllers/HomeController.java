@@ -62,10 +62,10 @@ public class HomeController {
                         .orElse(0.0)
         );
 
-        model.addAttribute("Báo cáo hàng tháng", monthlyReports); // Gửi sang Thymeleaf
-        model.addAttribute("Tổng doanh thu", totalRevenue);
-        model.addAttribute("Phí quản lý", managementFee);
-        model.addAttribute("Tỉ lệ lấp đầy", occupancyRate);
+        model.addAttribute("monthlyReports", monthlyReports); // Gửi sang Thymeleaf
+        model.addAttribute("totalRevenue", totalRevenue);
+        model.addAttribute("managementFee", managementFee);
+        model.addAttribute("occupancyRate", occupancyRate);
 
         return "bookingHomeCamping-admin/BaoCaoDoanhThu";//goi den html page
     }

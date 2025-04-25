@@ -68,7 +68,9 @@ public class ReportController {
         return ResponseEntity.noContent().build(); //tra ve loi 204 no content khi xoa thanh cong
     }
 
+    //lấy doanh thu theo tháng
     @GetMapping("/revenue/monthly")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<MonthlyRevenueDTO>> getMonthlyRevenue(
         @RequestParam int year,
         @RequestParam boolean forAdmin,

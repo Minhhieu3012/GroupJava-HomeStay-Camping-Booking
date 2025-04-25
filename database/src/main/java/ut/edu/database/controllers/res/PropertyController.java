@@ -34,7 +34,7 @@ public class PropertyController {
     private final UserService userService;
     private final UserRepository userRepository;
 
-
+    //tải hình ảnh property
     @PostMapping("/upload-img/{propertyId}")
     @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<String> uploadImg(@PathVariable Long propertyId, @RequestParam("file") MultipartFile file) {
@@ -61,6 +61,7 @@ public class PropertyController {
                     .body("Tải lên thất bại :((: "+e.getMessage());
         }
     }
+
     //GET: lay tat ca bat dong san
     @GetMapping
     public ResponseEntity<List<PropertyDTO>> getAllProperties() {

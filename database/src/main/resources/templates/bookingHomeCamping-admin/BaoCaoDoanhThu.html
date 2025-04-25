@@ -57,6 +57,7 @@
                     <div class="col-md-6 mb-4">
                         <canvas id="feeChart"></canvas>
                     </div>
+                    <canvas id="monthlyRevenueChart" width="800" height="400"></canvas>
                 </div>
 
                 <!-- Bảng chi tiết -->
@@ -86,11 +87,9 @@
 
 </div>
 <script th:inline="javascript">
-
-    // Dữ liệu mẫu, thay bằng dữ liệu backend trả về qua JS
-    const months = /*\[[${months}]]*/ ["Tháng 1", "Tháng 2"];
-    const revenues = /*[[${revenues}]]*/ [1000000, 2000000];
-    const fees = revenues.map(r => r * 0.2);
+    const months = [[${months}]];
+    const revenues = [[${revenues}]];
+    const fees = [[${fees}]];
 
     const revenueCtx = document.getElementById('revenueChart').getContext('2d');
     new Chart(revenueCtx, {
@@ -100,7 +99,7 @@
             datasets: [{
                 label: 'Tổng doanh thu',
                 data: revenues,
-                backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                backgroundColor: 'rgba(75, 192, 192, 0.7)'
             }]
         },
         options: {
@@ -111,52 +110,20 @@
         }
     });
 
-    // const feeCtx = document.getElementById('feeChart').getContext('2d');
-    // new Chart(feeCtx, {
-    //     type: 'doughnut',
-    //     data: {
-    //         labels: ['Phí quản lý', 'Doanh thu còn lại'],
-    //         datasets: [{
-    //             data: [fees.reduce((a, b) => a + b, 0), revenues.reduce((a, b) => a + b, 0) * 0.8],
-    //             backgroundColor: ['#ff6384', '#36a2eb']
-    //         }]
-    //     }
-    // });
-    // const totalRevenue = /*[[${totalRevenue}]]*/ 1200.50;
-    // const managementFee = /*[[${managementFee}]]*/ 240.10;
-    // const occupancyRate = /*[[${occupancyRate}]]*/ 0.48;
-    // const feeCtx = document.getElementById('feeChart').getContext('2d');
-    //
-    // new Chart(feeCtx, {
-    //     type: 'doughnut',
-    //     data: {
-    //         labels: ['Phí quản lý (20%)', 'Doanh thu còn lại', 'Tỷ lệ lấp đầy'],
-    //         datasets: [{
-    //             data: [
-    //                 managementFee,
-    //                 totalRevenue - managementFee,
-    //                 occupancyRate * totalRevenue  // Quy đổi occupancyRate thành số tiền để biểu diễn
-    //             ],
-    //             backgroundColor: ['#ff6384', '#36a2eb', '#ffce56']
-    //         }]
-    //     },
-    //     options: {
-    //         plugins: {
-    //             tooltip: {
-    //                 callbacks: {
-    //                     label: function(context) {
-    //                         const label = context.label || '';
-    //                         const value = context.raw.toLocaleString("vi-VN", { maximumFractionDigits: 2 });
-    //                         return `${label}: ${value} VND`;
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    // });
-
-
-
+    const feeCtx = document.getElementById('feeChart').getContext('2d');
+    new Chart(feeCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Phí quản lý', 'Phần còn lại'],
+            datasets: [{
+                data: [
+                    fees.reduce((a, b) => a + b, 0),
+                    revenues.reduce((a, b) => a + b, 0) * 0.8
+                ],
+                backgroundColor: ['#ff6384', '#36a2eb']
+            }]
+        }
+    });
 </script>
 <!-- Đặt script ở cuối file trước khi đóng </body> -->
 <script>
@@ -193,6 +160,44 @@
         });
     });
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Gọi API lấy dữ liệu doanh thu theo tháng
+        fetch('/revenue/monthly?year=2025&forAdmin=true') // đổi lại forAdmin=false và thêm usernameOrEmail nếu là chủ homestay
+            .then(response => response.json())
+            .then(data => {
+                const labels = data.map(item => item.month + '/' + item.year);
+                const revenues = data.map(item => item.totalRevenue);
+
+                const ctx = document.getElementById('monthlyRevenueChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Tổng doanh thu',
+                            data: revenues,
+                            backgroundColor: '#36a2eb',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'VND'
+                                }
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Lỗi khi lấy dữ liệu:', error));
+    });
+</script>
+
 
 </body>
 

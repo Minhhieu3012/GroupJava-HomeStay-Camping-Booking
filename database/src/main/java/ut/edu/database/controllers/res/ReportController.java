@@ -34,7 +34,7 @@ public class ReportController {
     //ADMIN: lay bao cao theo ID
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ReportDTO> getById(@PathVariable Long id){
+    public ResponseEntity<ReportDTO> getById(@PathVariable Long id) {
         return reportService.getReportById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -67,7 +67,6 @@ public class ReportController {
         reportService.deleteReport(id);
         return ResponseEntity.noContent().build(); //tra ve loi 204 no content khi xoa thanh cong
     }
-
     @GetMapping("/revenue/monthly")
     public ResponseEntity<List<MonthlyRevenueDTO>> getMonthlyRevenue(
         @RequestParam int year,

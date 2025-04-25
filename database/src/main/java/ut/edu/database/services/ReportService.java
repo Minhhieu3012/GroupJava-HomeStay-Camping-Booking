@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 
+import ut.edu.database.dtos.MonthlyRevenueDTO;
 import ut.edu.database.dtos.ReportDTO;
 import ut.edu.database.mapper.ReportMapper;
 import ut.edu.database.enums.ReportStatus;
@@ -104,5 +105,12 @@ public class ReportService {
     // Xóa báo cáo theo ID
     public void deleteReport(Long id) {
         reportRepository.deleteById(id);
+    }
+
+    public List<MonthlyRevenueDTO> getMonthlyRevenue(int year, Long ownerId, boolean forAdmin) {
+        List<Object[]> rows = bookingRepository.getMonthlyRevenue(year, ownerId, forAdmin);
+        return rows.stream()
+                .map(r->new MonthlyRevenueDTO((Integer) r[0], (BigDecimal) r[1]))
+                .collect(Collectors.toList());
     }
 }

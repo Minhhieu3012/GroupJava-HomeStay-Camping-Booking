@@ -7,9 +7,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import ut.edu.database.dtos.MonthlyRevenueDTO;
 import ut.edu.database.dtos.ReportDTO;
 import ut.edu.database.enums.ReportStatus;
 import ut.edu.database.services.ReportService;
+import ut.edu.database.services.UserService;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.List;
 public class ReportController {
 
     private final ReportService reportService;
+    private final UserService userService;
 
     //ADMIN: lay tat ca bao cao
     @GetMapping
@@ -63,5 +66,18 @@ public class ReportController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         reportService.deleteReport(id);
         return ResponseEntity.noContent().build(); //tra ve loi 204 no content khi xoa thanh cong
+    }
+
+    @GetMapping("/revenue/monthly")
+    public ResponseEntity<List<MonthlyRevenueDTO>> getMonthlyRevenue(
+        @RequestParam int year,
+        @RequestParam boolean forAdmin,
+        @RequestParam(required = false) String usernameOrEmail){
+
+        Long ownerId = null;
+        if(!forAdmin && usernameOrEmail != null){
+            ownerId = userService.getUserIdByUsername(usernameOrEmail);
+        }
+        return ResponseEntity.ok(reportService.getMonthlyRevenue(year, ownerId, forAdmin));
     }
 }

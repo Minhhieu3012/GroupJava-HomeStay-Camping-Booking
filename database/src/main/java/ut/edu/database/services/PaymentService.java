@@ -31,29 +31,29 @@ public class PaymentService {
                 payment.getAdminFee(),
                 payment.getHostAmount(),
                 payment.getPaymentStatus(),
-                payment.getPaymentDate()
+                payment.getPaymentDate(),
+                payment.getPaymentMethod()
         );
     }
 
-    // DTO -> Entity
+    // DTO → ENTITY
     private Payment toEntity(PaymentDTO dto) {
-        Payment payment = new Payment();
-        payment.setId(dto.getId());
-
         Booking booking = bookingRepository.findById(dto.getBookingId())
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy Booking :(("));
-        payment.setBooking(booking);
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy Booking với id: " + dto.getBookingId()));
 
-        payment.setTotalAmount(dto.getTotalAmount());
-        payment.setAdminFee(dto.getAdminFee());
-        payment.setHostAmount(dto.getHostAmount());
-        payment.setPaymentStatus(dto.getPaymentStatus());
-        payment.setPaymentDate(dto.getPaymentDate());
+        Payment payment = new Payment();
+        payment.setBooking(booking);
+        payment.setTotalAmount(booking.getTotalPrice()); // Gốc từ booking
+        payment.setAdminFee(booking.getAdminFee());
+        payment.setHostAmount(booking.getOwnerEarning());
+        payment.setPaymentMethod(dto.getPaymentMethod()); // Lấy từ fe
+        payment.setPaymentStatus(PaymentStatus.PAID);
+        payment.setPaymentDate(LocalDateTime.now());
 
         return payment;
     }
 
-
+    //tao payment moi
     public PaymentDTO createPayment(PaymentDTO dto) {
         Payment payment = toEntity(dto);
         payment.setPaymentStatus(PaymentStatus.PAID);
@@ -61,18 +61,21 @@ public class PaymentService {
         return toDTO(paymentRepository.save(payment));
     }
 
+    //xem tat ca payment (Admin)
     public List<PaymentDTO> getAllPayments() {
         return paymentRepository.findAll().stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
     }
 
+    //lay theo id
     public PaymentDTO getPaymentById(Long id) {
         return paymentRepository.findById(id)
                 .map(this::toDTO)
-                .orElse(null);
+                .orElseThrow(()->new RuntimeException("Không tìm thây Payment với id: " + id + ":(("));
     }
 
+    //lay theo booking id (OWNER)
     public List<PaymentDTO> getPaymentsByBookingId(Long bookingId) {
         return paymentRepository.findByBookingId(bookingId)
                 .stream()

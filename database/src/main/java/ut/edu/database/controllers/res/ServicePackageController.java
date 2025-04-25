@@ -15,12 +15,14 @@ import java.util.List;
 public class ServicePackageController {
     private final ServicePackageService servicePackageService;
 
-    @PostMapping
+    //tạo mới gói dịch vụ
+    @PostMapping("/create")
     @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<ServicePackageDTO> create(@RequestBody ServicePackageDTO dto) {
         return ResponseEntity.ok(servicePackageService.create(dto));
     }
 
+    //lấy ds tất cả các gói dịch vụ thuộc về 1 property cụ thể
     @GetMapping("/property/{propertyId}")
     @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
     public ResponseEntity<List<ServicePackageDTO>> getByProperty(@PathVariable Long propertyId) {

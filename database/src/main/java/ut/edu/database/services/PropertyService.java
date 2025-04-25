@@ -63,13 +63,13 @@ public class PropertyService {
     public PropertyDTO createPropertyDTO(PropertyDTO dto, User userDetail) {
         //Kiểm tra owner tồn tại
         User owner = userRepository.findByUsername(userDetail.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy chủ sở hữu với ID: " + dto.getOwner_id()));
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy chủ sở hữu với id: " + dto.getOwner_id()));
 
         Property property = propertyMapper.toEntity(dto);
         property.setOwner(owner);
         property.setStatus(PropertyStatus.AVAILABLE); //trang thai mac dinh
         if (property.getName() == null || property.getLocation() == null || property.getPrice() == null || property.getImage() == null || property.getDescription() == null) {
-            throw new IllegalArgumentException("Property and its required fields cannot be null");
+            throw new IllegalArgumentException("Thuộc tính và các trường bắt buộc của nó không thể là null -.-");
         }
         Property saved = propertyRepository.save(property);
         return propertyMapper.toDTO(saved);
@@ -99,7 +99,7 @@ public class PropertyService {
                     .map(propertyMapper::toDTO)
                     .collect(Collectors.toList());
         }catch (IllegalArgumentException e){
-            throw new IllegalArgumentException("Invalid status: "+status);
+            throw new IllegalArgumentException("Trạng thái không hợp lệ: "+status);
         }
     }
 

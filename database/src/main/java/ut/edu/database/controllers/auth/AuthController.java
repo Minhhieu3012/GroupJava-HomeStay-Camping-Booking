@@ -11,11 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import ut.edu.database.dtos.RegisterRequest;
 
-
-//GET	http://localhost:8080/auth/register-user (Trả về giao diện đăng ký, truy cập bằng trình duyệt)
-//GET	http://localhost:8080/auth/login-user	(Trả về giao diện login, truy cập bằng trình duyệt)
-//POST	http://localhost:8080/auth/register-user	(Gửi form đăng ký, HTML form submit (Not Postman)
-
 @Controller//MVC - tra ve giao dien HTML ko phai JSON
               //dung cho giao dien dang: login.html, register.html,...
               //khong dung voi postman

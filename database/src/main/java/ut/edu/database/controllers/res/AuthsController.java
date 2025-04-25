@@ -70,7 +70,7 @@ public class AuthsController {
             // Trả về đầy đủ token, username, role
             return ResponseEntity.ok(new AuthResponse(token, userDetails.getUsername(), role));
         } catch (AuthenticationException e) { //loi 401
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Sai thông tin đăng nhập");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Sai thông tin đăng nhập :((");
         }
     }
 
@@ -97,7 +97,7 @@ public class AuthsController {
             User user = userRepository.findByUsername(username)
                     .orElseThrow(() -> new ResponseStatusException(
                             HttpStatus.NOT_FOUND,
-                            "User not found with username: " + username
+                            "Không tìm thấy username: " + username
                     ));
 
             //Tra ve du lieu
@@ -110,7 +110,7 @@ public class AuthsController {
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Error retrieving user profile");
+            return ResponseEntity.internalServerError().body("Lỗi khi truy xuất hồ sơ người dùng :((");
         }
     }
 

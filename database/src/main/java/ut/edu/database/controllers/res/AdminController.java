@@ -12,6 +12,8 @@ import ut.edu.database.services.*;
 import ut.edu.database.jwt.JwtUtil;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -61,12 +63,37 @@ public class AdminController {
     // Danh sách role + quyền (hiển thị phân quyền hệ thống)
     @GetMapping("/roles")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> getRolesInfo() {
-        Map<String, String[]> roles = new HashMap<>();
-        roles.put("ADMIN", new String[]{"Quản lý toàn bộ hệ thống", "Xem + Xóa dữ liệu"});
-        roles.put("OWNER", new String[]{"Tạo/Cập nhật homestay", "Xem booking của mình"});
-        roles.put("CUSTOMER", new String[]{"Đặt phòng", "Gửi đánh giá", "Hủy booking của mình"});
+    public ResponseEntity<Map<String, List<String>>> getRolesInfo() {
+        Map<String, List<String>> roles = new LinkedHashMap<>();
+
+        roles.put("ADMIN", List.of(
+                "Quản lý toàn bộ hệ thống",
+                "Phân quyền người dùng",
+                "Xem, tạo, chỉnh sửa, xóa tất cả dữ liệu",
+                "Xem báo cáo doanh thu toàn hệ thống",
+                "Quản lý tài khoản OWNER và CUSTOMER",
+                "Duyệt báo cáo và phản hồi người dùng"
+        ));
+
+        roles.put("OWNER", List.of(
+                "Tạo/Cập nhật thông tin homestay hoặc khu cắm trại",
+                "Quản lý danh sách phòng (thêm/sửa/xem)",
+                "Tải ảnh và thông tin mô tả phòng",
+                "Xem đơn đặt phòng dành cho homestay của mình",
+                "Xem báo cáo doanh thu riêng của homestay",
+                "Phản hồi đánh giá từ khách hàng"
+        ));
+
+        roles.put("CUSTOMER", List.of(
+                "Tìm kiếm và đặt phòng (homestay hoặc camping)",
+                "Chọn dịch vụ bổ sung (combo ăn uống...)",
+                "Thanh toán và xem lịch sử đơn hàng",
+                "Gửi đánh giá sau khi sử dụng dịch vụ",
+                "Hủy đơn đặt phòng nếu cần",
+                "Quản lý thông tin cá nhân và avatar"
+        ));
 
         return ResponseEntity.ok(roles);
     }
+
 }

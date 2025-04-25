@@ -67,7 +67,7 @@ public class ReportService {
     // Tạo báo cáo theo property va khoang thoi gian
     public ReportDTO createReport(Long propertyId, LocalDate startDate, LocalDate endDate) {
         Property property = propertyRepository.findById(propertyId)
-                .orElseThrow(() -> new RuntimeException("Property not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy Property :(("));
         List<Booking> bookings = bookingRepository.findByPropertyId(propertyId).stream()
                 .filter(b -> !b.getStartDate().isAfter(endDate) && !b.getEndDate().isBefore(startDate))
                 .toList();

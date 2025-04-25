@@ -33,7 +33,7 @@ public class AuthService {
     public ResponseEntity<String> register(RegisterRequest registerRequest) {
         //kiem tra email da ton tai chua
         if(userRepository.existsByEmail(registerRequest.getEmail())){
-            return ResponseEntity.badRequest().body("Email Already Exist");
+            return ResponseEntity.badRequest().body("Email đã tồn tại!!!");
         }
 
         //dung builder pattern de tao moi user
@@ -46,17 +46,17 @@ public class AuthService {
 
         //luu user vao db
         userRepository.save(user);
-        return ResponseEntity.ok("Successfully registered");
+        return ResponseEntity.ok("Bạn đã đăng ký thành công :D");
     }
 
     //Login User va tra ve JWT token
     public ResponseEntity<AuthResponse> login(LoginRequest loginRequest) {
         User user = userRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new RuntimeException("Email not exist!!!"));
+                .orElseThrow(() -> new RuntimeException("Email không tồn tại!!!"));
 
         //kiem tra mk
         if(!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())){
-            return ResponseEntity.badRequest().body(new AuthResponse("Incorrect Password"));
+            return ResponseEntity.badRequest().body(new AuthResponse("Sai mật khẩu!!!"));
         }
 
         // Tạo JWT token bằng JwtUtil

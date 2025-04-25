@@ -62,29 +62,34 @@ public class HomeController {
                         .orElse(0.0)
         );
 
-        model.addAttribute("monthlyReports", monthlyReports); // Gửi sang Thymeleaf
-        model.addAttribute("totalRevenue", totalRevenue);
-        model.addAttribute("managementFee", managementFee);
-        model.addAttribute("occupancyRate", occupancyRate);
+        model.addAttribute("Báo cáo hàng tháng", monthlyReports); // Gửi sang Thymeleaf
+        model.addAttribute("Tổng doanh thu", totalRevenue);
+        model.addAttribute("Phí quản lý", managementFee);
+        model.addAttribute("Tỉ lệ lấp đầy", occupancyRate);
 
         return "bookingHomeCamping-admin/BaoCaoDoanhThu";//goi den html page
     }
+
     @GetMapping("/quan-li-phi-dich-vu")
     public String quanliphidichvuPage() {
         return "bookingHomeCamping-admin/QuanLiPhiDichVu";//goi den html page
     }
+
     @GetMapping("/quan-li-tk-host")
     public String quanlitkchuhomestayPage() {
         return "bookingHomeCamping-admin/QuanLiTKChuHomestay";//goi den html page
     }
+
     @GetMapping("/quan-li-tk-user")
     public String quanlitknguoidungPage() {
         return "bookingHomeCamping-admin/QuanLiTKNguoiDung";//goi den html page
     }
+
     @GetMapping("/them-phong")
     public String themphongPage() {
         return "bookingHomeCamping-admin/ThemPhong";//goi den html page
     }
+
     @GetMapping("/xem-phong")
     public String xemphongPage() {
         return "bookingHomeCamping-admin/XemPhong";//goi den html page

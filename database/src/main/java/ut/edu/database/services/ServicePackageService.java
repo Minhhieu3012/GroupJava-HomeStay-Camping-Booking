@@ -20,7 +20,7 @@ public class ServicePackageService {
 
     public ServicePackageDTO create(ServicePackageDTO dto) {
         Property property = propertyRepository.findById(dto.getPropertyId())
-                .orElseThrow(() -> new RuntimeException("Property not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy Property :(("));
         ServicePackage sp = new ServicePackage();
         sp.setName(dto.getName());
         sp.setDescription(dto.getDescription());

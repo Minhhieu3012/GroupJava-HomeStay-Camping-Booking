@@ -45,7 +45,7 @@ public class BookingController {
     @PreAuthorize("hasAnyRole('CUSTOMER','ADMIN')")
     public ResponseEntity<BookingDTO> getBookingById(@PathVariable Long id, @AuthenticationPrincipal UserDetails user) {
         BookingDTO booking = bookingService.getBookingDTOById(id)
-                .orElseThrow(() -> new RuntimeException("Booking not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy Booking :(("));
         boolean isOwner = booking.getUserID().equals(user.getUsername());
         boolean isCustomer = user.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_CUSTOMER"));
         boolean isAdmin = user.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
@@ -74,12 +74,12 @@ public class BookingController {
         try {
             // Lấy booking cũ dưới dạng DTO
             BookingDTO existingDTO = bookingService.getBookingDTOById(id)
-                    .orElseThrow(() -> new RuntimeException("Booking not found"));
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy Booking :(("));
 
             // Get current user from database
             User currentUser = userService.findByUsername(user.getUsername())
                     .orElseGet(() -> userService.findByEmail(user.getUsername())
-                            .orElseThrow(() -> new RuntimeException("User not found")));
+                            .orElseThrow(() -> new RuntimeException("Không tìm thấy User :((")));
 
             // Compare user IDs for authorization
             if (!existingDTO.getUserID().equals(currentUser.getId())) {
@@ -105,7 +105,7 @@ public class BookingController {
     @PreAuthorize("hasAnyRole('CUSTOMER','ADMIN','OWNER')")
     public ResponseEntity<Void> deleteBooking(@PathVariable Long id, @AuthenticationPrincipal UserDetails user) {
         BookingDTO booking = bookingService.getBookingDTOById(id)
-                .orElseThrow(() -> new RuntimeException("Booking not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy Booking :(("));
 
         boolean isCustomer = user.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_CUSTOMER"));
         boolean isOwner = booking.getUserID().equals(bookingService.getUserIdByEmail(user.getUsername()));

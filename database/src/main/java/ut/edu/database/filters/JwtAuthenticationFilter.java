@@ -61,7 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     }
             } catch (Exception e) {
                 // Không cho lỗi JWT làm crash hệ thống
-                logger.warn("JWT token error: {}"+e.getMessage());
+                logger.warn("Lỗi JWT token: {}"+e.getMessage());
             }
         }
         chain.doFilter(request, response); // Continue the filter chain

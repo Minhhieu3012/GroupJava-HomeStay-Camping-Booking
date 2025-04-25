@@ -41,7 +41,7 @@ public class PaymentService {
         payment.setId(dto.getId());
 
         Booking booking = bookingRepository.findById(dto.getBookingId())
-                .orElseThrow(() -> new RuntimeException("Booking not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy Booking :(("));
         payment.setBooking(booking);
 
         payment.setTotalAmount(dto.getTotalAmount());

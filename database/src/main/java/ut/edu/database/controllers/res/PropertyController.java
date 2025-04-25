@@ -40,7 +40,7 @@ public class PropertyController {
     public ResponseEntity<String> uploadImg(@PathVariable Long propertyId, @RequestParam("file") MultipartFile file) {
         try{
             Property property = propertyService.getPropertyById(propertyId)
-                    .orElseThrow(() -> new RuntimeException("Property not found"));
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy Property!!!"));
             //1 tao ten file duy nhat
             String filename = UUID.randomUUID()+"_"+file.getOriginalFilename();
 
@@ -54,11 +54,11 @@ public class PropertyController {
             property.setImage(imageUrl);
             propertyService.save(property); //co the goi lai repo.save()
 
-            return ResponseEntity.ok("Upload thanh cong! URL: "+imageUrl);
+            return ResponseEntity.ok("Tải lên thành công! URL: "+imageUrl);
         }catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Upload that bai: "+e.getMessage());
+                    .body("Tải lên thất bại :((: "+e.getMessage());
         }
     }
     //GET: lay tat ca bat dong san
@@ -80,7 +80,7 @@ public class PropertyController {
     @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<PropertyDTO> createProperty(@RequestBody PropertyDTO dto, @AuthenticationPrincipal UserDetails userDetails) {
         User owner = userRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy User :(("));
         return ResponseEntity.ok(propertyService.createPropertyDTO(dto, owner));
     }
 
@@ -93,7 +93,7 @@ public class PropertyController {
                     .body(null); // Or create a custom error DTO
         }
         PropertyDTO existing = propertyService.getPropertyDTOById(id)
-                .orElseThrow(() -> new RuntimeException("Property not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy Property :(("));
 
         Long currentUserId = userService.getUserIdByUsername(user.getUsername());
         if (!existing.getOwner_id().equals(currentUserId)) {
@@ -131,7 +131,7 @@ public class PropertyController {
     @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<List<PropertyDTO>> getMyProperties(@AuthenticationPrincipal UserDetails userDetails) {
         User user = userRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("Khong tim thay user"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy User :(("));
 
         return ResponseEntity.ok(propertyService.getPropertiesByOwnerEmail(user.getEmail()));
     }

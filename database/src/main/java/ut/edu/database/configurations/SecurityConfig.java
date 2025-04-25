@@ -28,9 +28,7 @@ public class SecurityConfig {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
-    //AuthenticationManager - xac thuc tai khoan login
-    //AuthenticationConfiguration - Spring tu cau hinh manager dung UserDetailService
-    // xu li phan login trong /auth/login
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();

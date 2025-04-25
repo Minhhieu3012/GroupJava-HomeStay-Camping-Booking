@@ -51,7 +51,7 @@ public class BookingService {
         
         // If not found by username, try by email
         return userService.findByEmail(usernameOrEmail)
-                .orElseThrow(() -> new RuntimeException("User not found with username or email: " + usernameOrEmail))
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy User với tên hoặc email là: " + usernameOrEmail))
                 .getId();
     }
 
@@ -69,24 +69,24 @@ public class BookingService {
                     .map(bookingMapper::toDTO)
                     .collect(Collectors.toList());
         } catch(IllegalArgumentException e) {
-            throw new RuntimeException("Invalid status: " +status);
+            throw new RuntimeException("Trạng thái không hợp lệ :((: " +status);
         }
     }
 
     // Tạo booking mới
     public Booking createBookingDTO(BookingDTO dto) {
         if (dto == null) {
-            throw new IllegalArgumentException("BookingDTO is null");
+            throw new IllegalArgumentException("BookingDTO không có hiệu lực :((");
         }
         if (dto.getStartDate().isAfter(dto.getEndDate())) {
-            throw new IllegalArgumentException("Start date must be before end date");
+            throw new IllegalArgumentException("Ngày bắt đầu phải trước ngày kết thúc -.-");
         }
         Booking booking = bookingMapper.toEntity(dto);
 
         User user = userService.getUserById(dto.getUserID())
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserID()));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy User với id: " + dto.getUserID()));
         Property property = propertyService.getPropertyById(dto.getPropertyID())
-                .orElseThrow(() -> new RuntimeException("Property not found with ID: " + dto.getPropertyID()));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy Property với id: " + dto.getPropertyID()));
 
         booking.setUser(user);
         booking.setProperty(property);
@@ -95,7 +95,7 @@ public class BookingService {
         if(dto.getServicePackageIds() != null & !dto.getServicePackageIds().isEmpty()) {
             List<ServicePackage> packages = dto.getServicePackageIds().stream()
                     .map(id->servicePackageRepository.findById(id)
-                    .orElseThrow(()->new RuntimeException("ServicePackage not found: "+id)))
+                    .orElseThrow(()->new RuntimeException("Không tìm thấy ServicePackage: "+id)))
                     .toList();
             booking.setServicePackages(packages);
         }
@@ -124,7 +124,7 @@ public class BookingService {
     //update booking theo id
     public Booking updateBooking(Long id, Booking updatedBooking) {
         Booking existingBooking = bookingRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Booking not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy Booking với id: " + id));
             // Cập nhật tất cả các thông tin có thể sửa đổi
             existingBooking.setStatus(updatedBooking.getStatus());
             existingBooking.setStartDate(updatedBooking.getStartDate());

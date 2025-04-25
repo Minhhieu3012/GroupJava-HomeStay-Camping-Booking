@@ -54,14 +54,17 @@ public class UserService implements UserDetailsService {
     public Long getUserIdByUsername(String username) {
         User user = userRepository.findByUsername(username)
         .orElseGet(() -> userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + username + "!")));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy User: " + username + ":((")));
         return user.getId();
     }
 
     // Đăng ký (đã dùng ở AuthController)
     public String registerUser(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            return "Email đã tồn tại!";
+            return "Email đã tồn tại :((";
+        }
+        if (userRepository.existsByUsername(request.getUsername())) {
+            return "Username đã tồn tại :((";
         }
 
         User user = new User();
@@ -77,7 +80,7 @@ public class UserService implements UserDetailsService {
     //cap nhat user
     public UserDTO updateUser(Long id, UserDTO dto) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy User với id là: " + id));
 
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
@@ -96,7 +99,7 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy User :(("));
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),

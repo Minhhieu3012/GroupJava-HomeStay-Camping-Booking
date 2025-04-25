@@ -67,9 +67,9 @@ public class ReviewService {
     // Tạo đánh giá mới
     public ReviewDTO createReview(ReviewDTO dto) {
         User user = userRepository.findById(dto.getUserID())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy User :(("));
         Property property = propertyRepository.findById(dto.getPropertyID())
-                .orElseThrow(() -> new IllegalArgumentException("Property not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy Property :(("));
 
 
         //set lai thong tin de dam bao dung

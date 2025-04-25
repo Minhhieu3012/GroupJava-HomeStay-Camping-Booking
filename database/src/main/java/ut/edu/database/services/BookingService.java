@@ -156,4 +156,11 @@ public class BookingService {
                 .toList();
     }
 
+    public boolean isOwnerOfBooking(Long propertyId, String usernameOrEmail) {
+        Long ownerId = userService.getUserIdByUsername(usernameOrEmail);
+        return propertyService.getPropertyById(propertyId)
+                .map(property -> property.getOwner().getId().equals(ownerId))
+                .orElse(false);
+    }
+
 }

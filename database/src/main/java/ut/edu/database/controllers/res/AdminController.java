@@ -30,7 +30,7 @@ public class AdminController {
 
     // Xem profile admin
     @GetMapping("/profile")
-    @PreAuthorize("hasRole('ADMIN')") //chi co nguoi dung co role admin moi goi duoc
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getProfile(@AuthenticationPrincipal UserDetails user, HttpServletRequest request) {
         //lay token tu header
         String token = request.getHeader("Authorization").substring(7);

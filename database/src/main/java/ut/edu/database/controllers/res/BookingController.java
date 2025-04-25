@@ -31,7 +31,7 @@ public class BookingController {
     private final BookingMapper bookingMapper;
     private final UserService userService;
 
-    //GET: lay tat ca dat cho
+
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     //tra ve List<BookingDTO> chu khong phai entity
@@ -106,10 +106,19 @@ public class BookingController {
     public ResponseEntity<Void> deleteBooking(@PathVariable Long id, @AuthenticationPrincipal UserDetails user) {
         BookingDTO booking = bookingService.getBookingDTOById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy Booking :(("));
+        //dk: luon co quyen
+        boolean isAdmin = user.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 
-        boolean isCustomer = user.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_CUSTOMER"));
-        boolean isOwner = booking.getUserID().equals(bookingService.getUserIdByEmail(user.getUsername()));
-        boolean isAdmin = user.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        //dk: la nguoi dat phong do
+        boolean isCustomer = user.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_CUSTOMER")) &&
+                booking.getUserID().equals(bookingService.getUserIdByEmail(user.getUsername()));
+
+        //dk: la chu cua Property duoc booking
+        boolean isOwner = user.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_OWNER")) &&
+                bookingService.isOwnerOfBooking(booking.getPropertyID(), user.getUsername());
 
         if (!isOwner && !isAdmin && !isCustomer) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -119,12 +128,14 @@ public class BookingController {
         return ResponseEntity.noContent().build();
     }
 
+    //xem ds booking các property mà chủ sở hữu
     @GetMapping("/owner")
     @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<List<BookingDTO>> getBookingsForOwner(@AuthenticationPrincipal UserDetails user) {
         return ResponseEntity.ok(bookingService.getBookingsForOwnerProperty(user.getUsername()));
     }
 
+    //xem ds booking theo trạng thái cụ thể
     @GetMapping("/status/{status}")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<List<BookingDTO>> getBookingsByStatus(@PathVariable String status) {

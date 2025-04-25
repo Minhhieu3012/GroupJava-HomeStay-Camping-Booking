@@ -18,7 +18,7 @@ public class PaymentController {
 
     //tao payment
     @PostMapping("/create")
-    @PreAuthorize("hasAnyRole('CUSTOMER','OWNER')")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public PaymentDTO createPayment(@RequestBody PaymentDTO dto) {
         return paymentService.createPayment(dto);
     }
@@ -32,7 +32,7 @@ public class PaymentController {
 
     //lay payment theo id
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER','OWNER')")
+    @PreAuthorize("hasAnyRole('ADMIN','OWNER')")
     public PaymentDTO getById(@PathVariable Long id) {
         return paymentService.getPaymentById(id);
     }

@@ -1,10 +1,19 @@
-package ut.edu.database.controllers;
 //Thường để xử lí route gốc hoặc tài nguyên public (/api/home, /api)
+package ut.edu.database.controllers;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import ut.edu.database.services.ReportService;
+import ut.edu.database.dtos.ReportDTO;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Objects;
 
 @Controller
+@RequiredArgsConstructor
 public class HomeController {
     @GetMapping("/layout")
     public String layoutPage() {
@@ -26,8 +35,38 @@ public class HomeController {
         return "home";//goi den html page
     }
 
+
+    private final ReportService ReportService;
     @GetMapping("/bao-cao-doanh-thu")
-    public String baocaodoanhthuPage() {
+
+    public String baocaodoanhthuPage(Model model) {
+        List<ReportDTO> monthlyReports = ReportService.getAllReports(); // Lấy danh sách báo cáo
+        BigDecimal totalRevenue = monthlyReports.stream()
+                .map(ReportDTO::getTotalRevenue)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        // Tính tổng phí quản lý
+        BigDecimal managementFee = monthlyReports.stream()
+                .map(ReportDTO::getManagementFee)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        // Tính tỷ lệ lấp đầy trung bình
+        BigDecimal occupancyRate = BigDecimal.valueOf(
+                monthlyReports.stream()
+                        .map(ReportDTO::getOccupancyRate)
+                        .filter(Objects::nonNull)
+                        .mapToDouble(BigDecimal::doubleValue)
+                        .average()
+                        .orElse(0.0)
+        );
+
+        model.addAttribute("monthlyReports", monthlyReports); // Gửi sang Thymeleaf
+        model.addAttribute("totalRevenue", totalRevenue);
+        model.addAttribute("managementFee", managementFee);
+        model.addAttribute("occupancyRate", occupancyRate);
+
         return "bookingHomeCamping-admin/BaoCaoDoanhThu";//goi den html page
     }
     @GetMapping("/quan-li-phi-dich-vu")

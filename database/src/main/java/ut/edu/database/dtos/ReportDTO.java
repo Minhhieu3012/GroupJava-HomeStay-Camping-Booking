@@ -21,5 +21,7 @@ public class ReportDTO {
     private LocalDate startDate;
     private LocalDate endDate;
     private ReportStatus status;
-
+    public String getMonth() {
+        return reportDate != null ? String.valueOf(reportDate.getMonthValue()) : "";
+    }
 }

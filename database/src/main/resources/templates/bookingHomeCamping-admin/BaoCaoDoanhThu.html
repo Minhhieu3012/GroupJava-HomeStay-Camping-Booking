@@ -3,7 +3,8 @@
 
 <head>
     <div th:replace="master-admin/css::css"></div>
-<!--    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 
 <body>
@@ -22,15 +23,177 @@
         </div>
     </div>
     <div id="main">
-
-
         <th:block th:fragment="content">
-            <!--            NỘI DUNG CÁC TRANG ADMIN-->
-        <div class="service-fee-report container mt-5">
-            <h2 class="report-title-service-fee mb-4">BÁO CÁO DOANH THU</h2>
+            <div class="container mt-5">
+                <h2 class="mb-4">BÁO CÁO DOANH THU</h2>
+
+                <!-- Tổng quan -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card p-3 shadow">
+                            <h5>Tổng doanh thu</h5>
+                            <p class="h4 text-success" th:text="${totalRevenue} + ' VND'">0 VND</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card p-3 shadow">
+                            <h5>Phí quản lý (20%)</h5>
+                            <p class="h4 text-danger" th:text="${managementFee} + ' VND'">0 VND</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card p-3 shadow">
+                            <h5>Tỷ lệ lấp đầy</h5>
+                            <p class="h4 text-primary" th:text="${occupancyRate} + '%'">0%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Biểu đồ -->
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <canvas id="feeChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Bảng chi tiết -->
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                        <tr>
+                            <th>Tháng</th>
+                            <th>Doanh thu</th>
+                            <th>Phí quản lý</th>
+                            <th>Tỷ lệ lấp đầy</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="report : ${monthlyReports}">
+                            <td th:text="${#temporals.format(report.reportDate, 'MM/yyyy')}">Tháng 1</td>
+                            <td th:text="${report.totalRevenue}">0</td>
+                            <td th:text="${report.managementFee}">0</td>
+                            <td th:text="${report.occupancyRate}">0%</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </th:block>
     </div>
+
 </div>
+<script th:inline="javascript">
+
+    // Dữ liệu mẫu, thay bằng dữ liệu backend trả về qua JS
+    const months = /*\[[${months}]]*/ ["Tháng 1", "Tháng 2"];
+    const revenues = /*[[${revenues}]]*/ [1000000, 2000000];
+    const fees = revenues.map(r => r * 0.2);
+
+    const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+    new Chart(revenueCtx, {
+        type: 'bar',
+        data: {
+            labels: months,
+            datasets: [{
+                label: 'Tổng doanh thu',
+                data: revenues,
+                backgroundColor: 'rgba(75, 192, 192, 0.7)',
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    // const feeCtx = document.getElementById('feeChart').getContext('2d');
+    // new Chart(feeCtx, {
+    //     type: 'doughnut',
+    //     data: {
+    //         labels: ['Phí quản lý', 'Doanh thu còn lại'],
+    //         datasets: [{
+    //             data: [fees.reduce((a, b) => a + b, 0), revenues.reduce((a, b) => a + b, 0) * 0.8],
+    //             backgroundColor: ['#ff6384', '#36a2eb']
+    //         }]
+    //     }
+    // });
+    // const totalRevenue = /*[[${totalRevenue}]]*/ 1200.50;
+    // const managementFee = /*[[${managementFee}]]*/ 240.10;
+    // const occupancyRate = /*[[${occupancyRate}]]*/ 0.48;
+    // const feeCtx = document.getElementById('feeChart').getContext('2d');
+    //
+    // new Chart(feeCtx, {
+    //     type: 'doughnut',
+    //     data: {
+    //         labels: ['Phí quản lý (20%)', 'Doanh thu còn lại', 'Tỷ lệ lấp đầy'],
+    //         datasets: [{
+    //             data: [
+    //                 managementFee,
+    //                 totalRevenue - managementFee,
+    //                 occupancyRate * totalRevenue  // Quy đổi occupancyRate thành số tiền để biểu diễn
+    //             ],
+    //             backgroundColor: ['#ff6384', '#36a2eb', '#ffce56']
+    //         }]
+    //     },
+    //     options: {
+    //         plugins: {
+    //             tooltip: {
+    //                 callbacks: {
+    //                     label: function(context) {
+    //                         const label = context.label || '';
+    //                         const value = context.raw.toLocaleString("vi-VN", { maximumFractionDigits: 2 });
+    //                         return `${label}: ${value} VND`;
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    // });
+
+
+
+</script>
+<!-- Đặt script ở cuối file trước khi đóng </body> -->
+<script>
+    window.addEventListener('DOMContentLoaded', function () {
+        const totalRevenue = [[${totalRevenue}]];
+        const managementFee = [[${managementFee}]];
+        const occupancyRate = [[${occupancyRate}]];
+
+        const feeCtx = document.getElementById('feeChart').getContext('2d');
+        new Chart(feeCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Phí quản lý', 'Doanh thu còn lại', 'Tỷ lệ lấp đầy'],
+                datasets: [{
+                    data: [
+                        managementFee,
+                        totalRevenue - managementFee,
+                        occupancyRate * totalRevenue
+                    ],
+                    backgroundColor: ['#ff6384', '#36a2eb', '#ffce56']
+                }]
+            },
+            options: {
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.label}: ${context.raw.toFixed(2)} VND`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+
 </body>
 
 </html>

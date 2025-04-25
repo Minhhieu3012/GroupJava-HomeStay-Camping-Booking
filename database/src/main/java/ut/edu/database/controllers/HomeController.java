@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import ut.edu.database.dtos.MonthlyRevenueDTO;
 import ut.edu.database.services.ReportService;
 import ut.edu.database.dtos.ReportDTO;
 
@@ -41,6 +42,7 @@ public class HomeController {
 
     public String baocaodoanhthuPage(Model model) {
         List<ReportDTO> monthlyReports = ReportService.getAllReports(); // Lấy danh sách báo cáo
+        List<MonthlyRevenueDTO> monthlyRevenues = ReportService.getMonthlyRevenue(2025, null, true);
         BigDecimal totalRevenue = monthlyReports.stream()
                 .map(ReportDTO::getTotalRevenue)
                 .filter(Objects::nonNull)
@@ -66,6 +68,7 @@ public class HomeController {
         model.addAttribute("totalRevenue", totalRevenue);
         model.addAttribute("managementFee", managementFee);
         model.addAttribute("occupancyRate", occupancyRate);
+        model.addAttribute("monthlyRevenues", monthlyRevenues);
 
         return "bookingHomeCamping-admin/BaoCaoDoanhThu";//goi den html page
     }

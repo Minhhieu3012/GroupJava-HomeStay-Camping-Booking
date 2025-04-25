@@ -57,7 +57,7 @@
                     <div class="col-md-6 mb-4">
                         <canvas id="feeChart"></canvas>
                     </div>
-                    <canvas id="monthlyRevenueChart" width="800" height="400"></canvas>
+<!--                    <canvas id="monthlyRevenueChart" width="200" height="50"></canvas>-->
                 </div>
 
                 <!-- Bảng chi tiết -->
@@ -67,20 +67,36 @@
                         <tr>
                             <th>Tháng</th>
                             <th>Doanh thu</th>
-                            <th>Phí quản lý</th>
-                            <th>Tỷ lệ lấp đầy</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="report : ${monthlyReports}">
-                            <td th:text="${#temporals.format(report.reportDate, 'MM/yyyy')}">Tháng 1</td>
-                            <td th:text="${report.totalRevenue}">0</td>
-                            <td th:text="${report.managementFee}">0</td>
-                            <td th:text="${report.occupancyRate}">0%</td>
+                        <tr th:each="report : ${monthlyRevenues}">
+                            <td th:text="'0' + ${report.month} + '/2025'">04/2025</td>
+                            <td th:text="${#numbers.formatDecimal(report.totalRevenue, 0, 'COMMA', 2, 'POINT')}">0.00</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
+<!--                <div class="table-responsive">-->
+<!--                    <table class="table table-bordered">-->
+<!--                        <thead class="table-light">-->
+<!--                        <tr>-->
+<!--                            <th>Tháng</th>-->
+<!--                            <th>Doanh thu</th>-->
+<!--                            <th>Phí quản lý</th>-->
+<!--                            <th>Tỷ lệ lấp đầy</th>-->
+<!--                        </tr>-->
+<!--                        </thead>-->
+<!--                        <tbody>-->
+<!--                        <tr th:each="report : ${monthlyReports}">-->
+<!--                            <td th:text="${#temporals.format(report.reportDate, 'MM/yyyy')}">Tháng 1</td>-->
+<!--                            <td th:text="${report.totalRevenue}">0</td>-->
+<!--                            <td th:text="${report.managementFee}">0</td>-->
+<!--                            <td th:text="${report.occupancyRate}">0%</td>-->
+<!--                        </tr>-->
+<!--                        </tbody>-->
+<!--                    </table>-->
+<!--                </div>-->
             </div>
         </th:block>
     </div>

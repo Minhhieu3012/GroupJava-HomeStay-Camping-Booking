@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -44,6 +45,11 @@ public class Property {
 
     @Column(length = 500)
     private String image;
+
+    @ElementCollection
+    @CollectionTable(name = "property_room_img", joinColumns = @JoinColumn(name = "property_id"))
+    @Column(name = "img_url")
+    private List<String> roomImages = new ArrayList<>(); //anh cac phong ben trong
 
     @Column(columnDefinition = "TEXT")
     private String description;

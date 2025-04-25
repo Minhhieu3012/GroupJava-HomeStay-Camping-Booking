@@ -42,8 +42,14 @@ public class Booking {
     private List<ServicePackage> servicePackages = new ArrayList<>();
 
     @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal totalPrice;  //day la tong price ma cus phai tra cho toan bo tgian dat cho
-                                    //bao gom gia thue co ban va them cac dich vu
+    private BigDecimal totalPrice;  //tong tien khach thanh toan
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal adminFee; //20%
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal ownerEarning; //80%
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private BookingStatus status; //vd: processing, completed, canceled

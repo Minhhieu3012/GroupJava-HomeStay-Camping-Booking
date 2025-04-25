@@ -22,5 +22,7 @@ public class BookingDTO {
     private BigDecimal totalPrice;
     private BookingStatus status;
     private List<Long> servicePackageIds;
+    private BigDecimal adminFee;
+    private BigDecimal ownerEarning;
 
 }

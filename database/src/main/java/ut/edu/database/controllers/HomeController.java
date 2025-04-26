@@ -4,14 +4,18 @@ package ut.edu.database.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ut.edu.database.dtos.MonthlyRevenueDTO;
+import ut.edu.database.dtos.PropertyDTO;
+import ut.edu.database.services.PropertyService;
 import ut.edu.database.services.ReportService;
 import ut.edu.database.dtos.ReportDTO;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -93,11 +97,42 @@ public class HomeController {
         return "bookingHomeCamping-admin/ThemPhong";//goi den html page
     }
 
+
+    private final PropertyService propertyService; // inject service vào
     @GetMapping("/xem-phong")
-    public String xemphongPage() {
+    public String xemphongPage(Model model) {
+        List<PropertyDTO> roomList = propertyService.getAllPropertyDTOs();
+        model.addAttribute("roomList", roomList);
         return "bookingHomeCamping-admin/XemPhong";//goi den html page
     }
+    @GetMapping("/chinh-sua-phong/{id}")
+    public String chinhsuaphongPage(@PathVariable Long id, Model model) {
+//        Optional<PropertyDTO> property = propertyService.getPropertyDTOById(id);
+//        model.addAttribute("property", property);
+//        return "bookingHomeCamping-admin/ChinhSuaPhong";
+        Optional<PropertyDTO> optional = propertyService.getPropertyDTOById(id);
+        if (optional.isPresent()) {
+            PropertyDTO property = optional.get();
+            model.addAttribute("property", property);
+            model.addAttribute("image", property.getImage()); // nếu bạn cần ảnh hiện tại
+            return "bookingHomeCamping-admin/ChinhSuaPhong";
+        } else {
+            // Có thể redirect hoặc thông báo lỗi
+            return "redirect:/xem-phong?error=notfound";
+        }
+    }
+    @PostMapping("/chinh-sua-phong")
+    public String updatePhong(@ModelAttribute("property") PropertyDTO dto,
+                              @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
+        propertyService.updatePropertyWithImage(dto, imageFile);
+        return "redirect:/xem-phong";
+    }
 
+    @GetMapping("/xoa-phong/{id}")
+    public String xoaPhong(@PathVariable Long id) {
+        propertyService.deleteProperty(id);
+        return "redirect:/xem-phong"; // quay về danh sách sau khi xóa
+    }
     @GetMapping("/hoa-don")
     public String hoadonPage() {
         return "bookingHomeCamping-admin/HoaDon";//goi den html page

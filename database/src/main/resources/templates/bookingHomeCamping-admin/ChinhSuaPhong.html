@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <div th:replace="master-admin/css::css"></div>
+
+</head>
+
+<body>
+<div id="app">
+  <div id="sidebar" class="active">
+    <div class="sidebar-wrapper active">
+
+      <!--            START LOGO-->
+      <div th:replace="master-admin/logo::logo"></div>
+      <!--            END LOGO -->
+
+      <!--            START MENU-->
+      <div th:replace="master-admin/menu::menu"></div>
+      <!--            END MENU-->
+
+    </div>
+  </div>
+  <div id="main">
+
+    <th:block th:fragment="content">
+      <!--                        NỘI DUNG CÁC TRANG ADMIN-->
+      <div class="page-heading">
+        <h3>Chỉnh sửa thông tin phòng</h3>
+      </div>
+
+      <div class="page-content">
+        <div class="container mt-4">
+          <div class="card p-4 shadow-sm">
+            <form th:action="@{/chinh-sua-phong}" th:object="${property}" method="post" enctype="multipart/form-data">
+              <input type="hidden" th:field="*{id}" />
+
+              <div class="mb-3">
+                <label class="form-label">Tên phòng:</label>
+                <input type="text" th:field="*{name}" class="form-control" required/>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Địa điểm:</label>
+                <input type="text" th:field="*{location}" class="form-control" required/>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Giá:</label>
+                <input type="number" th:field="*{price}" class="form-control" required/>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Mô tả:</label>
+                <textarea th:field="*{description}" class="form-control" rows="4"></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Trạng thái:</label>
+                <select th:field="*{status}" class="form-select">
+                  <option value="AVAILABLE">Available</option>
+                  <option value="BOOKED">Booked</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Ảnh hiện tại:</label><br>
+                <img th:src="@{${image}}" alt="Ảnh hiện tại" style="max-width: 200px;" class="img-thumbnail">
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Chọn ảnh mới (nếu muốn):</label>
+                <input type="file" name="imageFile" class="form-control"/>
+              </div>
+
+              <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">Cập nhật</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </th:block>
+  </div>
+</div>
+</body>
+
+</html>

@@ -3,8 +3,10 @@ import jakarta.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
+import org.springframework.web.multipart.MultipartFile;
 import ut.edu.database.dtos.PropertyDTO;
 import ut.edu.database.mapper.PropertyMapper;
 import ut.edu.database.models.Property;
@@ -13,8 +15,10 @@ import ut.edu.database.models.User;
 import ut.edu.database.repositories.PropertyRepository;
 import ut.edu.database.repositories.UserRepository;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -113,4 +117,31 @@ public class PropertyService {
     public Property save(Property property) {
         return propertyRepository.save(property);
     }
+    public void updatePropertyWithImage(PropertyDTO dto, MultipartFile imageFile) {
+        Optional<Property> optional = propertyRepository.findById(dto.getId());
+        if (optional.isPresent()) {
+            Property property = optional.get();
+
+            property.setName(dto.getName());
+            property.setLocation(dto.getLocation());
+            property.setPrice(dto.getPrice());
+            property.setDescription(dto.getDescription());
+            property.setStatus(dto.getStatus());
+
+            if (imageFile != null && !imageFile.isEmpty()) {
+                try {
+                    String filename = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
+                    String uploadDir = new ClassPathResource("static/properties").getFile().getAbsolutePath();
+                    File saveFile = new File(uploadDir + File.separator + filename);
+                    imageFile.transferTo(saveFile);
+                    property.setImage("/static/properties/" + filename);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            propertyRepository.save(property);
+        }
+    }
+
 }

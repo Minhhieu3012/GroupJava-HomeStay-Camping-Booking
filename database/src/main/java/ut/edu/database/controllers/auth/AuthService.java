@@ -37,12 +37,15 @@ public class AuthService {
         if(userRepository.existsByEmail(registerRequest.getEmail())){
             return ResponseEntity.badRequest().body("Email đã tồn tại!!!");
         }
+
         if(userRepository.existsByUsername(registerRequest.getUsername())){
             return ResponseEntity.badRequest().body("Username đã tồn tại!!!");
         }
+
         if(userRepository.existsByPhone(registerRequest.getPhone())){
             return ResponseEntity.badRequest().body("Số điện thoại đã tồn tại!!!");
         }
+
         if(userRepository.existsByIdentityCard(registerRequest.getIdentityCard())){
             return ResponseEntity.badRequest().body("Thẻ căn cước đã tồn tại!!!");
         }

@@ -66,15 +66,24 @@ public class UserService implements UserDetailsService {
         if (userRepository.existsByUsername(request.getUsername())) {
             return "Username đã tồn tại :((";
         }
+        if(userRepository.existsByPhone(request.getPhone())){
+            return "Số điện thoại đã tồn tại :((";
+        }
+
+        if(userRepository.existsByIdentityCard(request.getIdentityCard())){
+            return "Thẻ căn cước đã tồn tại :((";
+        }
 
         User user = new User();
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setPhone(request.getPhone());
+        user.setIdentityCard(request.getIdentityCard());
         user.setRole(request.getRole() != null ? request.getRole() : Role.CUSTOMER);
 
         userRepository.save(user);
-        return "Đăng ký thành công!";
+        return "Đăng ký thành công :D";
     }
 
     //cap nhat user
@@ -86,6 +95,8 @@ public class UserService implements UserDetailsService {
         user.setEmail(dto.getEmail());
         user.setRole(dto.getRole());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setPhone(dto.getPhone());
+        user.setIdentityCard(dto.getIdentityCard());
 
         return userMapper.toDTO(userRepository.save(user));
     }

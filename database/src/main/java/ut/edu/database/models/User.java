@@ -61,10 +61,12 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     private List<Review> reviews;
 
-    public User(String username, String email, String password, Role role) {
+    public User(String username, String email, String password, Role role, String phone, String identityCard) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.phone = phone;
+        this.identityCard = identityCard;
         this.role = role;
     }
 

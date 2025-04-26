@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import ut.edu.database.dtos.UserDTO;
@@ -34,10 +35,18 @@ public class UserController {
     }
 
     //ADMIN: cap nhat thong tin user (role, status,...)
-    @PutMapping("/update/{id}")
+    @PutMapping("/update-profile-all")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
-        UserDTO updatedUser = userService.updateUser(id, userDTO);
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO, @AuthenticationPrincipal org.springframework.security.core.userdetails.User currentUser) {
+        UserDTO updatedUser = userService.updateUser(currentUser.getUsername(), userDTO);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    //CUS & OWNER: cap nhat thong tin profile ( ngoai tru role)
+    @PutMapping("/update-profile")
+    @PreAuthorize("hasAnyRole('OWNER','CUSTOMER')")
+    public ResponseEntity<UserDTO> updateOwnProfile(@RequestBody UserDTO userDTO, @AuthenticationPrincipal org.springframework.security.core.userdetails.User currentUser) {
+        UserDTO updatedUser = userService.updateOwnProfile(currentUser.getUsername(), userDTO);
         return ResponseEntity.ok(updatedUser);
     }
 

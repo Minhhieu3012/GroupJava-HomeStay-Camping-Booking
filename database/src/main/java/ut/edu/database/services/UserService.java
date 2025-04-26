@@ -86,18 +86,36 @@ public class UserService implements UserDetailsService {
         return "Đăng ký thành công :D";
     }
 
-    //cap nhat user
-    public UserDTO updateUser(Long id, UserDTO dto) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy User với id là: " + id));
+    //cap nhat user cua admin
+    public UserDTO updateUser(String username, UserDTO dto) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy User là: " + username));
 
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
+        user.setPhone(dto.getPhone());
+        user.setIdentityCard(dto.getIdentityCard());
         user.setRole(dto.getRole());
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
+        return userMapper.toDTO(userRepository.save(user));
+    }
+
+    //cap nhat user cua owner
+    public UserDTO updateOwnProfile(String username, UserDTO dto) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy User: "+username));
+
+        user.setUsername(dto.getUsername());
+        user.setEmail(dto.getEmail());
         user.setPhone(dto.getPhone());
         user.setIdentityCard(dto.getIdentityCard());
 
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
         return userMapper.toDTO(userRepository.save(user));
     }
 

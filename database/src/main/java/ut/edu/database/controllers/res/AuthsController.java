@@ -105,6 +105,9 @@ public class AuthsController {
                     user.getId(),
                     user.getUsername(),
                     user.getEmail(),
+                    user.getPhone(),
+                    user.getIdentityCard(),
+                    user.getPassword(),
                     user.getRole().toString()
             ));
         } catch (ResponseStatusException e) {
@@ -115,6 +118,6 @@ public class AuthsController {
     }
 
     //Giup tao class nho gon cho response
-    record UserProfileResponse(Long id, String username, String email, String role) {}
+    record UserProfileResponse(Long id, String username, String email, String phone, String identityCard, String password ,String role) {}
 }
 

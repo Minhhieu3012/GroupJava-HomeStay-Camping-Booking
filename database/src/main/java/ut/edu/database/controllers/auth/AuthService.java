@@ -42,6 +42,8 @@ public class AuthService {
                 .email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(registerRequest.getPassword())) //ma hoa password (bang BCrypt)
                 .role(Role.CUSTOMER) // default role
+                .phone(registerRequest.getPhone())
+                .identityCard(registerRequest.getIdentityCard())
                 .build();
 
         //luu user vao db

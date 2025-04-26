@@ -32,8 +32,8 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String username;
 
-    @Email
     @NotBlank
+    @Email
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -42,6 +42,11 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    @Column(length = 15)
+    private String phone;
+
+    @Column(length = 20)
+    private String identityCard; //CCCD, CMND
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

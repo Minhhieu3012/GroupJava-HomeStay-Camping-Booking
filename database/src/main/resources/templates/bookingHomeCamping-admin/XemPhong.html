@@ -47,7 +47,7 @@
                         <td th:text="${room.location}"></td>
                         <td th:text="${room.price} + ' VND'"></td>
                         <td>
-                            <img th:src="@{${room.image}}" alt="Hình ảnh" width="100">
+                            <img th:src="@{${'/'} + ${room.image}}" alt="Hình ảnh" width="100" height="80">
                         </td>
                         <td th:text="${room.description}"></td>
                         <td th:text="${room.owner_id}"></td>

@@ -117,6 +117,8 @@ public class PropertyService {
     public Property save(Property property) {
         return propertyRepository.save(property);
     }
+
+
     public void updatePropertyWithImage(PropertyDTO dto, MultipartFile imageFile) {
         Optional<Property> optional = propertyRepository.findById(dto.getId());
         if (optional.isPresent()) {
@@ -134,12 +136,13 @@ public class PropertyService {
                     String uploadDir = new ClassPathResource("static/properties").getFile().getAbsolutePath();
                     File saveFile = new File(uploadDir + File.separator + filename);
                     imageFile.transferTo(saveFile);
-                    property.setImage("/static/properties/" + filename);
+
+                    //Đường dẫn LƯU trong DB phải bỏ "/static"
+                    property.setImage("/properties/" + filename);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-
             propertyRepository.save(property);
         }
     }

@@ -11,10 +11,12 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class UserDTO {
     private Long id;
+    //=============Cần tạo================
     private String username;
     private String email;
     private String password;
     private String phone;
     private String identityCard;
     private Role role;
+    //===================================
 }

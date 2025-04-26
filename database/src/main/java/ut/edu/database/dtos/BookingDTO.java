@@ -13,15 +13,17 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookingDTO {
-    private Long id;
+    //=============Cần tạo=======================
     private Long userID;
     private Long propertyID;
     private LocalDate startDate;
     private LocalDate endDate;
     private List<String> additionalServices;
+    private List<Long> servicePackageIds;
+    //=====================================
+    private Long id;
     private BigDecimal totalPrice;
     private BookingStatus status;
-    private List<Long> servicePackageIds;
     private BigDecimal adminFee;
     private BigDecimal ownerEarning;
 

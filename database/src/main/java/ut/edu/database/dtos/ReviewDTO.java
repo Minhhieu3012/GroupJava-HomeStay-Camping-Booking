@@ -10,10 +10,11 @@ import lombok.Data;
 @NoArgsConstructor
 public class ReviewDTO {
     private Long id;
+    //===========Cần tạo==================
     private Long userID;
     private Long propertyID;
     private Byte rating;
     private String comment;
     private LocalDate reviewDate;
-
+    //==============================
 }

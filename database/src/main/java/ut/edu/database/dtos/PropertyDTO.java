@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class PropertyDTO {
     private Long id;
+    //============Cần tạo=======================
     private String name;
     private String location;
     private BigDecimal price;
@@ -20,4 +21,5 @@ public class PropertyDTO {
     private String description;
     private PropertyStatus status;
     private Long owner_id;
+    //==================================
 }

@@ -68,6 +68,8 @@ public class ReportController {
         return ResponseEntity.noContent().build(); //tra ve loi 204 no content khi xoa thanh cong
     }
 
+    //lấy toàn bộ admin revenue: GET http://localhost:8080/api/reports/revenue/monthly?year=2025&forAdmin=true
+    //lấy doanh thu của owner username: GET http://localhost:8080/api/reports/revenue/monthly?year=2025&forAdmin=false&usernameOrEmail=hieudeptrai
     //lấy doanh thu theo tháng
     @GetMapping("/revenue/monthly")
     @PreAuthorize("hasRole('ADMIN')")

@@ -42,10 +42,10 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @Column(length = 15)
+    @Column(length = 15, nullable = false)
     private String phone;
 
-    @Column(length = 20)
+    @Column(name = "identity_card",length = 20, nullable = false)
     private String identityCard; //CCCD, CMND
 
     @Enumerated(EnumType.STRING)

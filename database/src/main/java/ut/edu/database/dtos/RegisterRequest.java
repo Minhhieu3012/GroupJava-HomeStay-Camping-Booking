@@ -23,12 +23,11 @@ public class RegisterRequest {
     @NotBlank
     private String username;
 
-    private Role role;
-
     @NotBlank
     private String phone;
 
     @NotBlank
     private String identityCard;
 
+    private Role role;
 }

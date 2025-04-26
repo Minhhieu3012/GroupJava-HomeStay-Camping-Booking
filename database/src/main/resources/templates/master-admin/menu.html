@@ -3,53 +3,62 @@
         <li class="sidebar-title">Menu</li>
 
         <li class="sidebar-item">
-            <a href="BaoCaoDoanhThu.html" class='sidebar-link'>
+            <a th:href="@{/bao-cao-doanh-thu}" class='sidebar-link'>
                 <i class="bi bi-grid-fill"></i>
                 <span>Xem báo cáo doanh thu</span>
             </a>
         </li>
 
         <li class="sidebar-item">
-            <a href="QuanLiPhiDichVu" class='sidebar-link'>
+            <a th:href="@{/quan-li-phi-dich-vu}" class='sidebar-link'>
                 <i class="bi bi-stack"></i>
                 <span>Phí dịch vụ</span>
             </a>
         </li>
 
-        <li class="sidebar-item  has-sub">
-            <a href="#" class='sidebar-link'>
+        <li class="sidebar-item has-sub">
+            <input type="checkbox" id="toggle-submenu" hidden>
+            <label for="toggle-submenu" class="sidebar-link" style="cursor: pointer;">
                 <i class="bi bi-grid-1x2-fill"></i>
                 <span>Quản lí tài khoản</span>
-            </a>
-            <ul class="submenu" style="">
+            </label>
+            <ul class="submenu">
                 <li class="submenu-item">
-                    <a href="layout-default.html">Người dùng</a>
+                    <a th:href="@{/quan-li-tk-user}">Người dùng</a>
                 </li>
                 <li class="submenu-item">
-                    <a href="layout-vertical-1-column.html">Chủ Homestay</a>
+                    <a th:href="@{/quan-li-tk-host}">Chủ Homestay</a>
                 </li>
             </ul>
         </li>
 
+        <style>
+            .submenu {
+                display: none;
+                padding-left: 20px;
+            }
 
-
+            input[type="checkbox"]:checked + label + .submenu {
+                display: block;
+            }
+        </style>
 
         <li class="sidebar-item">
-            <a href="XemPhong.html" class='sidebar-link'>
+            <a th:href="@{/xem-phong}" class='sidebar-link'>
                 <i class="bi bi-grid-1x2-fill"></i>
                 <span>Quản lí Homestay</span>
             </a>
         </li>
 
         <li class="sidebar-item">
-            <a href="DonDatPhong.html" class='sidebar-link'>
+            <a th:href="@{/don-dat-phong}" class='sidebar-link'>
                 <i class="bi bi-grid-1x2-fill"></i>
                 <span>Đơn đặt phòng</span>
             </a>
         </li>
 
         <li class="sidebar-item">
-            <a href="HoaDon.html" class='sidebar-link'>
+            <a th:href="@{/hoa-don}" class='sidebar-link'>
                 <i class="bi bi-grid-1x2-fill"></i>
                 <span>Xem hóa đơn</span>
             </a>

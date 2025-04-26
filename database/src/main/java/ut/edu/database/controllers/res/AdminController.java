@@ -34,11 +34,12 @@ public class AdminController {
     public ResponseEntity<?> getProfile(@AuthenticationPrincipal UserDetails user, HttpServletRequest request) {
         //lay token tu header
         String token = request.getHeader("Authorization").substring(7);
-        String email = jwtUtil.extractUsername(token);
+        String username = jwtUtil.extractUsername(token);
         String role = jwtUtil.extractRole(token).name();
 
+
         Map<String, String> profile = new HashMap<>();
-        profile.put("email", email);
+        profile.put("username", username);
         profile.put("role", role);
         profile.put("token", token);
 

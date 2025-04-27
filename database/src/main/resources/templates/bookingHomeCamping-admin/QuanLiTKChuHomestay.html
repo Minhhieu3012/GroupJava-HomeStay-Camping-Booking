@@ -30,7 +30,7 @@
                 <table class="table table-bordered table-hover align-middle text-center">
                     <thead class="table-dark">
                     <tr>
-                        <th>Tên người dùng</th>
+                        <th>Tên chủ homestay</th>
                         <th>Email</th>
                         <th>Số điện thoại</th>
                         <th>Số căn cước công dân</th>
@@ -44,9 +44,9 @@
                         <td th:text="${owner.phone}">Số điện thoại</td>
                         <td th:text="${owner.identityCard}">Số CCCD</td>
                         <td>
-                            <a th:href="@{/chinh-sua-user/{id}(id=${owner.id})}">Chỉnh sửa</a> |
-                            <a th:href="@{/xoa-user/{id}(id=${owner.id})}"
-                               onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này không?');">
+                            <a th:href="@{'/quan-li-tk-owner/chinh-sua-tk-owner/' + ${owner.id}}">Chỉnh sửa</a>
+                            <a th:href="@{/xoa-owner/{id}(id=${owner.id})}"
+                               onclick="return confirm('Bạn có chắc chắn muốn xóa chủ homestay này không?');">
                                 Xóa
                             </a>
                         </td>

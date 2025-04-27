@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 import ut.edu.database.dtos.BookingDTO;
 import ut.edu.database.enums.BookingStatus;
+import ut.edu.database.enums.PropertyStatus;
 import ut.edu.database.mapper.BookingMapper;
 import ut.edu.database.models.Booking;
 import ut.edu.database.models.Property;
@@ -98,6 +99,9 @@ public class BookingService {
 
         booking.setUser(user);
         booking.setProperty(property);
+        //set trang thai property thanh Booked neu booking thanh cong
+        property.setStatus(PropertyStatus.BOOKED);
+        propertyService.save(property);
 
         //Gan cac ServicePackage duoc chon
         if(dto.getServicePackageIds() != null & !dto.getServicePackageIds().isEmpty()) {

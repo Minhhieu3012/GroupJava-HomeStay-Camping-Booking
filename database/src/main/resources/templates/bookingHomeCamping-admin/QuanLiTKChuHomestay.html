@@ -30,36 +30,25 @@
                 <table class="table table-bordered table-hover align-middle text-center">
                     <thead class="table-dark">
                     <tr>
-                        <th>#</th>
-                        <th>Họ tên</th>
+                        <th>Tên người dùng</th>
                         <th>Email</th>
-                        <th>SĐT</th>
+                        <th>Số điện thoại</th>
+                        <th>Số căn cước công dân</th>
                         <th>Hành động</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="user, iterStat : ${users}">
-                        <td th:text="${iterStat.count}"></td>
-                        <td th:text="${user.fullName}"></td>
-                        <td th:text="${user.email}"></td>
-                        <td th:text="${user.phoneNumber}"></td>
+                    <tr th:each="owner : ${ownerList}">
+                        <td th:text="${owner.username}">Tên</td>
+                        <td th:text="${owner.email}">Email</td>
+                        <td th:text="${owner.phone}">Số điện thoại</td>
+                        <td th:text="${owner.identityCard}">Số CCCD</td>
                         <td>
-                    <span th:text="${user.role == 'HOST' ? 'Chủ Homestay' : 'Người dùng'}"
-                          th:classappend="${user.role == 'HOST' ? 'badge bg-primary' : 'badge bg-secondary'}">
-                    </span>
-                        </td>
-                        <td>
-                            <span th:if="${user.active}" class="badge bg-success">Đang hoạt động</span>
-                            <span th:if="${!user.active}" class="badge bg-danger">Đã bị khóa</span>
-                        </td>
-                        <td>
-                            <form th:action="@{/admin/user/toggle-status}" method="post">
-                                <input type="hidden" name="userId" th:value="${user.id}"/>
-                                <button type="submit"
-                                        th:text="${user.active ? 'Khóa tài khoản' : 'Mở khóa'}"
-                                        th:class="${user.active ? 'btn btn-danger btn-sm' : 'btn btn-success btn-sm'}">
-                                </button>
-                            </form>
+                            <a th:href="@{/chinh-sua-user/{id}(id=${owner.id})}">Chỉnh sửa</a> |
+                            <a th:href="@{/xoa-user/{id}(id=${owner.id})}"
+                               onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này không?');">
+                                Xóa
+                            </a>
                         </td>
                     </tr>
                     </tbody>

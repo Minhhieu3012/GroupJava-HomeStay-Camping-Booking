@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <div th:replace="master-admin/css::css"></div>
+</head>
+
+<body>
+<div id="app">
+    <div id="sidebar" class="active">
+        <div class="sidebar-wrapper active">
+
+            <!--            START LOGO-->
+            <div th:replace="master-admin/logo::logo"></div>
+            <!--            END LOGO -->
+
+            <!--            START MENU-->
+            <div th:replace="master-admin/menu::menu"></div>
+            <!--            END MENU-->
+
+        </div>
+    </div>
+    <div id="main">
+
+        <!--            NỘI DUNG CÁC TRANG ADMIN-->
+        <th:block th:fragment="content">
+
+        </th:block>
+    </div>
+</div>
+</body>
+
+</html>

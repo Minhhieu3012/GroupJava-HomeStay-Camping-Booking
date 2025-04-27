@@ -141,4 +141,23 @@ public class UserService implements UserDetailsService {
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+
+
+//LỌC ROLE == CUSTOMER ĐỂ ĐƯA VÀO QUẢN LÍ TK USER
+    public List<UserDTO> getAllCustomerUsers() {
+        return userRepository.findAll()
+                .stream()
+                .filter(user -> "CUSTOMER".equalsIgnoreCase(String.valueOf(user.getRole()))) // lọc role = "USER" (không phân biệt hoa thường)
+                .map(userMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+//LỌC ROLE == OWNER ĐỂ ĐƯA VÀO QUẢN LÍ TK OWNER
+    public List<UserDTO> getAllOwnerUsers() {
+        return userRepository.findAll()
+                .stream()
+                .filter(user -> "OWNER".equalsIgnoreCase(String.valueOf(user.getRole()))) // lọc role = "USER" (không phân biệt hoa thường)
+                .map(userMapper::toDTO)
+                .collect(Collectors.toList());
+    }
 }

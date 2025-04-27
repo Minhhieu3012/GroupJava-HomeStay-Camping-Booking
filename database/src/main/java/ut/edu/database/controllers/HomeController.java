@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ut.edu.database.dtos.MonthlyRevenueDTO;
 import ut.edu.database.dtos.PropertyDTO;
+import ut.edu.database.dtos.UserDTO;
 import ut.edu.database.enums.PropertyStatus;
 import ut.edu.database.mapper.PropertyMapper;
 import ut.edu.database.models.Property;
@@ -23,6 +24,7 @@ import ut.edu.database.repositories.UserRepository;
 import ut.edu.database.services.PropertyService;
 import ut.edu.database.services.ReportService;
 import ut.edu.database.dtos.ReportDTO;
+import ut.edu.database.services.UserService;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,6 +46,8 @@ public class HomeController {
     private PropertyMapper propertyMapper;
     @Autowired
     private PropertyRepository propertyRepository;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/layout")
     public String layoutPage() {
@@ -68,6 +72,7 @@ public class HomeController {
 
     private final ReportService ReportService;
 
+//XEM BAO CAO DOANH THU
     @GetMapping("/bao-cao-doanh-thu")
 
     public String baocaodoanhthuPage(Model model) {
@@ -108,72 +113,31 @@ public class HomeController {
         return "bookingHomeCamping-admin/QuanLiPhiDichVu";//goi den html page
     }
 
+//XEM DS OWNER
     @GetMapping("/quan-li-tk-host")
-    public String quanlitkchuhomestayPage() {
+    public String quanlitkchuhomestayPage(Model model) {
+        List<UserDTO> ownerList = userService.getAllOwnerUsers();
+        model.addAttribute("ownerList", ownerList);
         return "bookingHomeCamping-admin/QuanLiTKChuHomestay";//goi den html page
     }
 
+//XEM DS CUSTOMER
     @GetMapping("/quan-li-tk-user")
-    public String quanlitknguoidungPage() {
+    public String quanlitknguoidungPage(Model model) {
+//        List<UserDTO> userList = userService.getAllUsers();
+        List<UserDTO> userList = userService.getAllCustomerUsers();
+        model.addAttribute("userList", userList);
         return "bookingHomeCamping-admin/QuanLiTKNguoiDung";//goi den html page
     }
 
+//NHẤP VÀO THÊM PHÒNG
     @GetMapping("/them-phong")
     public String themphongPage(Model model) {
         model.addAttribute("propertyDTO", new PropertyDTO());
         return "bookingHomeCamping-admin/ThemPhong";//goi den html page
     }
 
-    //    private final PropertyService propertyService; // inject service vào
-    @GetMapping("/xem-phong")
-    public String xemphongPage(Model model) {
-        List<PropertyDTO> roomList = propertyService.getAllPropertyDTOs();
-        model.addAttribute("roomList", roomList);
-        return "bookingHomeCamping-admin/XemPhong";//goi den html page
-    }
-
-    @GetMapping("/chinh-sua-phong/{id}")
-    public String chinhsuaphongPage(@PathVariable Long id, Model model) {
-//        Optional<PropertyDTO> property = propertyService.getPropertyDTOById(id);
-//        model.addAttribute("property", property);
-//        return "bookingHomeCamping-admin/ChinhSuaPhong";
-        Optional<PropertyDTO> optional = propertyService.getPropertyDTOById(id);
-        if (optional.isPresent()) {
-            PropertyDTO property = optional.get();
-            model.addAttribute("property", property);
-            model.addAttribute("image", property.getImage()); // nếu bạn cần ảnh hiện tại
-            return "bookingHomeCamping-admin/ChinhSuaPhong";
-        } else {
-            // Có thể redirect hoặc thông báo lỗi
-            return "redirect:/xem-phong?error=notfound";
-        }
-    }
-
-    @PostMapping("/chinh-sua-phong")
-    public String updatePhong(@ModelAttribute("property") PropertyDTO dto,
-                              @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
-        propertyService.updatePropertyWithImage(dto, imageFile);
-        return "redirect:/xem-phong";
-    }
-
-    @GetMapping("/xoa-phong/{id}")
-    public String xoaPhong(@PathVariable Long id) {
-        propertyService.deleteProperty(id);
-        return "redirect:/xem-phong"; // quay về danh sách sau khi xóa
-    }
-
-    @GetMapping("/hoa-don")
-    public String hoadonPage() {
-        return "bookingHomeCamping-admin/HoaDon";//goi den html page
-    }
-
-    @GetMapping("/don-dat-phong")
-    public String dondatphongPage() {
-        return "bookingHomeCamping-admin/DonDatPhong";//goi den html page
-    }
-
-
-
+// NHẤP VÀO LƯU SAU KHI NHẬP PHÒNG CẦN THÊM
     @PostMapping("/luu-phong")
     public String saveNewProperty(@ModelAttribute PropertyDTO propertyDTO,
                                   @RequestParam("imageFile") MultipartFile imageFile) {
@@ -214,6 +178,63 @@ public class HomeController {
 
         return "redirect:/xem-phong";
     }
+
+    //    private final PropertyService propertyService; // inject service vào
+    @GetMapping("/xem-phong")
+    public String xemphongPage(Model model) {
+        List<PropertyDTO> roomList = propertyService.getAllPropertyDTOs();
+        model.addAttribute("roomList", roomList);
+        return "bookingHomeCamping-admin/XemPhong";//goi den html page
+    }
+
+//NHẤP VÀO CHỈNH SỬA
+    @GetMapping("/chinh-sua-phong/{id}")
+    public String chinhsuaphongPage(@PathVariable Long id, Model model) {
+        Optional<PropertyDTO> optional = propertyService.getPropertyDTOById(id);
+        if (optional.isPresent()) {
+            PropertyDTO property = optional.get();
+            model.addAttribute("property", property);
+            model.addAttribute("image", property.getImage()); // nếu bạn cần ảnh hiện tại
+            return "bookingHomeCamping-admin/ChinhSuaPhong";
+        } else {
+            // Có thể redirect hoặc thông báo lỗi
+            return "redirect:/xem-phong?error=notfound";
+        }
+    }
+
+//NHẤP VÀO NÚT CẬP NHẬT
+    @PostMapping("/chinh-sua-phong")
+    public String updatePhong(@ModelAttribute("property") PropertyDTO dto,
+                              @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
+        propertyService.updatePropertyWithImage(dto, imageFile);
+        return "redirect:/xem-phong";
+    }
+
+//    XÓA PHÒNG
+    @GetMapping("/xoa-phong/{id}")
+    public String xoaPhong(@PathVariable Long id) {
+        propertyService.deleteProperty(id);
+        return "redirect:/xem-phong"; // quay về danh sách sau khi xóa
+    }
+
+    @GetMapping("/hoa-don")
+    public String hoadonPage() {
+        return "bookingHomeCamping-admin/HoaDon";//goi den html page
+    }
+
+    @GetMapping("/don-dat-phong")
+    public String dondatphongPage() {
+        return "bookingHomeCamping-admin/DonDatPhong";//goi den html page
+    }
+
+//NHẤP VÀO CHỈNH SỬA CHUYỂN SANG TRANG CHỈNH SỬA TK USER
+//    @GetMapping("/quan-li-tk-user/chinh-sua-tk-user/{id}")
+//    public String editUserForm(@PathVariable Long id, Model model) {
+//        Optional<User> userDTO = userService.getUserById(id); // lấy user theo id
+//        model.addAttribute("user", userDTO);
+//        return "bookingHomeCamping-admin/ChinhSuaTKNguoiDung"; // đúng đường dẫn file HTML của bạn
+//    }
+
 
 }
 

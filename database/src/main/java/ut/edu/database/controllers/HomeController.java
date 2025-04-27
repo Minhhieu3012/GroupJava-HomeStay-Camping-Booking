@@ -2,24 +2,49 @@
 package ut.edu.database.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ut.edu.database.dtos.MonthlyRevenueDTO;
 import ut.edu.database.dtos.PropertyDTO;
+import ut.edu.database.enums.PropertyStatus;
+import ut.edu.database.mapper.PropertyMapper;
+import ut.edu.database.models.Property;
+import ut.edu.database.models.User;
+import ut.edu.database.repositories.PropertyRepository;
+import ut.edu.database.repositories.UserRepository;
 import ut.edu.database.services.PropertyService;
 import ut.edu.database.services.ReportService;
 import ut.edu.database.dtos.ReportDTO;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
 public class HomeController {
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private PropertyService propertyService;
+    @Autowired
+    private PropertyMapper propertyMapper;
+    @Autowired
+    private PropertyRepository propertyRepository;
+
     @GetMapping("/layout")
     public String layoutPage() {
         return "master/_layout";
@@ -42,6 +67,7 @@ public class HomeController {
 
 
     private final ReportService ReportService;
+
     @GetMapping("/bao-cao-doanh-thu")
 
     public String baocaodoanhthuPage(Model model) {
@@ -93,18 +119,19 @@ public class HomeController {
     }
 
     @GetMapping("/them-phong")
-    public String themphongPage() {
+    public String themphongPage(Model model) {
+        model.addAttribute("propertyDTO", new PropertyDTO());
         return "bookingHomeCamping-admin/ThemPhong";//goi den html page
     }
 
-
-    private final PropertyService propertyService; // inject service vào
+    //    private final PropertyService propertyService; // inject service vào
     @GetMapping("/xem-phong")
     public String xemphongPage(Model model) {
         List<PropertyDTO> roomList = propertyService.getAllPropertyDTOs();
         model.addAttribute("roomList", roomList);
         return "bookingHomeCamping-admin/XemPhong";//goi den html page
     }
+
     @GetMapping("/chinh-sua-phong/{id}")
     public String chinhsuaphongPage(@PathVariable Long id, Model model) {
 //        Optional<PropertyDTO> property = propertyService.getPropertyDTOById(id);
@@ -121,6 +148,7 @@ public class HomeController {
             return "redirect:/xem-phong?error=notfound";
         }
     }
+
     @PostMapping("/chinh-sua-phong")
     public String updatePhong(@ModelAttribute("property") PropertyDTO dto,
                               @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
@@ -133,6 +161,7 @@ public class HomeController {
         propertyService.deleteProperty(id);
         return "redirect:/xem-phong"; // quay về danh sách sau khi xóa
     }
+
     @GetMapping("/hoa-don")
     public String hoadonPage() {
         return "bookingHomeCamping-admin/HoaDon";//goi den html page
@@ -141,6 +170,49 @@ public class HomeController {
     @GetMapping("/don-dat-phong")
     public String dondatphongPage() {
         return "bookingHomeCamping-admin/DonDatPhong";//goi den html page
+    }
+
+
+
+    @PostMapping("/luu-phong")
+    public String saveNewProperty(@ModelAttribute PropertyDTO propertyDTO,
+                                  @RequestParam("imageFile") MultipartFile imageFile) {
+        Property property = propertyMapper.toEntity(propertyDTO);
+
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                String filename = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
+                String uploadDir = new ClassPathResource("static/properties").getFile().getAbsolutePath();
+                File saveFile = new File(uploadDir + File.separator + filename);
+                imageFile.transferTo(saveFile);
+
+                //Lưu đường dẫn ảnh (loại bỏ "/static")
+                property.setImage("/properties/" + filename);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Gán owner nếu có
+        if (propertyDTO.getOwner_id() != null) {
+            Optional<User> ownerOpt = userRepository.findById(propertyDTO.getOwner_id());
+            if (ownerOpt.isPresent()) {
+                property.setOwner(ownerOpt.get());
+            } else {
+                throw new IllegalArgumentException("Không tìm thấy chủ phòng với ID: " + propertyDTO.getOwner_id());
+            }
+        } else {
+            throw new IllegalArgumentException("Thiếu Owner ID");
+        }
+
+        // Set trạng thái mặc định nếu chưa có
+        if (property.getStatus() == null) {
+            property.setStatus(PropertyStatus.AVAILABLE);
+        }
+
+        propertyRepository.save(property);
+
+        return "redirect:/xem-phong";
     }
 
 }

@@ -24,6 +24,98 @@
 
         <th:block th:fragment="content">
 <!--                        NỘI DUNG CÁC TRANG ADMIN-->
+<!--            <div class="container mt-5">-->
+<!--                <h2>Thêm phòng mới</h2>-->
+<!--                <form action="/luu-phong" method="post" enctype="multipart/form-data">-->
+<!--                    <div class="mb-3">-->
+<!--                        <label class="form-label">Tên phòng</label>-->
+<!--                        <input type="text" name="name" class="form-control" required>-->
+<!--                    </div>-->
+
+<!--                    <div class="mb-3">-->
+<!--                        <label class="form-label">Địa điểm</label>-->
+<!--                        <input type="text" name="location" class="form-control" required>-->
+<!--                    </div>-->
+
+<!--                    <div class="mb-3">-->
+<!--                        <label class="form-label">Giá</label>-->
+<!--                        <input type="number" name="price" class="form-control" required>-->
+<!--                    </div>-->
+
+<!--                    <div class="mb-3">-->
+<!--                        <label class="form-label">Hình ảnh</label>-->
+<!--                        <input type="file" name="imageFile" class="form-control" required>-->
+<!--                    </div>-->
+
+<!--                    <div class="mb-3">-->
+<!--                        <label class="form-label">Mô tả</label>-->
+<!--                        <textarea name="description" class="form-control" rows="3"></textarea>-->
+<!--                    </div>-->
+
+<!--                    <div class="mb-3">-->
+<!--                        <label class="form-label">Chủ phòng (ID)</label>-->
+<!--                        <input type="number" name="owner_id" class="form-control" required>-->
+<!--                    </div>-->
+
+<!--                    <div class="mb-3">-->
+<!--                        <label class="form-label">Trạng thái</label>-->
+<!--                        <select name="status" class="form-select" required>-->
+<!--                            <option value="AVAILABLE">AVAILABLE</option>-->
+<!--                            <option value="UNAVAILABLE">UNAVAILABLE</option>-->
+<!--                        </select>-->
+<!--                    </div>-->
+
+<!--                    <button type="submit" class="btn btn-success">Lưu</button>-->
+<!--                    <a th:href="@{/xem-phong}" class="btn btn-secondary">Hủy</a>-->
+<!--                </form>-->
+<!--            </div>-->
+            <div class="container mt-5">
+                <h2>Thêm Phòng Mới</h2>
+                <form th:action="@{/luu-phong}" th:object="${propertyDTO}" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Tên phòng</label>
+                        <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="Nhập tên phòng" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="location" class="form-label">Địa điểm</label>
+                        <input type="text" class="form-control" id="location" th:field="*{location}" placeholder="Nhập địa điểm" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Giá (VND)</label>
+                        <input type="number" class="form-control" id="price" th:field="*{price}" placeholder="Nhập giá" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="imageFile" class="form-label">Hình ảnh</label>
+                        <input type="file" class="form-control" id="imageFile" name="imageFile" accept="image/*" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Mô tả</label>
+                        <textarea class="form-control" id="description" th:field="*{description}" rows="3" placeholder="Nhập mô tả chi tiết"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Trạng thái</label>
+                        <select class="form-select" id="status" th:field="*{status}" required>
+                            <option value="">-- Chọn trạng thái --</option>
+                            <option th:value="AVAILABLE">AVAILABLE</option>
+                            <option th:value="UNAVAILABLE">UNAVAILABLE</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="owner_id" class="form-label">ID Chủ Phòng</label>
+                        <input type="number" id="owner_id" name="owner_id" class="form-control" required />
+                    </div>
+
+
+                    <button type="submit" class="btn btn-primary">Lưu</button>
+                    <a th:href="@{/xem-phong}" class="btn btn-secondary">Hủy</a>
+                </form>
+            </div>
         </th:block>
 
     </div>

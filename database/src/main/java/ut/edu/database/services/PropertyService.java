@@ -16,6 +16,12 @@ import ut.edu.database.repositories.PropertyRepository;
 import ut.edu.database.repositories.UserRepository;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -28,7 +34,6 @@ public class PropertyService {
     private final PropertyRepository propertyRepository;
     private final PropertyMapper propertyMapper;
     private final UserRepository userRepository;
-
     // Lấy tất cả bất động sản
     public List<PropertyDTO> getAllPropertyDTOs() {
         return propertyRepository.findAll().stream()
@@ -76,9 +81,11 @@ public class PropertyService {
             throw new IllegalArgumentException("Thuộc tính và các trường bắt buộc của nó không thể là null -.-");
         }
         Property saved = propertyRepository.save(property);
+        propertyRepository.save(property);
         return propertyMapper.toDTO(saved);
 
     }
+
     // Xóa (neu admin cho phep)
     public boolean deleteProperty(Long id) {
         if (propertyRepository.existsById(id)) {
@@ -146,5 +153,35 @@ public class PropertyService {
             propertyRepository.save(property);
         }
     }
+
+
+    @Transactional
+    public void save(PropertyDTO propertyDTO) {
+        // Convert DTO thành Entity
+        Property property = propertyMapper.toEntity(propertyDTO);
+
+        // Gán Owner cho Property
+        if (propertyDTO.getOwner_id() != null) {
+            Optional<User> ownerOpt = userRepository.findById(propertyDTO.getOwner_id());
+            if (ownerOpt.isPresent()) {
+                property.setOwner(ownerOpt.get());
+            } else {
+                throw new IllegalArgumentException("Không tìm thấy chủ phòng với ID: " + propertyDTO.getOwner_id());
+            }
+        } else {
+            throw new IllegalArgumentException("Thiếu Owner ID");
+        }
+
+        // Set trạng thái mặc định nếu chưa có
+        if (property.getStatus() == null) {
+            property.setStatus(PropertyStatus.AVAILABLE);
+        }
+
+        // Save vào database
+        propertyRepository.save(property);
+    }
+
+
+
 
 }

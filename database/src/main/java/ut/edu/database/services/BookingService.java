@@ -78,6 +78,14 @@ public class BookingService {
         if (dto == null) {
             throw new IllegalArgumentException("BookingDTO không có hiệu lực :((");
         }
+        // Kiểm tra overlap (trùng lịch)
+        List<Booking> overlaps = bookingRepository.findOverlappingBookings(
+                dto.getPropertyID(), dto.getStartDate(), dto.getEndDate()
+        );
+
+        if (!overlaps.isEmpty()) {
+            throw new RuntimeException("Phòng đã được đặt trong khoảng thời gian này, vui lòng chọn ngày khác!");
+        }
         if (dto.getStartDate().isAfter(dto.getEndDate())) {
             throw new IllegalArgumentException("Ngày bắt đầu phải trước ngày kết thúc -.-");
         }

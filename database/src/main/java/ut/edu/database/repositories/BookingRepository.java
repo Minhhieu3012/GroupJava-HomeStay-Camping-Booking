@@ -28,4 +28,21 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             @Param("forAdmin") boolean forAdmin
     );
 
+    @Query("""
+    SELECT b FROM Booking b
+    WHERE b.property.id = :propertyId
+    AND b.status <> 'CANCELLED'
+    AND (
+        (:startDate BETWEEN b.startDate AND b.endDate)
+        OR (:endDate BETWEEN b.startDate AND b.endDate)
+        OR (b.startDate BETWEEN :startDate AND :endDate)
+    )
+""")
+    List<Booking> findOverlappingBookings(
+            @Param("propertyId") Long propertyId,
+            @Param("startDate") java.time.LocalDate startDate,
+            @Param("endDate") java.time.LocalDate endDate
+    );
+
+
 }

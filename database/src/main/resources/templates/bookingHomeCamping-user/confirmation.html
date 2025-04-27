@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Xác nhận đặt phòng</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div th:replace="~{master/masterpage :: content}">
+  <section th:fragment="content">
+    <div class="container mt-5">
+      <h1>Xác nhận đặt phòng</h1>
+      <div class="alert alert-success" role="alert">
+        Đặt phòng của bạn đã được thực hiện thành công!
+      </div>
+
+      <!-- Thông tin đặt phòng -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title" th:text="'Đặt phòng tại: ' + ${booking.homestayName}">Đặt phòng tại: Homestay Name</h5>
+          <p class="card-text" th:text="'Họ và tên: ' + ${booking.fullName}">Họ và tên: Full Name</p>
+          <p class="card-text" th:text="'Số điện thoại: ' + ${booking.phone}">Số điện thoại: Phone</p>
+          <p class="card-text" th:text="'Ngày nhận phòng: ' + ${booking.checkin}">Ngày nhận phòng: Check-in Date</p>
+          <p class="card-text" th:text="'Ngày trả phòng: ' + ${booking.checkout}">Ngày trả phòng: Check-out Date</p>
+          <p class="card-text" th:text="'Số lượng khách: ' + ${booking.guests}">Số lượng khách: Guests</p>
+          <p class="card-text" th:text="'Tổng giá: ' + ${booking.totalPrice} + ' VNĐ'">Tổng giá: Total Price VNĐ</p>
+        </div>
+      </div>
+
+      <!-- Nút quay lại trang chủ -->
+      <a th:href="@{/}" class="btn btn-primary">Quay lại trang chủ</a>
+    </div>
+  </section>
+</div>
+</body>
+</html>

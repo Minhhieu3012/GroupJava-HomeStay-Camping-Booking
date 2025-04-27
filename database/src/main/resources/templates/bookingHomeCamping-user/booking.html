@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đặt phòng</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div th:replace="~{master/masterpage :: content}">
+    <section th:fragment="content">
+        <div class="container mt-5">
+            <h1>Đặt phòng Homestay</h1>
+
+            <!-- Thông tin homestay -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${homestay?.name} ?: 'Homestay Name'">Homestay Name</h5>
+                    <p class="card-text" th:text="'Địa điểm: ' + (${homestay?.location} ?: 'Location')">Địa điểm: Location</p>
+                    <p class="card-text" th:text="'Giá: ' + (${homestay?.price} ?: 'Price') + ' VNĐ/đêm'">Giá: Price VNĐ/đêm</p>
+                </div>
+            </div>
+
+            <!-- Form đặt phòng -->
+            <form th:action="@{/confirmBooking}" method="post">
+                <input type="hidden" name="homestayId" th:value="${homestayId}">
+
+                <div class="mb-3">
+                    <label for="fullName" class="form-label">Họ và tên</label>
+                    <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Nhập họ và tên" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Số điện thoại</label>
+                    <input type="tel" class="form-control" id="phone" name="phone" placeholder="Nhập số điện thoại" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="checkin" class="form-label">Ngày nhận phòng</label>
+                    <input type="date" class="form-control" id="checkin" name="checkin" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="checkout" class="form-label">Ngày trả phòng</label>
+                    <input type="date" class="form-control" id="checkout" name="checkout" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="guests" class="form-label">Số lượng khách</label>
+                    <input type="number" class="form-control" id="guests" name="guests" min="1" placeholder="Nhập số lượng khách" required>
+                </div>
+
+                <button type="submit" class="btn btn-success">Xác nhận đặt phòng</button>
+                <a th:href="@{/}" class="btn btn-secondary">Hủy</a>
+            </form>
+        </div>
+    </section>
+</div>
+</body>
+</html>

@@ -1,0 +1,93 @@
+/* booking-styles.css */
+.hero-section {
+    background-image: url('https://images.unsplash.com/photo-1507521628349-6e9b27569d5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    height: 500px;
+    position: relative;
+}
+
+.hero-section .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.hero-section h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    position: relative;
+    z-index: 1;
+}
+
+.search-form {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    border-radius: 10px;
+}
+
+.homestay-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.homestay-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.homestay-image {
+    overflow: hidden;
+}
+
+.homestay-image img {
+    transition: transform 0.3s ease;
+    height: 220px;
+    object-fit: cover;
+}
+
+.homestay-card:hover .homestay-image img {
+    transform: scale(1.1);
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.card-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.card-text {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.badge {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+}
+
+.btn-primary {
+    background-color: #ff5733;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #e04e2c;
+}
+
+.text-muted {
+    color: #6c757d !important;
+}

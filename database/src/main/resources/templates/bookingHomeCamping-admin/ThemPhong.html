@@ -71,6 +71,10 @@
 <!--            </div>-->
             <div class="container mt-5">
                 <h2>Thêm Phòng Mới</h2>
+                <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+                    <p th:text="${errorMessage}"></p>
+                </div>
+
                 <form th:action="@{/luu-phong}" th:object="${propertyDTO}" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="name" class="form-label">Tên phòng</label>

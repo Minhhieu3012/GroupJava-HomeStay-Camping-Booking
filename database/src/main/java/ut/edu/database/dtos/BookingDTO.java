@@ -27,4 +27,7 @@ public class BookingDTO {
     private BigDecimal adminFee;
     private BigDecimal ownerEarning;
 
+    // Thêm 2 field mới:
+    private String username;
+    private String propertyName;
 }

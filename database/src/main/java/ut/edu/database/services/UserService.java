@@ -3,7 +3,6 @@ package ut.edu.database.services;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,10 +13,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import ut.edu.database.dtos.RegisterRequest;
 import ut.edu.database.dtos.UserDTO;
 import ut.edu.database.enums.Role;
-import ut.edu.database.mapper.UserMapper;
 import ut.edu.database.models.Property;
-import ut.edu.database.models.User;
 import ut.edu.database.repositories.PropertyRepository;
+import ut.edu.database.mapper.UserMapper;
+import ut.edu.database.models.User;
 import ut.edu.database.repositories.UserRepository;
 
 import java.util.Collections;
@@ -28,12 +27,11 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
-
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
-    @Autowired
-    private PropertyRepository propertyRepository;
+    private final PropertyRepository propertyRepository;
+
     // Get all users (Admin)
     public List<UserDTO> getAllUsers() {
         return userRepository.findAll()
@@ -124,14 +122,12 @@ public class UserService implements UserDetailsService {
         return userMapper.toDTO(userRepository.save(user));
     }
 
-
-//ADMIN XÓA CUSTOMER
+    //ADMIN XÓA CUSTOMER
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 
-
-//ADMIN XÓA OWNER
+    //ADMIN XÓA OWNER
     @Transactional
     public void deleteOwner(Long userId) {
         // 1. Lấy danh sách properties của user
@@ -143,7 +139,6 @@ public class UserService implements UserDetailsService {
         // 3. Xóa user
         userRepository.deleteById(userId);
     }
-
 
 
     @Override
@@ -182,7 +177,7 @@ public class UserService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
-//LƯU THAY ĐỔI TK CUS
+    //LƯU THAY ĐỔI TK CUS
     public void updateUser(UserDTO userDTO) {
         User user = userRepository.findById(userDTO.getId())
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
@@ -195,7 +190,7 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-//LƯU THAY ĐỔI TK OWNER
+    //LƯU THAY ĐỔI TK OWNER
     public void updateOwner(UserDTO ownerDTO) {
         User owner = userRepository.findById(ownerDTO.getId())
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
@@ -207,5 +202,4 @@ public class UserService implements UserDetailsService {
 
         userRepository.save(owner);
     }
-
 }

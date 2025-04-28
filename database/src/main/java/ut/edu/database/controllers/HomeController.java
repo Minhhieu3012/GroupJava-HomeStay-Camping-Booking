@@ -293,6 +293,22 @@ public class HomeController {
         return "bookingHomeCamping-admin/DonDatPhong";//goi den html page
     }
 
+    @RestController
+    @RequestMapping("/api/admin/dashboard")
+    @RequiredArgsConstructor
+    public class DashboardController {
+
+        private final DashboardService dashboardService;
+
+        @GetMapping
+        public DashboardDTO getDashboard() {
+            return dashboardService.getDashboardData();
+        }
+    }
+    @GetMapping("/dashboard")
+    public String dashboardPage() {
+        return "bookingHomeCamping-admin/Dashboard";
+    }
 
 }
 

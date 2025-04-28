@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <div th:replace="master-admin/css::css"></div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Hover nổi lên */
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 15px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+
+</head>
+
+<body>
+<div id="app">
+    <div id="sidebar" class="active">
+        <div class="sidebar-wrapper active">
+
+            <!--            START LOGO-->
+            <div th:replace="master-admin/logo::logo"></div>
+            <!--            END LOGO -->
+
+            <!--            START MENU-->
+            <div th:replace="master-admin/menu::menu"></div>
+            <!--            END MENU-->
+
+        </div>
+    </div>
+    <div id="main">
+        <div id="loading" style="display: none; text-align: center; margin-top: 50px;">
+            <div class="spinner-border text-primary" role="status" style="width: 4rem; height: 4rem;">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
+        <th:block th:fragment="content">
+            <!--                        NỘI DUNG CÁC TRANG ADMIN-->
+            <div class="container mt-5">
+                <h2 class="mb-4">Dashboard - Quản lý Homestay</h2>
+
+                <div class="row" id="dashboard-cards">
+                    <!-- Các Card sẽ được tạo tự động ở đây -->
+                </div>
+
+                <!-- Nếu cần thêm Chart có thể đặt dưới này -->
+            </div>
+            <div class="row mt-5">
+                <div class="col-md-6">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+                <div class="col-md-6">
+                    <canvas id="roomStatusChart"></canvas>
+                </div>
+                <div class="col-md-12 mt-5">
+                    <canvas id="monthlyRevenueChart"></canvas>
+                </div>
+
+            </div>
+
+            <script>
+                async function loadDashboard() {
+                    const loading = document.getElementById('loading');
+                    const dashboard = document.getElementById('dashboard-cards');
+
+                    loading.style.display = 'block';    // Bắt đầu hiện loading
+                    dashboard.innerHTML = '';            // Xóa dashboard trước đó
+
+                    try {
+                        const response = await fetch('/api/admin/dashboard');
+                        const data = await response.json();
+
+                        // Vẽ Card
+                        dashboard.innerHTML = `<div class="col-md-4 mb-3">
+                            <div class="card text-white bg-primary">
+                                <div class="card-body">
+                                    <h5 class="card-title">Đơn đặt hôm nay</h5>
+                                    <p class="card-text fs-4">${data.totalBookingsToday}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <div class="card text-white bg-success">
+                                <div class="card-body">
+                                    <h5 class="card-title">Doanh thu tháng</h5>
+                                    <p class="card-text fs-4">$${data.totalRevenueThisMonth}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <div class="card text-white bg-warning">
+                                <div class="card-body">
+                                    <h5 class="card-title">Phòng đang đặt</h5>
+                                    <p class="card-text fs-4">${data.totalRoomsBooked}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <div class="card text-white bg-info">
+                                <div class="card-body">
+                                    <h5 class="card-title">Phòng còn trống</h5>
+                                    <p class="card-text fs-4">${data.totalRoomsAvailable}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <div class="card text-white bg-dark">
+                                <div class="card-body">
+                                    <h5 class="card-title">Người dùng</h5>
+                                    <p class="card-text fs-4">${data.totalUsers}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <div class="card text-white bg-danger">
+                                <div class="card-body">
+                                    <h5 class="card-title">Homestay</h5>
+                                    <p class="card-text fs-4">${data.totalHomestays}</p>
+                                </div>
+                            </div>
+                        </div>`;  // Thay nội dung các Card
+
+                        // Vẽ Chart
+                        drawCharts(data);
+                        function drawCharts(data) {
+                            //     // Doanh thu ngày
+                            //         // const months = [[${months}]];
+                            //         // const revenues = [[${revenues}]];
+                            //
+                            //         const monthlyData = /*[[${monthlyRevenues}]]*/ [];
+                            //
+                            //         const months = monthlyData.map(item => (item.month < 10 ? '0' : '') + item.month + '/2025');
+                            //         const revenues = monthlyData.map(item => item.totalRevenue);
+                            //         const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+                            //         new Chart(revenueCtx, {
+                            //         type: 'bar',
+                            //         data: {
+                            //         labels: months,
+                            //         datasets: [{
+                            //         label: 'Tổng doanh thu theo tháng',
+                            //         data: revenues,
+                            //         backgroundColor: 'rgba(75, 192, 192, 0.7)'
+                            //     }]
+                            //     },
+                            //         options: {
+                            //         responsive: true,
+                            //         scales: {
+                            //         y: { beginAtZero: true }
+                            //     }
+                            //     }
+                            //     });
+                            // Phòng đang đặt / còn trống
+                            const roomStatusChartCtx = document.getElementById('roomStatusChart').getContext('2d');
+                            new Chart(roomStatusChartCtx, {
+                                type: 'pie',
+                                data: {
+                                    labels: ['Phòng đang đặt', 'Phòng còn trống'],
+                                    datasets: [{
+                                        data: [data.totalRoomsBooked, data.totalRoomsAvailable],
+                                        backgroundColor: ['#FFCE56', '#4BC0C0'],
+                                    }]
+                                },
+                                options: {responsive: true}
+                            });
+
+                            //     // Doanh thu tháng
+                            //     const monthlyRevenueChartCtx = document.getElementById('monthlyRevenueChart').getContext('2d');
+                            //     new Chart(monthlyRevenueChartCtx, {
+                            //         type: 'bar',
+                            //         data: {
+                            //             labels: data.months || [],
+                            //             datasets: [{
+                            //                 label: 'Doanh thu theo tháng ($)',
+                            //                 data: data.monthlyRevenue || [],
+                            //                 backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                            //                 borderRadius: 8,
+                            //             }]
+                            //         },
+                            //         options: { responsive: true }
+                            //     });
+                        }
+
+
+                    }catch (error) {
+                        console.error('Error loading dashboard:', error);
+                        dashboard.innerHTML = '<p class="text-danger">Không thể tải dữ liệu!</p>';
+                        } finally {
+                        loading.style.display = 'none';   // Ẩn loading dù thành công hay thất bại
+                    }
+                }
+
+                loadDashboard();
+
+            </script>
+        </th:block>
+    </div>
+</div>
+</body>
+
+</html>

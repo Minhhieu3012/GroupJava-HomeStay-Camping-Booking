@@ -3,6 +3,72 @@
 
 <head>
     <div th:replace="master-admin/css::css"></div>
+    <!-- Thêm CSS cho image gallery -->
+    <style>
+        .room-gallery {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        .main-image {
+            width: 100%;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .main-image img {
+            max-width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+        }
+        .thumbnails {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .thumbnail {
+            width: 100px;
+            height: 70px;
+            cursor: pointer;
+            border: 2px solid #ddd;
+            transition: border-color 0.3s;
+        }
+        .thumbnail:hover, .thumbnail.active {
+            border-color: #0d6efd;
+        }
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2;
+        }
+        .nav-prev {
+            left: 10px;
+        }
+        .nav-next {
+            right: 10px;
+        }
+    </style>
 </head>
 
 <body>
@@ -39,6 +105,7 @@
                         <th>Chủ phòng</th>
                         <th>Trạng thái</th>
                         <th>Hành động</th>
+                        <th>Xem Phòng</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -50,14 +117,11 @@
                         <td>
                             <img th:src="@{'/' + ${room.image}}" alt="Hình ảnh" width="100" height="80">
                         </td>
+
                         <td th:text="${room.description}"></td>
                         <td th:text="${room.owner_id}"></td>
                         <td th:text="${room.status}"></td>
                         <td>
-<!--                            <a th:href="@{/chinh-sua-phong/{id}(id=${room.id})}" class="btn btn-warning btn-sm">Chỉnh sửa</a>-->
-<!--                            <a th:href="@{'/xoa-phong/' + ${room.id}}" onclick="return confirm('Bạn có chắc muốn xóa phòng này không?')">-->
-<!--                                <button class="btn btn-danger">Xóa</button>-->
-<!--                            </a>-->
                             <a th:href="@{'/chinh-sua-phong/' + ${room.id}}" class="text-primary me-2" title="Chỉnh sửa">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
@@ -65,6 +129,14 @@
                                onclick="return confirm('Bạn có chắc muốn xóa phòng này không?')">
                                 <i class="bi bi-trash-fill"></i>
                             </a>
+                        </td>
+                        <td>
+                            <button class="btn btn-success btn-sm view-room-btn"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#viewRoomModal"
+                                    th:attr="data-roomid=${room.id}">
+                                Xem
+                            </button>
                         </td>
                     </tr>
                     </tbody>
@@ -74,6 +146,140 @@
 
     </div>
 </div>
+
+<!-- Modal hiển thị hình -->
+<div class="modal fade" id="viewRoomModal" tabindex="-1" aria-labelledby="viewRoomModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewRoomModalLabel">Thư viện ảnh Homestay</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Gallery đơn giản không sử dụng thư viện bên ngoài -->
+                <div class="room-gallery">
+                    <div class="main-image">
+                        <button class="nav-button nav-prev">&lt;</button>
+                        <img id="mainImage" src="" alt="Ảnh chính">
+                        <button class="nav-button nav-next">&gt;</button>
+                    </div>
+                    <div class="thumbnails" id="thumbnailContainer">
+                        <!-- Thumbnails sẽ được thêm vào đây -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        // Đăng ký sự kiện cho modal
+        var viewModal = document.getElementById('viewRoomModal');
+        viewModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var roomId = button.getAttribute('data-roomid');
+
+            console.log("Đang mở modal cho phòng ID:", roomId);
+            loadRoomImages();
+        });
+
+        // Các elements cần thiết
+        const mainImage = document.getElementById('mainImage');
+        const thumbnailContainer = document.getElementById('thumbnailContainer');
+        const prevButton = document.querySelector('.nav-prev');
+        const nextButton = document.querySelector('.nav-next');
+
+        // Các biến để theo dõi trạng thái
+        let currentIndex = 0;
+        let images = [];
+
+        // Đăng ký sự kiện cho nút điều hướng
+        prevButton.addEventListener('click', function() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateMainImage();
+                updateActiveThumbnail();
+            }
+        });
+
+        nextButton.addEventListener('click', function() {
+            if (currentIndex < images.length - 1) {
+                currentIndex++;
+                updateMainImage();
+                updateActiveThumbnail();
+            }
+        });
+
+        // Hàm tải danh sách ảnh
+        function loadRoomImages() {
+            // Xóa các thumbnails cũ
+            thumbnailContainer.innerHTML = '';
+
+            // Danh sách đường dẫn ảnh
+            images = [
+                "/static/rooms/Pic-Room-1.png",
+                "/static/rooms/Pic-Room-2.png",
+                "/static/rooms/Pic-Room-3.png",
+                "/static/rooms/Pic-Room-4.png",
+                "/static/rooms/Pic-Room-5.png",
+                "/static/rooms/Pic-Room-6.png",
+                "/static/rooms/Pic-Room-7.png",
+                "/static/rooms/Pic-Room-8.png",
+            ];
+
+            // Reset index
+            currentIndex = 0;
+
+            // Tạo thumbnail cho mỗi ảnh
+            images.forEach((src, index) => {
+                const thumbnail = document.createElement('div');
+                thumbnail.className = 'thumbnail' + (index === 0 ? ' active' : '');
+                thumbnail.dataset.index = index;
+
+                const img = document.createElement('img');
+                img.src = src;
+                img.alt = 'Thumbnail ' + (index + 1);
+
+                thumbnail.appendChild(img);
+                thumbnailContainer.appendChild(thumbnail);
+
+                // Đăng ký sự kiện khi click vào thumbnail
+                thumbnail.addEventListener('click', function() {
+                    currentIndex = parseInt(this.dataset.index);
+                    updateMainImage();
+                    updateActiveThumbnail();
+                });
+            });
+
+            // Hiển thị ảnh đầu tiên
+            updateMainImage();
+        }
+
+        // Cập nhật ảnh chính
+        function updateMainImage() {
+            if (images.length > 0) {
+                mainImage.src = images[currentIndex];
+            }
+        }
+
+        // Cập nhật trạng thái active của thumbnail
+        function updateActiveThumbnail() {
+            document.querySelectorAll('.thumbnail').forEach(thumbnail => {
+                thumbnail.classList.remove('active');
+            });
+
+            const activeThumbnail = document.querySelector(`.thumbnail[data-index="${currentIndex}"]`);
+            if (activeThumbnail) {
+                activeThumbnail.classList.add('active');
+            }
+        }
+    });
+</script>
+
 </body>
 
 </html>

@@ -310,6 +310,15 @@ public class HomeController {
         return "bookingHomeCamping-admin/Dashboard";
     }
 
+    @GetMapping("/login")
+    public String loginPage() {
+        return "bookingHomeCamping-user/login";
+    }
+
+    @GetMapping("/register")
+    public String registerPage() {
+        return "bookingHomeCamping-user/register";
+    }
 }
 
 //Layout ...

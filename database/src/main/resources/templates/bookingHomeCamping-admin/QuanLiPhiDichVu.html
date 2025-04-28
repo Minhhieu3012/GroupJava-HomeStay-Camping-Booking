@@ -24,34 +24,55 @@
         <!--            NỘI DUNG CÁC TRANG ADMIN-->
         <th:block th:fragment="content">
         <!--Nội dung trang con -->
-        <div class="service-fee-report container mt-5">
-            <h2 class="report-title-service-fee mb-4">QUẢN LÍ PHÍ DỊCH VỤ</h2>
-        
-            <table class="table table-bordered table-striped">
-                <thead class="table-dark">
-                <tr>
-                    <th>#</th>
-                    <th>ID Giao dịch</th>
-                    <th>Khách hàng</th>
-                    <th>Tổng tiền</th>
-                    <th>Phí quản lý (20%)</th>
-                    <th>Chủ nhà nhận</th>
-                    <th>Chi tiết</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="transaction, iterStat : ${transactions}">
-                    <td th:text="${iterStat.count}"></td>
-                    <td th:text="${transaction.id}"></td>
-                    <td th:text="${transaction.customerName}"></td>
-                    <td th:text="${#numbers.formatDecimal(transaction.totalAmount, 0, 'COMMA', 3, 'POINT')} + ' VND'"></td>
-                    <td th:text="${#numbers.formatDecimal(transaction.totalAmount * 0.2, 0, 'COMMA', 3, 'POINT')} + ' VND'"></td>
-                    <td th:text="${#numbers.formatDecimal(transaction.totalAmount * 0.8, 0, 'COMMA', 3, 'POINT')} + ' VND'"></td>
-                    <td><a th:href="@{'/admin/transaction-detail/' + ${transaction.id}}" class="btn btn-sm btn-primary">Xem</a></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+            <section class="p-6">
+                <h1 class="text-2xl font-bold mb-4">Quản lý phí dịch vụ</h1>
+
+                <!-- Bộ lọc -->
+<!--                <div class="flex gap-4 mb-6">-->
+<!--                    <input type="text" placeholder="Tìm theo chủ homestay..." class="border p-2 rounded w-1/3">-->
+<!--                    <input type="date" class="border p-2 rounded">-->
+<!--                    <select class="border p-2 rounded">-->
+<!--                        <option value="">Tất cả trạng thái</option>-->
+<!--                        <option value="PAID">Đã thanh toán</option>-->
+<!--                        <option value="UNPAID">Chưa thanh toán</option>-->
+<!--                    </select>-->
+<!--                    <button class="bg-blue-500 text-white px-4 py-2 rounded">Lọc</button>-->
+<!--                </div>-->
+
+                <!-- Bảng danh sách giao dịch -->
+                <div class="overflow-x-auto">
+                    <table class="table table-bordered table-hover align-middle text-center">
+                        <thead class="table-dark">
+                        <tr class="bg-gray-100 text-left">
+                            <th class="p-3">#</th>
+                            <th class="p-3">Khách hàng</th>
+                            <th class="p-3">Homestay</th>
+                            <th class="p-3">Ngày giao dịch</th>
+                            <th class="p-3">Tổng tiền</th>
+                            <th class="p-3">Phí quản lý (20%)</th>
+                            <th class="p-3">Hành động</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="payment, iterStat : ${payments}" th:if="${payment.paymentStatus.name() == 'PAID'}">
+                            <td th:text="${iterStat.index + 1}">1</td>
+                            <td th:text="${payment.username}">Nguyễn Văn A</td>
+<!--                            <td th:text="'Homestay ' + ${payment.bookingId}">Homestay 101</td> &lt;!&ndash; Tạm lấy bookingId, bạn có thể thay bằng tên homestay nếu có &ndash;&gt;-->
+                            <td th:text="${payment.propertyName}">Homestay ABC</td>
+
+                            <td th:text="${#temporals.format(payment.paymentDate, 'dd/MM/yyyy')}">28/04/2025</td>
+                            <td th:text="${#numbers.formatDecimal(payment.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' ₫'">1.000.000 ₫</td>
+                            <td th:text="${#numbers.formatDecimal(payment.adminFee, 0, 'COMMA', 0, 'POINT')} + ' ₫'">200.000 ₫</td>
+                            <td>
+                                <a th:href="@{/quan-li-phi-dich-vu/{id}(id=${payment.id})}"  class="btn btn-primary btn-sm">Xem chi tiết</a>
+                            </td>
+                        </tr>
+                        </tbody>
+
+
+                    </table>
+                </div>
+            </section>
         </th:block>
     </div>
 </div>

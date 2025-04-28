@@ -61,7 +61,7 @@ public class HomeController {
 
     @GetMapping("/home")
     public String HomePage() {
-        return "home";//goi den html page
+        return "bookingHomeCamping-user/home";//goi den html page
     }
 
     @GetMapping("/admin")
@@ -282,6 +282,43 @@ public class HomeController {
         List<BookingDTO> bookings = bookingService.getAllBookingDTOs();
         model.addAttribute("bookings", bookings);
         return "bookingHomeCamping-admin/DonDatPhong";//goi den html page
+    }
+
+//    @GetMapping("/home")
+//    public String home() {
+//
+//        return "bookingHomeCamping-user/home";
+//    }
+
+    @GetMapping("/login")
+    public String loginPage() {
+        return "bookingHomeCamping-user/login";
+    }
+
+    @GetMapping("/register")
+    public String registerPage() {
+        return "bookingHomeCamping-user/register";
+    }
+
+    //homestay
+//    @GetMapping("/homestays")
+//    public String showHomestays(Model model) {
+//        List<PropertyDTO> homestays = propertyService.getAllPropertyDTOs();
+//        model.addAttribute("homestays", homestays);
+//        return "bookingHomeCamping-user/homestay-detail"; // tên file HTML bạn đã viết
+//    }
+
+//    // Mapping tới trang danh sách homestay
+//    @GetMapping("/bookingHomeCamping-user/homestay-detail")
+//    public String showHomestayList(Model model) {
+//        List<PropertyDTO> homestays = propertyService.getAllPropertyDTOs(); // lấy danh sách homestay
+//        model.addAttribute("homestays", homestays); // đưa danh sách ra view
+//        return "/bookingHomeCamping-user/homestay-detail";
+//    }
+
+    @GetMapping("/homestay-detail")
+    public String homestayPage() {
+        return "bookingHomeCamping-user/homestay-detail";
     }
 
 

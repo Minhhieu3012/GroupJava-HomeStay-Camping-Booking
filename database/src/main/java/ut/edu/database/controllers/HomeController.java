@@ -53,8 +53,8 @@ public class HomeController {
     }
 
     @GetMapping("/home")
-    public String HomePage() {
-        return "home";//goi den html page
+    public String homePage() {
+        return "home"; // Không thêm .html
     }
 
     @GetMapping("/admin")
@@ -275,6 +275,30 @@ public class HomeController {
         return "bookingHomeCamping-admin/DonDatPhong";//goi den html page
     }
 
+    @GetMapping("/login")
+    public String loginPage() {
+        return "bookingHomeCamping-user/login";
+    }
+
+    // Xử lý đăng nhập (POST)
+    @PostMapping("/login")
+    public String processLogin() {
+        // Logic xử lý đăng nhập
+        return "redirect:/home"; // Chuyển hướng sau khi đăng nhập thành công
+    }
+
+    // Hiển thị trang đăng ký
+    @GetMapping("/register")
+    public String showRegisterPage() {
+        return "bookingHomeCamping-user/register"; // Trả về template register.html trong thư mục templates/auth
+    }
+
+    // Xử lý đăng ký (POST)
+    @PostMapping("/register")
+    public String processRegister() {
+        // Logic xử lý đăng ký
+        return "redirect:/login"; // Chuyển hướng đến trang đăng nhập sau khi đăng ký
+    }
 
 }
 

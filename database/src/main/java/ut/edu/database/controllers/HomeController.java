@@ -4,14 +4,10 @@ package ut.edu.database.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-//import org.springframework.security.core.annotation.AuthenticationPrincipal;
-//import org.springframework.security.core.userdetails.UserDetails;
-//import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-//import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ut.edu.database.dtos.*;
 import ut.edu.database.enums.PropertyStatus;
 import ut.edu.database.enums.Role;
@@ -24,9 +20,6 @@ import ut.edu.database.services.*;
 import ut.edu.database.services.PaymentService;
 
 import java.io.File;
-//import java.io.IOException;
-import java.math.BigDecimal;
-//import java.security.Principal;
 import java.util.*;
 
 @Controller
@@ -190,17 +183,6 @@ public class HomeController {
             }
         }
 
-//        // Gán owner nếu có
-//        if (propertyDTO.getOwner_id() != null) {
-//            Optional<User> ownerOpt = userRepository.findById(propertyDTO.getOwner_id());
-//            if (ownerOpt.isPresent()) {
-//                property.setOwner(ownerOpt.get());
-//            } else {
-//                throw new IllegalArgumentException("Không tìm thấy chủ phòng với ID: " + propertyDTO.getOwner_id());
-//            }
-//        } else {
-//            throw new IllegalArgumentException("Thiếu Owner ID");
-//        }
         // Gán owner nếu có
         if (propertyDTO.getOwner_id() != null) {
             Optional<User> ownerOpt = userRepository.findById(propertyDTO.getOwner_id());

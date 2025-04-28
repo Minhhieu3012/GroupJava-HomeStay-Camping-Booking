@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import ut.edu.database.dtos.MonthlyRevenueDTO;
+import ut.edu.database.dtos.PaymentDTO;
 import ut.edu.database.dtos.ReportDTO;
 import ut.edu.database.enums.BookingStatus;
 import ut.edu.database.mapper.ReportMapper;
@@ -21,6 +22,7 @@ import java.time.LocalDate;
 import java.math.RoundingMode;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -34,6 +36,7 @@ public class ReportService {
     private final ReportMapper reportMapper;
 
     private static final BigDecimal MANAGEMENT_FEE_PERCENT = BigDecimal.valueOf(0.2);
+    public double calculateTotalRevenue;
 
 
     // Lấy tất cả báo cáo
@@ -116,17 +119,17 @@ public class ReportService {
                 .collect(Collectors.toList());
     }
 
-    public BigDecimal calculateTotalRevenue() {
-        List<Booking> bookings = bookingRepository.findByStatus(BookingStatus.COMPLETED);
-        return bookings.stream()
-                .map(Booking::getTotalPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    public BigDecimal calculateManagementFee() {
-        BigDecimal totalRevenue = calculateTotalRevenue();
-        return totalRevenue.multiply(BigDecimal.valueOf(0.2));
-    }
+//    public BigDecimal calculateTotalRevenue() {
+//        List<Booking> bookings = bookingRepository.findByStatus(BookingStatus.COMPLETED);
+//        return bookings.stream()
+//                .map(Booking::getTotalPrice)
+//                .reduce(BigDecimal.ZERO, BigDecimal::add);
+//    }
+//
+//    public BigDecimal calculateManagementFee() {
+//        BigDecimal totalRevenue = calculateTotalRevenue();
+//        return totalRevenue.multiply(BigDecimal.valueOf(0.2));
+//    }
 
     public double calculateOccupancyRate() {
         List<Booking> bookings = bookingRepository.findByStatus(BookingStatus.COMPLETED);
@@ -143,5 +146,21 @@ public class ReportService {
         if (totalPossibleNights == 0) return 0;
 
         return (double) totalNightsBooked / totalPossibleNights * 100;
+    }
+
+    public double calculateTotalRevenue(List<PaymentDTO> payments) {
+        return payments.stream()
+                .map(PaymentDTO::getTotalAmount)
+                .filter(Objects::nonNull)
+                .mapToDouble(BigDecimal::doubleValue)
+                .sum();
+    }
+
+    public double calculateManagementFee(List<PaymentDTO> payments) {
+        return payments.stream()
+                .map(PaymentDTO::getAdminFee)
+                .filter(Objects::nonNull)
+                .mapToDouble(BigDecimal::doubleValue)
+                .sum();
     }
 }

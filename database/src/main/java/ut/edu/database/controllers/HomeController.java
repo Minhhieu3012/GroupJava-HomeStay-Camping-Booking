@@ -20,11 +20,8 @@ import ut.edu.database.models.Property;
 import ut.edu.database.models.User;
 import ut.edu.database.repositories.PropertyRepository;
 import ut.edu.database.repositories.UserRepository;
-import ut.edu.database.services.BookingService;
-import ut.edu.database.services.PropertyService;
-import ut.edu.database.services.ReportService;
-import ut.edu.database.services.UserService;
-import org.springframework.web.bind.annotation.GetMapping;
+import ut.edu.database.services.*;
+import ut.edu.database.services.PaymentService;
 
 import java.io.File;
 //import java.io.IOException;
@@ -49,6 +46,8 @@ public class HomeController {
     private UserService userService;
     @Autowired
     private BookingService bookingService;
+    @Autowired
+    private PaymentService paymentService;
 
     @GetMapping("/layout")
     public String layoutPage() {
@@ -60,9 +59,10 @@ public class HomeController {
         return "index";
     }
 
-    //@GetMapping("/home")
-    //public String homePage() { return "home";//goi den html page
-    //}
+    @GetMapping("/home")
+    public String HomePage() {
+        return "home";//goi den html page
+    }
 
     @GetMapping("/admin")
     public String adminPage() {
@@ -73,67 +73,23 @@ public class HomeController {
     private final ReportService ReportService;
 
 ////XEM BAO CAO DOANH THU
-//    @GetMapping("/bao-cao-doanh-thu")
-//
-//    public String baocaodoanhthuPage(Model model) {
-//        List<ReportDTO> monthlyReports = ReportService.getAllReports(); // Lấy danh sách báo cáo
-//        List<MonthlyRevenueDTO> monthlyRevenues = ReportService.getMonthlyRevenue(2025, null, true);
-//        BigDecimal totalRevenue = monthlyReports.stream()
-//                .map(ReportDTO::getTotalRevenue)
-//                .filter(Objects::nonNull)
-//                .reduce(BigDecimal.ZERO, BigDecimal::add);
-//
-//        // Tính tổng phí quản lý
-//        BigDecimal managementFee = monthlyReports.stream()
-//                .map(ReportDTO::getManagementFee)
-//                .filter(Objects::nonNull)
-//                .reduce(BigDecimal.ZERO, BigDecimal::add);
-//
-//        // Tính tỷ lệ lấp đầy trung bình
-//        BigDecimal occupancyRate = BigDecimal.valueOf(
-//                monthlyReports.stream()
-//                        .map(ReportDTO::getOccupancyRate)
-//                        .filter(Objects::nonNull)
-//                        .mapToDouble(BigDecimal::doubleValue)
-//                        .average()
-//                        .orElse(0.0)
-//        );
-//
-//        model.addAttribute("monthlyReports", monthlyReports); // Gửi sang Thymeleaf
-//        model.addAttribute("totalRevenue", totalRevenue);
-//        model.addAttribute("managementFee", managementFee);
-//        model.addAttribute("occupancyRate", occupancyRate);
-//        model.addAttribute("monthlyRevenues", monthlyRevenues);
-//
-//        return "bookingHomeCamping-admin/BaoCaoDoanhThu";//goi den html page
-//    }
-
 
     @GetMapping("/bao-cao-doanh-thu")
     public String viewRevenueReport(Model model) {
-//        List<ReportDTO> monthlyReports = ReportService.getAllReports(); // Lấy danh sách báo cáo
-        List<MonthlyRevenueDTO> monthlyRevenues = ReportService.getMonthlyRevenue(2025, null, true);
+        int year = 2025;
+        List<PaymentDTO> payments = paymentService.getAllPayments(); // hoặc getAllPaymentsForAdmin();
+        List<MonthlyRevenueDTO> monthlyRevenues = paymentService.calculateMonthlyRevenue(year);
 
-        // Tạo map tháng => doanh thu
-        Map<Integer, BigDecimal> revenueByMonth = new HashMap<>();
-        for (MonthlyRevenueDTO dto : monthlyRevenues) {
-            revenueByMonth.put(dto.getMonth(), dto.getTotalRevenue());
-        }
+        double totalRevenue = reportService.calculateTotalRevenue(payments);
+        double managementFee = reportService.calculateManagementFee(payments);
+        double occupancyRate = reportService.calculateTotalRevenue;// bạn tính thêm nếu cần
 
-        List<String> months = new ArrayList<>();
-        List<BigDecimal> revenues = new ArrayList<>();
 
-        for (int month = 1; month <= 12; month++) {
-            months.add(String.format("%02d/2025", month));
-            revenues.add(revenueByMonth.getOrDefault(month, BigDecimal.ZERO));
-        }
-
-        model.addAttribute("months", months);
-        model.addAttribute("revenues", revenues);
-        model.addAttribute("totalRevenue", reportService.calculateTotalRevenue());
-        model.addAttribute("managementFee", reportService.calculateManagementFee());
-        model.addAttribute("occupancyRate", reportService.calculateOccupancyRate());
         model.addAttribute("monthlyRevenues", monthlyRevenues);
+        model.addAttribute("payments", payments);
+        model.addAttribute("totalRevenue", totalRevenue);
+        model.addAttribute("managementFee", managementFee);
+        model.addAttribute("occupancyRate", occupancyRate);
         return "bookingHomeCamping-admin/BaoCaoDoanhThu";
     }
 
@@ -314,9 +270,12 @@ public class HomeController {
     }
 
     @GetMapping("/hoa-don")
-    public String hoadonPage() {
-        return "bookingHomeCamping-admin/HoaDon";//goi den html page
+    public String hoadonPage(Model model) {
+        List<PaymentDTO> payments = paymentService.getAllPayments();
+        model.addAttribute("payments", payments);
+        return "bookingHomeCamping-admin/HoaDon";
     }
+
 
     @GetMapping("/don-dat-phong")
     public String dondatphongPage(Model model) {
@@ -326,21 +285,6 @@ public class HomeController {
     }
 
 
-
-    @GetMapping("/home")
-    public String home() {
-        return "bookingHomeCamping-user/home";
-    }
-
-    @GetMapping("/login")
-    public String loginPage() {
-        return "bookingHomeCamping-user/login"; // gọi đến file login.html trong templates/
-    }
-
-    @GetMapping("/register")
-    public String registerPage() {
-        return "bookingHomeCamping-user/register"; // gọi file templates/register.html
-    }
 }
 
 //Layout ...

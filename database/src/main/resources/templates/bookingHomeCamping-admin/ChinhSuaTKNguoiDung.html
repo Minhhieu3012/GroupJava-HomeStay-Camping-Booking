@@ -9,45 +9,48 @@
 <div id="app">
     <div id="sidebar" class="active">
         <div class="sidebar-wrapper active">
-
-            <!--            START LOGO-->
+            <!-- BẮT ĐẦU LOGO -->
             <div th:replace="master-admin/logo::logo"></div>
-            <!--            END LOGO -->
+            <!-- KẾT THÚC LOGO -->
 
-            <!--            START MENU-->
+            <!-- BẮT ĐẦU MENU -->
             <div th:replace="master-admin/menu::menu"></div>
-            <!--            END MENU-->
-
+            <!-- KẾT THÚC MENU -->
         </div>
     </div>
     <div id="main">
-
-        <!--            NỘI DUNG CÁC TRANG ADMIN-->
+        <!-- NỘI DUNG CÁC TRANG ADMIN -->
         <th:block th:fragment="content">
             <div class="container mt-5">
                 <h2 class="homestay-host-account mb-4">CHỈNH SỬA TÀI KHOẢN NGƯỜI DÙNG</h2>
 
-                <form action="/cap-nhat-tk-user" th:object="${user}"  method="post">
-                    <input type="hidden" name="id" th:value="${id}" />
+                <form th:action="@{/cap-nhat-tk-user}" th:object="${user}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="id" th:field="*{id}" />
+
+                    <!-- Thay thế phần chọn avatar hiện tại -->
+                    <div class="mb-3">
+                        <label for="avatarFile" class="form-label">Tải lên ảnh đại diện:</label>
+                        <input type="file" class="form-control" id="avatarFile" name="avatarFile" accept="image/*" onchange="previewUploadedAvatar(this)">
+                    </div>
 
                     <div class="mb-3">
                         <label for="username" class="form-label">Tên người dùng:</label>
-                        <input type="text" class="form-control" id="username" name="username" th:value="${username}" required />
+                        <input type="text" class="form-control" id="username" name="username" th:field="*{username}" required />
                     </div>
 
                     <div class="mb-3">
                         <label for="email" class="form-label">Email:</label>
-                        <input type="email" class="form-control" id="email" name="email" th:value="${email}" required />
+                        <input type="email" class="form-control" id="email" name="email" th:field="*{email}" required />
                     </div>
 
                     <div class="mb-3">
                         <label for="phone" class="form-label">Số điện thoại:</label>
-                        <input type="text" class="form-control" id="phone" name="phone" th:value="${phone}" required />
+                        <input type="text" class="form-control" id="phone" name="phone" th:field="*{phone}" required />
                     </div>
 
                     <div class="mb-3">
                         <label for="identityCard" class="form-label">Số CCCD:</label>
-                        <input type="text" class="form-control" id="identityCard" name="identityCard" th:value="${identityCard}" required />
+                        <input type="text" class="form-control" id="identityCard" name="identityCard" th:field="*{identityCard}" required />
                     </div>
 
                     <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
@@ -56,6 +59,39 @@
         </th:block>
     </div>
 </div>
-</body>
 
+<!-- JavaScript để xem trước ảnh đại diện -->
+<script>
+    function previewAvatar(selectElement) {
+        const preview = document.getElementById('avatarPreview');
+        const selectedValue = selectElement.value;
+
+        // Đặt lại file input
+        document.getElementById('avatarFile').value = '';
+
+        if (selectedValue) {
+            preview.src = selectedValue;
+        } else {
+            preview.src = '/static/static-user/img/avt users/default-avt.png';
+        }
+    }
+
+    function previewUploadedAvatar(fileInput) {
+        const preview = document.getElementById('avatarPreview');
+        const file = fileInput.files[0];
+
+        // Đặt lại select dropdown
+        document.getElementById('avatar').value = '';
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                preview.src = reader.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+
+</body>
 </html>

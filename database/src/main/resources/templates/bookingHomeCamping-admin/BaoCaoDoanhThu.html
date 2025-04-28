@@ -25,7 +25,7 @@
     <div id="main">
         <th:block th:fragment="content">
             <div class="container mt-5">
-                <h2 class="mb-4">BÁO CÁO DOANH THU</h2>
+                <h2 class="mb-4">BÁO CÁO DOANH THU</h2>reports
 
                 <!-- Tổng quan -->
                 <div class="row mb-4">
@@ -43,8 +43,8 @@
                     </div>
                     <div class="col-md-4">
                         <div class="card p-3 shadow">
-                            <h5>Tỷ lệ lấp đầy</h5>
-                            <p class="h4 text-primary" th:text="${occupancyRate} + '%'">0%</p>
+                            <h5>Tổng doanh thu chủ homestay</h5>
+                            <p class="h4 text-primary" th:text="${totalRevenue} - ${managementFee}  + ' VND'">0 VND</p>
                         </div>
                     </div>
                 </div>
@@ -70,7 +70,7 @@
                         </thead>
                         <tbody>
                         <tr th:each="report : ${monthlyRevenues}">
-                            <td th:text="'0' + ${report.month} + '/2025'">04/2025</td>
+                            <td th:text="'0' + ${report.month} + '/2025'">4/2025</td>
                             <td th:text="${#numbers.formatDecimal(report.totalRevenue, 0, 'COMMA', 2, 'POINT')}">0.00</td>
                         </tr>
                         </tbody>
@@ -83,9 +83,13 @@
 </div>
 
 <script th:inline="javascript">
-    const months = [[${months}]];
-    const revenues = [[${revenues}]];
+    // const months = [[${months}]];
+    // const revenues = [[${revenues}]];
 
+    const monthlyData = /*[[${monthlyRevenues}]]*/ [];
+
+    const months = monthlyData.map(item => (item.month < 10 ? '0' : '') + item.month + '/2025');
+    const revenues = monthlyData.map(item => item.totalRevenue);
     const revenueCtx = document.getElementById('revenueChart').getContext('2d');
     new Chart(revenueCtx, {
         type: 'bar',
@@ -109,18 +113,17 @@
     window.addEventListener('DOMContentLoaded', function () {
         const totalRevenue = [[${totalRevenue}]];
         const managementFee = [[${managementFee}]];
-        const occupancyRate = [[${occupancyRate}]];
 
         const feeCtx = document.getElementById('feeChart').getContext('2d');
         new Chart(feeCtx, {
             type: 'doughnut',
             data: {
-                labels: ['Phí quản lý', 'Doanh thu chủ homestay', 'Tỷ lệ lấp đầy'],
+                labels: ['Phí quản lý', 'Tổng doanh thu', 'Tổng doanh thu chủ homestay'],
                 datasets: [{
                     data: [
                         managementFee,
-                        totalRevenue - managementFee,
-                        occupancyRate * totalRevenue
+                        totalRevenue,
+                        totalRevenue - managementFee
                     ],
                     backgroundColor: ['#ff6384', '#36a2eb', '#ffce56']
                 }]

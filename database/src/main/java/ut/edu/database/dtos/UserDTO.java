@@ -17,6 +17,7 @@ public class UserDTO {
     private String password;
     private String phone;
     private String identityCard;
+    private String avatar;
     private Role role;
     //===================================
 }

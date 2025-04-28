@@ -26,8 +26,49 @@
 
         <th:block th:fragment="content">
             <!--            NỘI DUNG CÁC TRANG ADMIN-->
-            <div class="service-fee-report container mt-5">
-                <h2 class="report-title-service-fee mb-4">HÓA ĐƠN ĐẶT PHÒNG</h2>
+            <div class="page-heading">
+                <h3>Danh sách Hóa Đơn</h3>
+            </div>
+
+            <div class="page-content">
+                <section class="section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Thông tin các hóa đơn</h4>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped" id="table1">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Username</th>
+                                    <th>Tổng Tiền</th>
+                                    <th>Phí Admin</th>
+                                    <th>Tiền Host</th>
+                                    <th>Trạng thái</th>
+                                    <th>Ngày thanh toán</th>
+                                    <th>Phương thức thanh toán</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="payment : ${payments}">
+                                    <td th:text="${payment.id}"></td>
+                                    <td th:text="${payment.username}"></td>
+                                    <td th:text="${#numbers.formatDecimal(payment.totalAmount, 1, 'COMMA', 2, 'POINT')} + ' đ'"></td>
+                                    <td th:text="${#numbers.formatDecimal(payment.adminFee, 1, 'COMMA', 2, 'POINT')} + ' đ'"></td>
+                                    <td th:text="${#numbers.formatDecimal(payment.hostAmount, 1, 'COMMA', 2, 'POINT')} + ' đ'"></td>
+                                    <td th:text="${payment.paymentStatus}"></td>
+                                    <td th:text="${#temporals.format(payment.paymentDate, 'dd/MM/yyyy HH:mm')}"></td>
+
+                                    <!--                                    <td th:text="${#dates.format(payment.paymentDate, 'dd/MM/yyyy HH:mm')}"></td>-->
+                                    <td th:text="${payment.paymentMethod}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
         </th:block>
     </div>
 </div>

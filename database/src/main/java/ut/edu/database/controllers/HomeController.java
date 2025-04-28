@@ -134,71 +134,41 @@ public class HomeController {
 
     //LƯU THÔNG TIN THAY ĐỔI VÀ QUAY LẠI TRANG DANH SÁCH CUS
     @PostMapping("/cap-nhat-tk-user")
-    public String updateUserAccount(@RequestParam("id") Long id,
-                                    @RequestParam("username") String username,
-                                    @RequestParam("email") String email,
-                                    @RequestParam("phone") String phone,
-                                    @RequestParam("identityCard") String identityCard,
-                                    @RequestParam(value = "avatar", required = false) String avatar,
-                                    @RequestParam(value = "avatarFile", required = false) MultipartFile avatarFile,
-                                    Model model) {
+    public String updateUser(@ModelAttribute UserDTO userDTO,
+                             @RequestParam(value = "avatarFile", required = false) MultipartFile avatarFile,
+                             @RequestParam(value = "avatar", required = false) String selectedAvatar) {
+        Optional<User> optionalUser = userService.getUserById(userDTO.getId());
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
 
-        Optional<User> userOptional = userService.getUserById(id);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            user.setUsername(username);
-            user.setEmail(email);
-            user.setPhone(phone);
-            user.setIdentityCard(identityCard);
+            user.setUsername(userDTO.getUsername());
+            user.setEmail(userDTO.getEmail());
+            user.setPhone(userDTO.getPhone());
+            user.setIdentityCard(userDTO.getIdentityCard());
 
-            // Xử lý upload ảnh mới nếu có
             if (avatarFile != null && !avatarFile.isEmpty()) {
-                String fileName = StringUtils.cleanPath(avatarFile.getOriginalFilename());
-                String uploadDir = "static/static-user/img/avt users/uploaded/";
-
+                // Nếu upload ảnh mới
                 try {
-                    // Tạo thư mục nếu chưa tồn tại
-                    Path uploadPath = Paths.get(uploadDir);
-                    if (!Files.exists(uploadPath)) {
-                        Files.createDirectories(uploadPath);
-                    }
+                    String fileName = UUID.randomUUID() + "_" + avatarFile.getOriginalFilename();
+                    String uploadDir = new ClassPathResource("static/static-user/img/avt users").getFile().getAbsolutePath();
+                    File saveFile = new File(uploadDir + File.separator + fileName);
+                    avatarFile.transferTo(saveFile);
 
-                    // Tạo tên file duy nhất để tránh trùng lặp
-                    String uniqueFileName = System.currentTimeMillis() + "_" + fileName;
-                    Path filePath = uploadPath.resolve(uniqueFileName);
-
-                    // Lưu file
-                    Files.copy(avatarFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-                    // Cập nhật đường dẫn ảnh cho user
-                    user.setAvatar("/" + uploadDir + uniqueFileName);
-
-                } catch (IOException e) {
+                    user.setAvatar("/static-user/img/avt users/" + fileName);
+                } catch (Exception e) {
                     e.printStackTrace();
-                    model.addAttribute("errorMessage", "Lỗi khi tải lên ảnh: " + e.getMessage());
-                    return "redirect:/quan-li-tk-user";
                 }
-            }
-            // Nếu người dùng chọn avatar có sẵn
-            else if (avatar != null && !avatar.isEmpty()) {
-                user.setAvatar(avatar);
+            } else if (selectedAvatar != null && !selectedAvatar.isEmpty()) {
+                // Nếu chọn ảnh có sẵn
+                user.setAvatar(selectedAvatar);
             }
 
-            UserDTO userDTO = new UserDTO();
-            userDTO.setId(id);
-            userDTO.setUsername(username);
-            userDTO.setEmail(email);
-            userDTO.setPhone(phone);
-            userDTO.setIdentityCard(identityCard);
-            userDTO.setAvatar(user.getAvatar()); // Dùng avatar đã cập nhật từ user object
-            userService.updateUser(userDTO);
-            model.addAttribute("successMessage", "Cập nhật tài khoản thành công!");
-        } else {
-            model.addAttribute("errorMessage", "Không tìm thấy người dùng!");
+            userRepository.save(user);
         }
 
-        return "redirect:/quan-li-tk-user";
+        return "redirect:/quan-li-tk-user";  // Quay về trang danh sách
     }
+
 
     //XÓA CUS
     @GetMapping("/xoa-user/{id}")

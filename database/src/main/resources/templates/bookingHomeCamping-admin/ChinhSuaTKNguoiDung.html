@@ -37,15 +37,7 @@
                     <div class="mb-3">
                         <label for="avatar" class="form-label">Hoặc chọn ảnh đại diện có sẵn:</label>
                         <select class="form-select" id="avatar" name="avatar" onchange="previewAvatar(this)">
-                            <option value="" th:selected="${user.avatar == null}">Không chọn ảnh</option>
-                            <option value="/static/static-user/img/avt users/bombardino crocodilo.png" th:selected="${user.avatar == '/static/static-user/img/avt users/bombardino crocodilo.png'}">Bombardino Crocodilo</option>
-                            <option value="/static/static-user/img/avt users/brr brr patapim.png" th:selected="${user.avatar == '/static/static-user/img/avt users/brr brr patapim.png'}">Brr Brr Patapim</option>
-                            <option value="/static/static-user/img/avt users/cappuccino asasino.png" th:selected="${user.avatar == '/static/static-user/img/avt users/cappuccino asasino.png'}">Cappuccino Asasino</option>
-                            <option value="/static/static-user/img/avt users/default-avt.png" th:selected="${user.avatar == '/static/static-user/img/avt users/default-avt.png'}">Avatar Default</option>
-                            <option value="/static/static-user/img/avt users/lirili larila.png" th:selected="${user.avatar == '/static/static-user/img/avt users/lirili larila.png'}">Lirili Larila</option>
-                            <option value="/static/static-user/img/avt users/simpanzinni bananinni.png" th:selected="${user.avatar == '/static/static-user/img/avt users/simpanzinni bananinni.png'}">Simpanzinni Bananinni</option>
-                            <option value="/static/static-user/img/avt users/tralalero tralala.png" th:selected="${user.avatar == '/static/static-user/img/avt users/tralalero tralala.png'}">Tralalero Tralala</option>
-                            <option value="/static/static-user/img/avt users/tung tung tung sahur.png" th:selected="${user.avatar == '/static/static-user/img/avt users/tung tung tung sahur.png'}">Tung Tung Tung Sahur</option>
+                            <option value="/static/static-user/img/avt users/default-avt.png" th:selected="${user.avatar == '/static/static-user/img/avt users/default-avt.png'}">Ảnh mặc định</option>
                         </select>
                     </div>
 

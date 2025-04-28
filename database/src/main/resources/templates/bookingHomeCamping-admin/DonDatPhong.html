@@ -28,6 +28,50 @@
             <!--            NỘI DUNG CÁC TRANG ADMIN-->
             <div class="service-fee-report container mt-5">
                 <h2 class="report-title-service-fee mb-4">DANH SÁCH ĐƠN ĐẶT PHÒNG</h2>
+
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên người đặt</th>
+                        <th>Tên phòng</th>
+                        <th>Ngày bắt đầu</th>
+                        <th>Ngày kết thúc</th>
+                        <th>Tổng giá</th>
+                        <th>Phí admin</th>
+                        <th>Chủ nhà nhận</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                    </thead>
+<!--                    <tbody>-->
+<!--                    <tr th:each="booking : ${bookings}">-->
+<!--                        <td th:text="${booking.id}">1</td>-->
+<!--                        <td th:text="${booking.userID}">User ID</td>-->
+<!--                        <td th:text="${booking.propertyID}">Property ID</td>-->
+<!--                        <td th:text="${booking.startDate}">Start Date</td>-->
+<!--                        <td th:text="${booking.endDate}">End Date</td>-->
+<!--                        <td th:text="${#numbers.formatDecimal(booking.totalPrice, 1, 'COMMA', 2, 'POINT')}">0</td>-->
+<!--                        <td th:text="${#numbers.formatDecimal(booking.adminFee, 1, 'COMMA', 2, 'POINT')}">0</td>-->
+<!--                        <td th:text="${#numbers.formatDecimal(booking.ownerEarning, 1, 'COMMA', 2, 'POINT')}">0</td>-->
+<!--                        <td th:text="${booking.status}">Status</td>-->
+<!--                    </tr>-->
+<!--                    </tbody>-->
+                    <tbody>
+                    <tr th:each="booking : ${bookings}">
+                        <td th:text="${booking.id}">1</td>
+                        <td th:text="${booking.username}">Tên người đặt</td> <!-- lấy từ UserDTO -->
+                        <td th:text="${booking.propertyName}">Tên phòng</td>    <!-- lấy từ PropertyDTO -->
+                        <td th:text="${booking.startDate}">Ngày bắt đầu</td>
+                        <td th:text="${booking.endDate}">Ngày kết thúc</td>
+                        <td th:text="${#numbers.formatDecimal(booking.totalPrice, 1, 'COMMA', 2, 'POINT')}">Tổng giá</td>
+                        <td th:text="${#numbers.formatDecimal(booking.adminFee, 1, 'COMMA', 2, 'POINT')}">Phí admin</td>
+                        <td th:text="${#numbers.formatDecimal(booking.ownerEarning, 1, 'COMMA', 2, 'POINT')}">Chủ nhà nhận</td>
+                        <td th:text="${booking.status}">Trạng thái</td>
+                    </tr>
+                    </tbody>
+
+                </table>
+            </div>
         </th:block>
     </div>
 </div>

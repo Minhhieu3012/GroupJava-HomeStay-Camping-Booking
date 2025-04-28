@@ -16,4 +16,8 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
     List<Property> findByStatus(PropertyStatus status);
 
     List<Property> findByOwnerEmail(String email);
+
+    List<Property> findByOwnerId(Long ownerId); // lấy danh sách property theo ownerId
+
+    void deleteByOwnerId(Long ownerId); // xóa hết property theo ownerId
 }

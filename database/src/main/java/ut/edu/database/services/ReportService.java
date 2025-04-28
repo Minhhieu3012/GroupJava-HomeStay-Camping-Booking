@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import ut.edu.database.dtos.MonthlyRevenueDTO;
 import ut.edu.database.dtos.ReportDTO;
+import ut.edu.database.enums.BookingStatus;
 import ut.edu.database.mapper.ReportMapper;
 import ut.edu.database.enums.ReportStatus;
 import ut.edu.database.models.Report;
@@ -18,6 +19,7 @@ import ut.edu.database.repositories.BookingRepository;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.math.RoundingMode;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -75,7 +77,7 @@ public class ReportService {
                 .map(Booking::getTotalPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal managementFee = totalRevenue.multiply(MANAGEMENT_FEE_PERCENT);
-        long totalDays = startDate.until(endDate).getDays()+1;
+        long totalDays = startDate.until(endDate).getDays() + 1;
         long bookedDays = bookings.stream()
                 .mapToLong(b -> {
                     LocalDate from = b.getStartDate().isBefore(startDate) ? startDate : b.getStartDate();
@@ -110,7 +112,36 @@ public class ReportService {
     public List<MonthlyRevenueDTO> getMonthlyRevenue(int year, Long ownerId, boolean forAdmin) {
         List<Object[]> rows = bookingRepository.getMonthlyRevenue(year, ownerId, forAdmin);
         return rows.stream()
-                .map(r->new MonthlyRevenueDTO((Integer) r[0], (BigDecimal) r[1]))
+                .map(r -> new MonthlyRevenueDTO((Integer) r[0], (BigDecimal) r[1]))
                 .collect(Collectors.toList());
+    }
+
+    public BigDecimal calculateTotalRevenue() {
+        List<Booking> bookings = bookingRepository.findByStatus(BookingStatus.COMPLETED);
+        return bookings.stream()
+                .map(Booking::getTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public BigDecimal calculateManagementFee() {
+        BigDecimal totalRevenue = calculateTotalRevenue();
+        return totalRevenue.multiply(BigDecimal.valueOf(0.2));
+    }
+
+    public double calculateOccupancyRate() {
+        List<Booking> bookings = bookingRepository.findByStatus(BookingStatus.COMPLETED);
+
+        long totalNightsBooked = bookings.stream()
+                .mapToLong(booking -> ChronoUnit.DAYS.between(booking.getStartDate(), booking.getEndDate()))
+                .sum();
+
+        long totalRooms = propertyRepository.count();
+        long daysInYear = 365;
+
+        long totalPossibleNights = totalRooms * daysInYear;
+
+        if (totalPossibleNights == 0) return 0;
+
+        return (double) totalNightsBooked / totalPossibleNights * 100;
     }
 }

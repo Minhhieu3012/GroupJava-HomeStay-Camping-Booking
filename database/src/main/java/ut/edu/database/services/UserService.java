@@ -1,5 +1,6 @@
 package ut.edu.database.services;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,6 +13,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import ut.edu.database.dtos.RegisterRequest;
 import ut.edu.database.dtos.UserDTO;
 import ut.edu.database.enums.Role;
+import ut.edu.database.models.Property;
+import ut.edu.database.repositories.PropertyRepository;
 import ut.edu.database.mapper.UserMapper;
 import ut.edu.database.models.User;
 import ut.edu.database.repositories.UserRepository;
@@ -24,10 +27,10 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
-
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final PropertyRepository propertyRepository;
 
     // Get all users (Admin)
     public List<UserDTO> getAllUsers() {
@@ -119,11 +122,24 @@ public class UserService implements UserDetailsService {
         return userMapper.toDTO(userRepository.save(user));
     }
 
-
-    // Admin xoá người dùng
+    //ADMIN XÓA CUSTOMER
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
+
+    //ADMIN XÓA OWNER
+    @Transactional
+    public void deleteOwner(Long userId) {
+        // 1. Lấy danh sách properties của user
+        List<Property> properties = propertyRepository.findByOwnerId(userId);
+
+        // 2. Xóa các property
+        propertyRepository.deleteByOwnerId(userId);
+
+        // 3. Xóa user
+        userRepository.deleteById(userId);
+    }
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -159,5 +175,31 @@ public class UserService implements UserDetailsService {
                 .filter(user -> "OWNER".equalsIgnoreCase(String.valueOf(user.getRole()))) // lọc role = "USER" (không phân biệt hoa thường)
                 .map(userMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    //LƯU THAY ĐỔI TK CUS
+    public void updateUser(UserDTO userDTO) {
+        User user = userRepository.findById(userDTO.getId())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+
+        user.setUsername(userDTO.getUsername());
+        user.setEmail(userDTO.getEmail());
+        user.setPhone(userDTO.getPhone());
+        user.setIdentityCard(userDTO.getIdentityCard());
+
+        userRepository.save(user);
+    }
+
+    //LƯU THAY ĐỔI TK OWNER
+    public void updateOwner(UserDTO ownerDTO) {
+        User owner = userRepository.findById(ownerDTO.getId())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+
+        owner.setUsername(ownerDTO.getUsername());
+        owner.setEmail(ownerDTO.getEmail());
+        owner.setPhone(ownerDTO.getPhone());
+        owner.setIdentityCard(ownerDTO.getIdentityCard());
+
+        userRepository.save(owner);
     }
 }

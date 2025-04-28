@@ -11,7 +11,9 @@ public interface BookingMapper {
 
     //ENTITY --> DTO
     @Mapping(source = "user.id", target = "userID")
+    @Mapping(source = "user.username", target = "username") // thêm dòng này
     @Mapping(source = "property.id", target = "propertyID")
+    @Mapping(source = "property.name", target = "propertyName") // thêm dòng này
     @Mapping(source = "adminFee", target = "adminFee")
     @Mapping(source = "ownerEarning", target = "ownerEarning")
     BookingDTO toDTO (Booking booking);

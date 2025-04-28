@@ -10,49 +10,54 @@
     <div id="sidebar" class="active">
         <div class="sidebar-wrapper active">
 
-            <!--            START LOGO-->
+            <!-- START LOGO -->
             <div th:replace="master-admin/logo::logo"></div>
-            <!--            END LOGO -->
 
-            <!--            START MENU-->
+            <!-- START MENU -->
             <div th:replace="master-admin/menu::menu"></div>
-            <!--            END MENU-->
 
         </div>
     </div>
-    <div id="main">
 
-        <!--            NỘI DUNG CÁC TRANG ADMIN-->
+    <div id="main">
+        <!-- NỘI DUNG CÁC TRANG ADMIN -->
         <th:block th:fragment="content">
             <div class="container mt-5">
-            <h2 class="homestay-host-account mb-4">DANH SÁCH TÀI KHOẢN NGƯỜI DÙNG</h2>
+                <h2 class="homestay-host-account mb-4">DANH SÁCH TÀI KHOẢN NGƯỜI DÙNG</h2>
 
-            <table class="table table-bordered table-hover align-middle text-center">
-                <thead class="table-dark">
-                <tr>
-                    <th>Tên người dùng</th>
-                    <th>Email</th>
-                    <th>Số điện thoại</th>
-                    <th>Số căn cước công dân</th>
-                    <th>Hành động</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="user : ${userList}">
-                    <td th:text="${user.username}">Tên</td>
-                    <td th:text="${user.email}">Email</td>
-                    <td th:text="${user.phone}">Số điện thoại</td>
-                    <td th:text="${user.identityCard}">Số CCCD</td>
-                    <td>
-                        <a th:href="@{'/quan-li-tk-user/chinh-sua-tk-user/' + ${user.id}}">Chỉnh sửa</a>
-                        <a th:href="@{/xoa-user/{id}(id=${user.id})}"
-                           onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này không?');">
-                            Xóa
-                        </a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                <table class="table table-bordered table-hover align-middle text-center">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>Avatar</th>
+                        <th>Tên người dùng</th>
+                        <th>Email</th>
+                        <th>Số điện thoại</th>
+                        <th>Số căn cước công dân</th>
+                        <th>Hành động</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user : ${userList}">
+                        <td>
+                            <img th:src="${user.avatar != null ? user.avatar : '/static-user/img/avt users/default-avt.png'}"
+                                 th:id="'avatar_' + ${user.id}"
+                                 alt="Avatar" width="60" height="60"
+                                 style="object-fit: cover; border-radius: 50%;">
+                        </td>
+                        <td th:text="${user.username}">Tên</td>
+                        <td th:text="${user.email}">Email</td>
+                        <td th:text="${user.phone}">Số điện thoại</td>
+                        <td th:text="${user.identityCard}">Số CCCD</td>
+                        <td>
+                            <a th:href="@{'/quan-li-tk-user/chinh-sua-tk-user/' + ${user.id}}">Chỉnh sửa</a>
+                            <a th:href="@{/xoa-user/{id}(id=${user.id})}"
+                               onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này không?');">
+                                Xóa
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </th:block>
     </div>

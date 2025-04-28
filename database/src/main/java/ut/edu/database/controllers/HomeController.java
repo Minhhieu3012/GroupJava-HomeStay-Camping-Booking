@@ -29,14 +29,13 @@ import java.io.File;
 //import java.io.IOException;
 import java.math.BigDecimal;
 //import java.security.Principal;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
 public class HomeController {
+    @Autowired
+    private final ReportService reportService;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -73,41 +72,71 @@ public class HomeController {
 
     private final ReportService ReportService;
 
-//XEM BAO CAO DOANH THU
+////XEM BAO CAO DOANH THU
+//    @GetMapping("/bao-cao-doanh-thu")
+//
+//    public String baocaodoanhthuPage(Model model) {
+//        List<ReportDTO> monthlyReports = ReportService.getAllReports(); // Lấy danh sách báo cáo
+//        List<MonthlyRevenueDTO> monthlyRevenues = ReportService.getMonthlyRevenue(2025, null, true);
+//        BigDecimal totalRevenue = monthlyReports.stream()
+//                .map(ReportDTO::getTotalRevenue)
+//                .filter(Objects::nonNull)
+//                .reduce(BigDecimal.ZERO, BigDecimal::add);
+//
+//        // Tính tổng phí quản lý
+//        BigDecimal managementFee = monthlyReports.stream()
+//                .map(ReportDTO::getManagementFee)
+//                .filter(Objects::nonNull)
+//                .reduce(BigDecimal.ZERO, BigDecimal::add);
+//
+//        // Tính tỷ lệ lấp đầy trung bình
+//        BigDecimal occupancyRate = BigDecimal.valueOf(
+//                monthlyReports.stream()
+//                        .map(ReportDTO::getOccupancyRate)
+//                        .filter(Objects::nonNull)
+//                        .mapToDouble(BigDecimal::doubleValue)
+//                        .average()
+//                        .orElse(0.0)
+//        );
+//
+//        model.addAttribute("monthlyReports", monthlyReports); // Gửi sang Thymeleaf
+//        model.addAttribute("totalRevenue", totalRevenue);
+//        model.addAttribute("managementFee", managementFee);
+//        model.addAttribute("occupancyRate", occupancyRate);
+//        model.addAttribute("monthlyRevenues", monthlyRevenues);
+//
+//        return "bookingHomeCamping-admin/BaoCaoDoanhThu";//goi den html page
+//    }
+
+
     @GetMapping("/bao-cao-doanh-thu")
-
-    public String baocaodoanhthuPage(Model model) {
-        List<ReportDTO> monthlyReports = ReportService.getAllReports(); // Lấy danh sách báo cáo
+    public String viewRevenueReport(Model model) {
+//        List<ReportDTO> monthlyReports = ReportService.getAllReports(); // Lấy danh sách báo cáo
         List<MonthlyRevenueDTO> monthlyRevenues = ReportService.getMonthlyRevenue(2025, null, true);
-        BigDecimal totalRevenue = monthlyReports.stream()
-                .map(ReportDTO::getTotalRevenue)
-                .filter(Objects::nonNull)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        // Tính tổng phí quản lý
-        BigDecimal managementFee = monthlyReports.stream()
-                .map(ReportDTO::getManagementFee)
-                .filter(Objects::nonNull)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        // Tạo map tháng => doanh thu
+        Map<Integer, BigDecimal> revenueByMonth = new HashMap<>();
+        for (MonthlyRevenueDTO dto : monthlyRevenues) {
+            revenueByMonth.put(dto.getMonth(), dto.getTotalRevenue());
+        }
 
-        // Tính tỷ lệ lấp đầy trung bình
-        BigDecimal occupancyRate = BigDecimal.valueOf(
-                monthlyReports.stream()
-                        .map(ReportDTO::getOccupancyRate)
-                        .filter(Objects::nonNull)
-                        .mapToDouble(BigDecimal::doubleValue)
-                        .average()
-                        .orElse(0.0)
-        );
+        List<String> months = new ArrayList<>();
+        List<BigDecimal> revenues = new ArrayList<>();
 
-        model.addAttribute("monthlyReports", monthlyReports); // Gửi sang Thymeleaf
-        model.addAttribute("totalRevenue", totalRevenue);
-        model.addAttribute("managementFee", managementFee);
-        model.addAttribute("occupancyRate", occupancyRate);
+        for (int month = 1; month <= 12; month++) {
+            months.add(String.format("%02d/2025", month));
+            revenues.add(revenueByMonth.getOrDefault(month, BigDecimal.ZERO));
+        }
+
+        model.addAttribute("months", months);
+        model.addAttribute("revenues", revenues);
+        model.addAttribute("totalRevenue", reportService.calculateTotalRevenue());
+        model.addAttribute("managementFee", reportService.calculateManagementFee());
+        model.addAttribute("occupancyRate", reportService.calculateOccupancyRate());
         model.addAttribute("monthlyRevenues", monthlyRevenues);
-
-        return "bookingHomeCamping-admin/BaoCaoDoanhThu";//goi den html page
+        return "bookingHomeCamping-admin/BaoCaoDoanhThu";
     }
+
 
     @GetMapping("/quan-li-phi-dich-vu")
     public String quanliphidichvuPage() {

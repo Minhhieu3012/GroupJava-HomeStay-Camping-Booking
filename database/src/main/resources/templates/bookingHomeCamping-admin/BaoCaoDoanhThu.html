@@ -57,7 +57,6 @@
                     <div class="col-md-6 mb-4">
                         <canvas id="feeChart"></canvas>
                     </div>
-<!--                    <canvas id="monthlyRevenueChart" width="200" height="50"></canvas>-->
                 </div>
 
                 <!-- Bảng chi tiết -->
@@ -66,7 +65,7 @@
                         <thead class="table-light">
                         <tr>
                             <th>Tháng</th>
-                            <th>Doanh thu</th>
+                            <th>Phí quản lí (20%)</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -77,35 +76,15 @@
                         </tbody>
                     </table>
                 </div>
-<!--                <div class="table-responsive">-->
-<!--                    <table class="table table-bordered">-->
-<!--                        <thead class="table-light">-->
-<!--                        <tr>-->
-<!--                            <th>Tháng</th>-->
-<!--                            <th>Doanh thu</th>-->
-<!--                            <th>Phí quản lý</th>-->
-<!--                            <th>Tỷ lệ lấp đầy</th>-->
-<!--                        </tr>-->
-<!--                        </thead>-->
-<!--                        <tbody>-->
-<!--                        <tr th:each="report : ${monthlyReports}">-->
-<!--                            <td th:text="${#temporals.format(report.reportDate, 'MM/yyyy')}">Tháng 1</td>-->
-<!--                            <td th:text="${report.totalRevenue}">0</td>-->
-<!--                            <td th:text="${report.managementFee}">0</td>-->
-<!--                            <td th:text="${report.occupancyRate}">0%</td>-->
-<!--                        </tr>-->
-<!--                        </tbody>-->
-<!--                    </table>-->
-<!--                </div>-->
             </div>
         </th:block>
     </div>
 
 </div>
+
 <script th:inline="javascript">
     const months = [[${months}]];
     const revenues = [[${revenues}]];
-    const fees = [[${fees}]];
 
     const revenueCtx = document.getElementById('revenueChart').getContext('2d');
     new Chart(revenueCtx, {
@@ -113,7 +92,7 @@
         data: {
             labels: months,
             datasets: [{
-                label: 'Tổng doanh thu',
+                label: 'Tổng doanh thu theo tháng',
                 data: revenues,
                 backgroundColor: 'rgba(75, 192, 192, 0.7)'
             }]
@@ -125,23 +104,7 @@
             }
         }
     });
-
-    const feeCtx = document.getElementById('feeChart').getContext('2d');
-    new Chart(feeCtx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Phí quản lý', 'Phần còn lại'],
-            datasets: [{
-                data: [
-                    fees.reduce((a, b) => a + b, 0),
-                    revenues.reduce((a, b) => a + b, 0) * 0.8
-                ],
-                backgroundColor: ['#ff6384', '#36a2eb']
-            }]
-        }
-    });
 </script>
-<!-- Đặt script ở cuối file trước khi đóng </body> -->
 <script>
     window.addEventListener('DOMContentLoaded', function () {
         const totalRevenue = [[${totalRevenue}]];
@@ -152,7 +115,7 @@
         new Chart(feeCtx, {
             type: 'doughnut',
             data: {
-                labels: ['Phí quản lý', 'Doanh thu còn lại', 'Tỷ lệ lấp đầy'],
+                labels: ['Phí quản lý', 'Doanh thu chủ homestay', 'Tỷ lệ lấp đầy'],
                 datasets: [{
                     data: [
                         managementFee,

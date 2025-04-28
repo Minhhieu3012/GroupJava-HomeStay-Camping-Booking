@@ -88,11 +88,21 @@ public class HomeController {
 
 
     @GetMapping("/quan-li-phi-dich-vu")
-    public String quanliphidichvuPage() {
+    public String quanliphidichvuPage(Model model) {
+        List<PaymentDTO> payments = paymentService.getAllPayments();
+        model.addAttribute("payments", payments);
         return "bookingHomeCamping-admin/QuanLiPhiDichVu";//goi den html page
     }
 
-//XEM DS CUSTOMER
+    @GetMapping("/quan-li-phi-dich-vu/{paymentId}")
+    public String viewPaymentDetail(@PathVariable Long paymentId, Model model) {
+        PaymentDTO payment = paymentService.getPaymentById(paymentId);
+        model.addAttribute("payment", payment);
+        return "bookingHomeCamping-admin/ChiTietHoaDon"; // Gọi trang chi tiết
+    }
+
+
+    //XEM DS CUSTOMER
     @GetMapping("/quan-li-tk-user")
     public String quanlitknguoidungPage(Model model) {
 //        List<UserDTO> userList = userService.getAllUsers();
@@ -257,7 +267,6 @@ public class HomeController {
         model.addAttribute("payments", payments);
         return "bookingHomeCamping-admin/HoaDon";
     }
-
 
     @GetMapping("/don-dat-phong")
     public String dondatphongPage(Model model) {

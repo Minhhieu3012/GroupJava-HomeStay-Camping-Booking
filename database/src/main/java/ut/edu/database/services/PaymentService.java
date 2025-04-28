@@ -41,7 +41,8 @@ public class PaymentService {
                 payment.getPaymentDate(),
                 payment.getPaymentMethod(),
                 booking.getUser().getId(),
-                booking.getUser().getUsername()
+                booking.getUser().getUsername(),
+                booking.getProperty().getName()
         );
     }
 
@@ -83,6 +84,7 @@ public class PaymentService {
                 .map(this::toDTO)
                 .orElseThrow(()->new RuntimeException("Không tìm thây Payment với id: " + id + ":(("));
     }
+
 
     //lay theo booking id (OWNER)
     public List<PaymentDTO> getPaymentsByBookingId(Long bookingId) {

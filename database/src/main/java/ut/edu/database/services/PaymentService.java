@@ -1,6 +1,7 @@
 package ut.edu.database.services;
 
 import lombok.RequiredArgsConstructor;
+import ut.edu.database.dtos.MonthlyRevenueDTO;
 import ut.edu.database.dtos.PaymentDTO;
 import ut.edu.database.models.Booking;
 import ut.edu.database.models.Payment;
@@ -10,8 +11,12 @@ import ut.edu.database.repositories.PaymentRepository;
 
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -24,6 +29,8 @@ public class PaymentService {
 
     // Entity -> DTO
     private PaymentDTO toDTO(Payment payment) {
+        Booking booking = payment.getBooking();
+
         return new PaymentDTO(
                 payment.getId(),
                 payment.getBooking().getId(),
@@ -32,7 +39,9 @@ public class PaymentService {
                 payment.getHostAmount(),
                 payment.getPaymentStatus(),
                 payment.getPaymentDate(),
-                payment.getPaymentMethod()
+                payment.getPaymentMethod(),
+                booking.getUser().getId(),
+                booking.getUser().getUsername()
         );
     }
 
@@ -82,5 +91,35 @@ public class PaymentService {
                 .map(this::toDTO)
                 .collect(Collectors.toList());
     }
+
+    public List<MonthlyRevenueDTO> calculateMonthlyRevenue(int year) {
+        List<Payment> payments = paymentRepository.findAll(); // hoặc chỉ tìm những Payment đã SUCCESS
+
+        Map<Integer, BigDecimal> revenueByMonth = new HashMap<>();
+        Map<Integer, BigDecimal> adminFeeByMonth = new HashMap<>();
+
+        for (Payment payment : payments) {
+            if (payment.getPaymentDate() != null && payment.getPaymentDate().getYear() == year) {
+                int month = payment.getPaymentDate().getMonthValue();
+
+                revenueByMonth.put(month,
+                        revenueByMonth.getOrDefault(month, BigDecimal.ZERO).add(payment.getTotalAmount()));
+
+                adminFeeByMonth.put(month,
+                        adminFeeByMonth.getOrDefault(month, BigDecimal.ZERO).add(payment.getAdminFee()));
+            }
+        }
+
+        List<MonthlyRevenueDTO> monthlyRevenues = new ArrayList<>();
+        for (int month = 1; month <= 12; month++) {
+            BigDecimal totalRevenue = revenueByMonth.getOrDefault(month, BigDecimal.ZERO);
+            BigDecimal adminFee = adminFeeByMonth.getOrDefault(month, BigDecimal.ZERO);
+
+            monthlyRevenues.add(new MonthlyRevenueDTO(month, adminFee));
+        }
+
+        return monthlyRevenues;
+    }
+
 }
 

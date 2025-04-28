@@ -21,4 +21,7 @@ public class PaymentDTO {
     private PaymentStatus paymentStatus;
     private LocalDateTime paymentDate;
     private PaymentMethod paymentMethod; // VNPAY, MOMO, CREDIT_CARD, CASH
+
+    private Long userId;
+    private String username;
 }

@@ -4,10 +4,14 @@ package ut.edu.database.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+//import org.springframework.security.core.annotation.AuthenticationPrincipal;
+//import org.springframework.security.core.userdetails.UserDetails;
+//import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+//import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ut.edu.database.dtos.*;
 import ut.edu.database.enums.PropertyStatus;
 import ut.edu.database.enums.Role;
@@ -16,23 +20,14 @@ import ut.edu.database.models.Property;
 import ut.edu.database.models.User;
 import ut.edu.database.repositories.PropertyRepository;
 import ut.edu.database.repositories.UserRepository;
-import ut.edu.database.services.BookingService;
-import ut.edu.database.services.PropertyService;
-import ut.edu.database.services.ReportService;
-import ut.edu.database.services.UserService;
+import ut.edu.database.services.*;
+import ut.edu.database.services.PaymentService;
 
 import java.io.File;
+//import java.io.IOException;
 import java.math.BigDecimal;
+//import java.security.Principal;
 import java.util.*;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import org.springframework.util.StringUtils;
-import java.util.Optional;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
@@ -51,6 +46,8 @@ public class HomeController {
     private UserService userService;
     @Autowired
     private BookingService bookingService;
+    @Autowired
+    private PaymentService paymentService;
 
     @GetMapping("/layout")
     public String layoutPage() {
@@ -75,31 +72,24 @@ public class HomeController {
 
     private final ReportService ReportService;
 
+////XEM BAO CAO DOANH THU
+
     @GetMapping("/bao-cao-doanh-thu")
     public String viewRevenueReport(Model model) {
-//        List<ReportDTO> monthlyReports = ReportService.getAllReports(); // Lấy danh sách báo cáo
-        List<MonthlyRevenueDTO> monthlyRevenues = ReportService.getMonthlyRevenue(2025, null, true);
+        int year = 2025;
+        List<PaymentDTO> payments = paymentService.getAllPayments(); // hoặc getAllPaymentsForAdmin();
+        List<MonthlyRevenueDTO> monthlyRevenues = paymentService.calculateMonthlyRevenue(year);
 
-        // Tạo map tháng => doanh thu
-        Map<Integer, BigDecimal> revenueByMonth = new HashMap<>();
-        for (MonthlyRevenueDTO dto : monthlyRevenues) {
-            revenueByMonth.put(dto.getMonth(), dto.getTotalRevenue());
-        }
+        double totalRevenue = reportService.calculateTotalRevenue(payments);
+        double managementFee = reportService.calculateManagementFee(payments);
+        double occupancyRate = reportService.calculateTotalRevenue;// bạn tính thêm nếu cần
 
-        List<String> months = new ArrayList<>();
-        List<BigDecimal> revenues = new ArrayList<>();
 
-        for (int month = 1; month <= 12; month++) {
-            months.add(String.format("%02d/2025", month));
-            revenues.add(revenueByMonth.getOrDefault(month, BigDecimal.ZERO));
-        }
-
-        model.addAttribute("months", months);
-        model.addAttribute("revenues", revenues);
-        model.addAttribute("totalRevenue", reportService.calculateTotalRevenue());
-        model.addAttribute("managementFee", reportService.calculateManagementFee());
-        model.addAttribute("occupancyRate", reportService.calculateOccupancyRate());
         model.addAttribute("monthlyRevenues", monthlyRevenues);
+        model.addAttribute("payments", payments);
+        model.addAttribute("totalRevenue", totalRevenue);
+        model.addAttribute("managementFee", managementFee);
+        model.addAttribute("occupancyRate", occupancyRate);
         return "bookingHomeCamping-admin/BaoCaoDoanhThu";
     }
 
@@ -121,54 +111,17 @@ public class HomeController {
     //CHUYỂN SANG TRANG CHỈNH SỬA CUS
     @GetMapping("/quan-li-tk-user/chinh-sua-tk-user/{id}")
     public String chinhSuaTaiKhoanCus(@PathVariable Long id, Model model) {
-        Optional<User> userDTO = userService.getUserById(id); // Lấy user theo id
-        User user = userDTO.orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng với ID: " + id));
-        model.addAttribute("user", user); // Truyền đối tượng User thay vì Optional<User>
-        model.addAttribute("id", id); // Thêm id vào model để sử dụng trong form
-        model.addAttribute("username", user.getUsername()); // Thêm các thuộc tính khác
-        model.addAttribute("email", user.getEmail());
-        model.addAttribute("phone", user.getPhone());
-        model.addAttribute("identityCard", user.getIdentityCard());
-        return "bookingHomeCamping-admin/ChinhSuaTKNguoiDung"; // Đúng tên file HTML
+        Optional<User> userDTO = userService.getUserById(id); // lấy user theo id
+        model.addAttribute("user", userDTO);
+        return "bookingHomeCamping-admin/ChinhSuaTKNguoiDung"; // đúng tên file HTML
     }
 
     //LƯU THÔNG TIN THAY ĐỔI VÀ QUAY LẠI TRANG DANH SÁCH CUS
     @PostMapping("/cap-nhat-tk-user")
-    public String updateUser(@ModelAttribute UserDTO userDTO,
-                             @RequestParam(value = "avatarFile", required = false) MultipartFile avatarFile,
-                             @RequestParam(value = "avatar", required = false) String selectedAvatar) {
-        Optional<User> optionalUser = userService.getUserById(userDTO.getId());
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-
-            user.setUsername(userDTO.getUsername());
-            user.setEmail(userDTO.getEmail());
-            user.setPhone(userDTO.getPhone());
-            user.setIdentityCard(userDTO.getIdentityCard());
-
-            if (avatarFile != null && !avatarFile.isEmpty()) {
-                // Nếu upload ảnh mới
-                try {
-                    String fileName = UUID.randomUUID() + "_" + avatarFile.getOriginalFilename();
-                    String uploadDir = new ClassPathResource("static/static-user/img/avt users").getFile().getAbsolutePath();
-                    File saveFile = new File(uploadDir + File.separator + fileName);
-                    avatarFile.transferTo(saveFile);
-
-                    user.setAvatar("/static-user/img/avt users/" + fileName);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else if (selectedAvatar != null && !selectedAvatar.isEmpty()) {
-                // Nếu chọn ảnh có sẵn
-                user.setAvatar(selectedAvatar);
-            }
-
-            userRepository.save(user);
-        }
-
-        return "redirect:/quan-li-tk-user";  // Quay về trang danh sách
+    public String capNhatTaiKhoanCus(@ModelAttribute UserDTO userDTO) {
+        userService.updateUser(userDTO); // gọi service cập nhật
+        return "redirect:/quan-li-tk-user"; // quay lại danh sách tài khoản
     }
-
 
     //XÓA CUS
     @GetMapping("/xoa-user/{id}")
@@ -237,6 +190,17 @@ public class HomeController {
             }
         }
 
+//        // Gán owner nếu có
+//        if (propertyDTO.getOwner_id() != null) {
+//            Optional<User> ownerOpt = userRepository.findById(propertyDTO.getOwner_id());
+//            if (ownerOpt.isPresent()) {
+//                property.setOwner(ownerOpt.get());
+//            } else {
+//                throw new IllegalArgumentException("Không tìm thấy chủ phòng với ID: " + propertyDTO.getOwner_id());
+//            }
+//        } else {
+//            throw new IllegalArgumentException("Thiếu Owner ID");
+//        }
         // Gán owner nếu có
         if (propertyDTO.getOwner_id() != null) {
             Optional<User> ownerOpt = userRepository.findById(propertyDTO.getOwner_id());
@@ -306,9 +270,12 @@ public class HomeController {
     }
 
     @GetMapping("/hoa-don")
-    public String hoadonPage() {
-        return "bookingHomeCamping-admin/HoaDon";//goi den html page
+    public String hoadonPage(Model model) {
+        List<PaymentDTO> payments = paymentService.getAllPayments();
+        model.addAttribute("payments", payments);
+        return "bookingHomeCamping-admin/HoaDon";
     }
+
 
     @GetMapping("/don-dat-phong")
     public String dondatphongPage(Model model) {
@@ -316,6 +283,7 @@ public class HomeController {
         model.addAttribute("bookings", bookings);
         return "bookingHomeCamping-admin/DonDatPhong";//goi den html page
     }
+
 
 }
 

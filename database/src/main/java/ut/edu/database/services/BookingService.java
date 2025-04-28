@@ -31,12 +31,34 @@ public class BookingService {
     private final ServicePackageRepository servicePackageRepository;
 
     // Trả về danh sách BookingDTO để gửi ra ngoài cho client
+//    public List<BookingDTO> getAllBookingDTOs() {
+//        return bookingRepository.findAll()
+//                .stream()
+//                .map(bookingMapper::toDTO)
+//                .collect(Collectors.toList());
+//    }
+
+
+//TỰ ĐỘNG TÍNH ADMINFEE = 20% TOTALPRICE, OWNERERNING = TOTALPRICE - ADMINFEE
     public List<BookingDTO> getAllBookingDTOs() {
         return bookingRepository.findAll()
                 .stream()
-                .map(bookingMapper::toDTO)
+                .map(booking -> {
+                    BookingDTO dto = bookingMapper.toDTO(booking);
+
+                    // Tính lại adminFee và ownerEarning từ totalPrice
+                    if (dto.getTotalPrice() != null) {
+                        BigDecimal adminFee = dto.getTotalPrice().multiply(BigDecimal.valueOf(0.2));
+                        BigDecimal ownerEarning = dto.getTotalPrice().subtract(adminFee);
+                        dto.setAdminFee(adminFee);
+                        dto.setOwnerEarning(ownerEarning);
+                    }
+
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
+
 
     public BookingDTO bookingToDTO(Booking booking) {
         return bookingMapper.toDTO(booking);

@@ -53,8 +53,8 @@ public class HomeController {
     }
 
     @GetMapping("/home")
-    public String homePage() {
-        return "home"; // Không thêm .html
+    public String HomePage() {
+        return "bookingHomeCamping-user/home";//goi den html page
     }
 
     @GetMapping("/admin")
@@ -275,30 +275,43 @@ public class HomeController {
         return "bookingHomeCamping-admin/DonDatPhong";//goi den html page
     }
 
+//    @GetMapping("/home")
+//    public String home() {
+//
+//        return "bookingHomeCamping-user/home";
+//    }
+
     @GetMapping("/login")
     public String loginPage() {
         return "bookingHomeCamping-user/login";
     }
 
-    // Xử lý đăng nhập (POST)
-    @PostMapping("/login")
-    public String processLogin() {
-        // Logic xử lý đăng nhập
-        return "redirect:/home"; // Chuyển hướng sau khi đăng nhập thành công
-    }
-
-    // Hiển thị trang đăng ký
     @GetMapping("/register")
-    public String showRegisterPage() {
-        return "bookingHomeCamping-user/register"; // Trả về template register.html trong thư mục templates/auth
+    public String registerPage() {
+        return "bookingHomeCamping-user/register";
     }
 
-    // Xử lý đăng ký (POST)
-    @PostMapping("/register")
-    public String processRegister() {
-        // Logic xử lý đăng ký
-        return "redirect:/login"; // Chuyển hướng đến trang đăng nhập sau khi đăng ký
+    //homestay
+//    @GetMapping("/homestays")
+//    public String showHomestays(Model model) {
+//        List<PropertyDTO> homestays = propertyService.getAllPropertyDTOs();
+//        model.addAttribute("homestays", homestays);
+//        return "bookingHomeCamping-user/homestay-detail"; // tên file HTML bạn đã viết
+//    }
+
+//    // Mapping tới trang danh sách homestay
+//    @GetMapping("/bookingHomeCamping-user/homestay-detail")
+//    public String showHomestayList(Model model) {
+//        List<PropertyDTO> homestays = propertyService.getAllPropertyDTOs(); // lấy danh sách homestay
+//        model.addAttribute("homestays", homestays); // đưa danh sách ra view
+//        return "/bookingHomeCamping-user/homestay-detail";
+//    }
+
+    @GetMapping("/homestay-detail")
+    public String homestayPage() {
+        return "bookingHomeCamping-user/homestay-detail";
     }
+
 
 }
 

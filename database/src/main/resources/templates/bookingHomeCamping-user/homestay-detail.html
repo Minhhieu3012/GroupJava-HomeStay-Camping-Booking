@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách Homestay</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
+        .homestay-card {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .homestay-card:hover {
+            transform: translateY(-5px);
+        }
+        .homestay-card img {
+            height: 250px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="~{master/masterpage :: content}">
+    <section th:fragment="content">
+        <div class="container mt-5">
+            <h1 class="mb-4 text-center">Danh sách Homestay</h1>
+
+            <div class="row g-4">
+                <div class="col-md-4" th:each="homestay : ${homestays}">
+                    <div class="card homestay-card">
+                        <img th:src="@{${homestay.image}}" class="card-img-top" th:alt="${homestay.name}">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${homestay.name}">Tên Homestay</h5>
+                            <p class="card-text" th:text="'Địa điểm: ' + ${homestay.location}">Địa điểm</p>
+                            <p class="card-text" th:text="'Giá: ' + ${#numbers.formatDecimal(homestay.price,0,'POINT','.',',')} + ' VNĐ/đêm'">Giá</p>
+                            <!-- Nút Đặt ngay: dẫn tới trang booking -->
+                            <a th:href="@{/booking/{id}(id=${homestay.id})}" class="btn btn-success w-100 mt-3">Đặt ngay</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<!-- Bootstrap Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

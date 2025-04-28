@@ -48,6 +48,7 @@
                                     <th>Trạng thái</th>
                                     <th>Ngày thanh toán</th>
                                     <th>Phương thức thanh toán</th>
+                                    <th>Hành động</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -59,9 +60,10 @@
                                     <td th:text="${#numbers.formatDecimal(payment.hostAmount, 1, 'COMMA', 2, 'POINT')} + ' đ'"></td>
                                     <td th:text="${payment.paymentStatus}"></td>
                                     <td th:text="${#temporals.format(payment.paymentDate, 'dd/MM/yyyy HH:mm')}"></td>
-
-                                    <!--                                    <td th:text="${#dates.format(payment.paymentDate, 'dd/MM/yyyy HH:mm')}"></td>-->
                                     <td th:text="${payment.paymentMethod}"></td>
+                                    <td>
+                                        <a th:href="@{/quan-li-phi-dich-vu/{id}(id=${payment.id})}"  class="btn btn-primary btn-sm">Xem chi tiết</a>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>

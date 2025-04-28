@@ -4,14 +4,14 @@ package ut.edu.database.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+//import org.springframework.security.core.annotation.AuthenticationPrincipal;
+//import org.springframework.security.core.userdetails.UserDetails;
+//import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+//import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ut.edu.database.dtos.MonthlyRevenueDTO;
 import ut.edu.database.dtos.PropertyDTO;
 import ut.edu.database.dtos.UserDTO;
@@ -27,9 +27,9 @@ import ut.edu.database.dtos.ReportDTO;
 import ut.edu.database.services.UserService;
 
 import java.io.File;
-import java.io.IOException;
+//import java.io.IOException;
 import java.math.BigDecimal;
-import java.security.Principal;
+//import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -114,7 +114,7 @@ public class HomeController {
     }
 
 //XEM DS OWNER
-    @GetMapping("/quan-li-tk-host")
+    @GetMapping("/quan-li-tk-owner")
     public String quanlitkchuhomestayPage(Model model) {
         List<UserDTO> ownerList = userService.getAllOwnerUsers();
         model.addAttribute("ownerList", ownerList);
@@ -227,14 +227,49 @@ public class HomeController {
         return "bookingHomeCamping-admin/DonDatPhong";//goi den html page
     }
 
-//NHẤP VÀO CHỈNH SỬA CHUYỂN SANG TRANG CHỈNH SỬA TK USER
-//    @GetMapping("/quan-li-tk-user/chinh-sua-tk-user/{id}")
-//    public String editUserForm(@PathVariable Long id, Model model) {
-//        Optional<User> userDTO = userService.getUserById(id); // lấy user theo id
-//        model.addAttribute("user", userDTO);
-//        return "bookingHomeCamping-admin/ChinhSuaTKNguoiDung"; // đúng đường dẫn file HTML của bạn
-//    }
+    //CHUYỂN SANG TRANG CHỈNH SỬA CUS
+    @GetMapping("/quan-li-tk-user/chinh-sua-tk-user/{id}")
+    public String chinhSuaTaiKhoanCus(@PathVariable Long id, Model model) {
+        Optional<User> userDTO = userService.getUserById(id); // lấy user theo id
+        model.addAttribute("user", userDTO);
+        return "bookingHomeCamping-admin/ChinhSuaTKNguoiDung"; // đúng tên file HTML
+    }
 
+    //LƯU THÔNG TIN THAY ĐỔI VÀ QUAY LẠI TRANG DANH SÁCH CUS
+    @PostMapping("/cap-nhat-tk-user")
+    public String capNhatTaiKhoanCus(@ModelAttribute UserDTO userDTO) {
+        userService.updateUser(userDTO); // gọi service cập nhật
+        return "redirect:/quan-li-tk-user"; // quay lại danh sách tài khoản
+    }
+
+    //XÓA CUS
+    @GetMapping("/xoa-user/{id}")
+    public String xoaUser(@PathVariable Long id) {
+        userService.deleteUser(id); // gọi service để xóa
+        return "redirect:/quan-li-tk-user"; // xóa xong quay lại danh sách
+    }
+
+    //CHUYỂN SANG TRANG CHỈNH SỬA OWNER
+    @GetMapping("/quan-li-tk-owner/chinh-sua-tk-owner/{id}")
+    public String chinhSuaTaiKhoanOwner(@PathVariable Long id, Model model) {
+        Optional<User> ownerDTO = userService.getUserById(id); // lấy user theo id
+        model.addAttribute("owner", ownerDTO);
+        return "bookingHomeCamping-admin/ChinhSuaTKChuHomestay"; // đúng tên file HTML
+    }
+
+    //LƯU THÔNG TIN THAY ĐỔI VÀ QUAY LẠI TRANG DANH SÁCH OWNER
+    @PostMapping("/cap-nhat-tk-owner")
+    public String capNhatTaiKhoanOwner(@ModelAttribute UserDTO userDTO) {
+        userService.updateUser(userDTO); // gọi service cập nhật
+        return "redirect:/quan-li-tk-owner"; // quay lại danh sách tài khoản
+    }
+
+    //XÓA OWNER
+    @GetMapping("/xoa-owner/{id}")
+    public String xoaOwner(@PathVariable Long id) {
+        userService.deleteOwner(id); // gọi service để xóa
+        return "redirect:/quan-li-tk-owner"; // xóa xong quay lại danh sách
+    }
 
 }
 

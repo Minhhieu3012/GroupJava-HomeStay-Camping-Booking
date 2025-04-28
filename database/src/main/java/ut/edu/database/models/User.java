@@ -48,6 +48,9 @@ public class User implements UserDetails {
     @Column(name = "identity_card",length = 20, nullable = false)
     private String identityCard; //CCCD, CMND
 
+    @Column(name = "avatar")
+    private String avatar;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role; //vai tro (vd: customer, homestay owner, admin)

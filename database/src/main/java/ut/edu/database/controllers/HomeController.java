@@ -4,14 +4,10 @@ package ut.edu.database.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-//import org.springframework.security.core.annotation.AuthenticationPrincipal;
-//import org.springframework.security.core.userdetails.UserDetails;
-//import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-//import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ut.edu.database.dtos.*;
 import ut.edu.database.enums.PropertyStatus;
 import ut.edu.database.enums.Role;
@@ -26,10 +22,17 @@ import ut.edu.database.services.ReportService;
 import ut.edu.database.services.UserService;
 
 import java.io.File;
-//import java.io.IOException;
 import java.math.BigDecimal;
-//import java.security.Principal;
 import java.util.*;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import org.springframework.util.StringUtils;
+import java.util.Optional;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
@@ -71,43 +74,6 @@ public class HomeController {
 
 
     private final ReportService ReportService;
-
-////XEM BAO CAO DOANH THU
-//    @GetMapping("/bao-cao-doanh-thu")
-//
-//    public String baocaodoanhthuPage(Model model) {
-//        List<ReportDTO> monthlyReports = ReportService.getAllReports(); // Lấy danh sách báo cáo
-//        List<MonthlyRevenueDTO> monthlyRevenues = ReportService.getMonthlyRevenue(2025, null, true);
-//        BigDecimal totalRevenue = monthlyReports.stream()
-//                .map(ReportDTO::getTotalRevenue)
-//                .filter(Objects::nonNull)
-//                .reduce(BigDecimal.ZERO, BigDecimal::add);
-//
-//        // Tính tổng phí quản lý
-//        BigDecimal managementFee = monthlyReports.stream()
-//                .map(ReportDTO::getManagementFee)
-//                .filter(Objects::nonNull)
-//                .reduce(BigDecimal.ZERO, BigDecimal::add);
-//
-//        // Tính tỷ lệ lấp đầy trung bình
-//        BigDecimal occupancyRate = BigDecimal.valueOf(
-//                monthlyReports.stream()
-//                        .map(ReportDTO::getOccupancyRate)
-//                        .filter(Objects::nonNull)
-//                        .mapToDouble(BigDecimal::doubleValue)
-//                        .average()
-//                        .orElse(0.0)
-//        );
-//
-//        model.addAttribute("monthlyReports", monthlyReports); // Gửi sang Thymeleaf
-//        model.addAttribute("totalRevenue", totalRevenue);
-//        model.addAttribute("managementFee", managementFee);
-//        model.addAttribute("occupancyRate", occupancyRate);
-//        model.addAttribute("monthlyRevenues", monthlyRevenues);
-//
-//        return "bookingHomeCamping-admin/BaoCaoDoanhThu";//goi den html page
-//    }
-
 
     @GetMapping("/bao-cao-doanh-thu")
     public String viewRevenueReport(Model model) {
@@ -155,16 +121,83 @@ public class HomeController {
     //CHUYỂN SANG TRANG CHỈNH SỬA CUS
     @GetMapping("/quan-li-tk-user/chinh-sua-tk-user/{id}")
     public String chinhSuaTaiKhoanCus(@PathVariable Long id, Model model) {
-        Optional<User> userDTO = userService.getUserById(id); // lấy user theo id
-        model.addAttribute("user", userDTO);
-        return "bookingHomeCamping-admin/ChinhSuaTKNguoiDung"; // đúng tên file HTML
+        Optional<User> userDTO = userService.getUserById(id); // Lấy user theo id
+        User user = userDTO.orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng với ID: " + id));
+        model.addAttribute("user", user); // Truyền đối tượng User thay vì Optional<User>
+        model.addAttribute("id", id); // Thêm id vào model để sử dụng trong form
+        model.addAttribute("username", user.getUsername()); // Thêm các thuộc tính khác
+        model.addAttribute("email", user.getEmail());
+        model.addAttribute("phone", user.getPhone());
+        model.addAttribute("identityCard", user.getIdentityCard());
+        return "bookingHomeCamping-admin/ChinhSuaTKNguoiDung"; // Đúng tên file HTML
     }
 
     //LƯU THÔNG TIN THAY ĐỔI VÀ QUAY LẠI TRANG DANH SÁCH CUS
     @PostMapping("/cap-nhat-tk-user")
-    public String capNhatTaiKhoanCus(@ModelAttribute UserDTO userDTO) {
-        userService.updateUser(userDTO); // gọi service cập nhật
-        return "redirect:/quan-li-tk-user"; // quay lại danh sách tài khoản
+    public String updateUserAccount(@RequestParam("id") Long id,
+                                    @RequestParam("username") String username,
+                                    @RequestParam("email") String email,
+                                    @RequestParam("phone") String phone,
+                                    @RequestParam("identityCard") String identityCard,
+                                    @RequestParam(value = "avatar", required = false) String avatar,
+                                    @RequestParam(value = "avatarFile", required = false) MultipartFile avatarFile,
+                                    Model model) {
+
+        Optional<User> userOptional = userService.getUserById(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setUsername(username);
+            user.setEmail(email);
+            user.setPhone(phone);
+            user.setIdentityCard(identityCard);
+
+            // Xử lý upload ảnh mới nếu có
+            if (avatarFile != null && !avatarFile.isEmpty()) {
+                String fileName = StringUtils.cleanPath(avatarFile.getOriginalFilename());
+                String uploadDir = "static/static-user/img/avt users/uploaded/";
+
+                try {
+                    // Tạo thư mục nếu chưa tồn tại
+                    Path uploadPath = Paths.get(uploadDir);
+                    if (!Files.exists(uploadPath)) {
+                        Files.createDirectories(uploadPath);
+                    }
+
+                    // Tạo tên file duy nhất để tránh trùng lặp
+                    String uniqueFileName = System.currentTimeMillis() + "_" + fileName;
+                    Path filePath = uploadPath.resolve(uniqueFileName);
+
+                    // Lưu file
+                    Files.copy(avatarFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+                    // Cập nhật đường dẫn ảnh cho user
+                    user.setAvatar("/" + uploadDir + uniqueFileName);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    model.addAttribute("errorMessage", "Lỗi khi tải lên ảnh: " + e.getMessage());
+                    return "redirect:/quan-li-tk-user";
+                }
+            }
+            // Nếu người dùng chọn avatar có sẵn
+            else if (avatar != null && !avatar.isEmpty()) {
+                user.setAvatar(avatar);
+            }
+
+            UserDTO userDTO = new UserDTO();
+            userDTO.setId(id);
+            userDTO.setUsername(username);
+            userDTO.setEmail(email);
+            userDTO.setPhone(phone);
+            userDTO.setIdentityCard(identityCard);
+            userDTO.setAvatar(user.getAvatar()); // Dùng avatar đã cập nhật từ user object
+            userService.updateUser(userDTO);
+            model.addAttribute("successMessage", "Cập nhật tài khoản thành công!");
+        } else {
+            model.addAttribute("errorMessage", "Không tìm thấy người dùng!");
+        }
+
+        return "redirect:/quan-li-tk-user";
     }
 
     //XÓA CUS
@@ -234,17 +267,6 @@ public class HomeController {
             }
         }
 
-//        // Gán owner nếu có
-//        if (propertyDTO.getOwner_id() != null) {
-//            Optional<User> ownerOpt = userRepository.findById(propertyDTO.getOwner_id());
-//            if (ownerOpt.isPresent()) {
-//                property.setOwner(ownerOpt.get());
-//            } else {
-//                throw new IllegalArgumentException("Không tìm thấy chủ phòng với ID: " + propertyDTO.getOwner_id());
-//            }
-//        } else {
-//            throw new IllegalArgumentException("Thiếu Owner ID");
-//        }
         // Gán owner nếu có
         if (propertyDTO.getOwner_id() != null) {
             Optional<User> ownerOpt = userRepository.findById(propertyDTO.getOwner_id());
@@ -324,7 +346,6 @@ public class HomeController {
         model.addAttribute("bookings", bookings);
         return "bookingHomeCamping-admin/DonDatPhong";//goi den html page
     }
-
 
 }
 

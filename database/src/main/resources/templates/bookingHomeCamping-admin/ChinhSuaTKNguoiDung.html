@@ -9,26 +9,45 @@
 <div id="app">
     <div id="sidebar" class="active">
         <div class="sidebar-wrapper active">
-
-            <!--            START LOGO-->
+            <!-- BẮT ĐẦU LOGO -->
             <div th:replace="master-admin/logo::logo"></div>
-            <!--            END LOGO -->
+            <!-- KẾT THÚC LOGO -->
 
-            <!--            START MENU-->
+            <!-- BẮT ĐẦU MENU -->
             <div th:replace="master-admin/menu::menu"></div>
-            <!--            END MENU-->
-
+            <!-- KẾT THÚC MENU -->
         </div>
     </div>
     <div id="main">
-
-        <!--            NỘI DUNG CÁC TRANG ADMIN-->
+        <!-- NỘI DUNG CÁC TRANG ADMIN -->
         <th:block th:fragment="content">
             <div class="container mt-5">
                 <h2 class="homestay-host-account mb-4">CHỈNH SỬA TÀI KHOẢN NGƯỜI DÙNG</h2>
 
-                <form action="/cap-nhat-tk-user" th:object="${user}"  method="post">
+                <form action="/cap-nhat-tk-user" th:object="${user}" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="id" th:value="${id}" />
+
+                    <!-- Thay thế phần chọn avatar hiện tại -->
+                    <div class="mb-3">
+                        <label for="avatarFile" class="form-label">Tải lên ảnh đại diện:</label>
+                        <input type="file" class="form-control" id="avatarFile" name="avatarFile" accept="image/*" onchange="previewUploadedAvatar(this)">
+                    </div>
+
+                    <!-- Chọn ảnh đại diện -->
+                    <div class="mb-3">
+                        <label for="avatar" class="form-label">Hoặc chọn ảnh đại diện có sẵn:</label>
+                        <select class="form-select" id="avatar" name="avatar" onchange="previewAvatar(this)">
+                            <option value="" th:selected="${user.avatar == null}">Không chọn ảnh</option>
+                            <option value="/static/static-user/img/avt users/bombardino crocodilo.png" th:selected="${user.avatar == '/static/static-user/img/avt users/bombardino crocodilo.png'}">Bombardino Crocodilo</option>
+                            <option value="/static/static-user/img/avt users/brr brr patapim.png" th:selected="${user.avatar == '/static/static-user/img/avt users/brr brr patapim.png'}">Brr Brr Patapim</option>
+                            <option value="/static/static-user/img/avt users/cappuccino asasino.png" th:selected="${user.avatar == '/static/static-user/img/avt users/cappuccino asasino.png'}">Cappuccino Asasino</option>
+                            <option value="/static/static-user/img/avt users/default-avt.png" th:selected="${user.avatar == '/static/static-user/img/avt users/default-avt.png'}">Avatar Default</option>
+                            <option value="/static/static-user/img/avt users/lirili larila.png" th:selected="${user.avatar == '/static/static-user/img/avt users/lirili larila.png'}">Lirili Larila</option>
+                            <option value="/static/static-user/img/avt users/simpanzinni bananinni.png" th:selected="${user.avatar == '/static/static-user/img/avt users/simpanzinni bananinni.png'}">Simpanzinni Bananinni</option>
+                            <option value="/static/static-user/img/avt users/tralalero tralala.png" th:selected="${user.avatar == '/static/static-user/img/avt users/tralalero tralala.png'}">Tralalero Tralala</option>
+                            <option value="/static/static-user/img/avt users/tung tung tung sahur.png" th:selected="${user.avatar == '/static/static-user/img/avt users/tung tung tung sahur.png'}">Tung Tung Tung Sahur</option>
+                        </select>
+                    </div>
 
                     <div class="mb-3">
                         <label for="username" class="form-label">Tên người dùng:</label>
@@ -56,6 +75,39 @@
         </th:block>
     </div>
 </div>
-</body>
 
+<!-- JavaScript để xem trước ảnh đại diện -->
+<script>
+    function previewAvatar(selectElement) {
+        const preview = document.getElementById('avatarPreview');
+        const selectedValue = selectElement.value;
+
+        // Đặt lại file input
+        document.getElementById('avatarFile').value = '';
+
+        if (selectedValue) {
+            preview.src = selectedValue;
+        } else {
+            preview.src = '/static/static-user/img/avt users/default-avt.png';
+        }
+    }
+
+    function previewUploadedAvatar(fileInput) {
+        const preview = document.getElementById('avatarPreview');
+        const file = fileInput.files[0];
+
+        // Đặt lại select dropdown
+        document.getElementById('avatar').value = '';
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                preview.src = reader.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+
+</body>
 </html>

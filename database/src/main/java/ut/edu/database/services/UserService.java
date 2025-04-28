@@ -119,6 +119,9 @@ public class UserService implements UserDetailsService {
         if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
             user.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
+        if (dto.getAvatar() != null) {
+            user.setAvatar(dto.getAvatar());
+        }
         return userMapper.toDTO(userRepository.save(user));
     }
 
@@ -186,6 +189,9 @@ public class UserService implements UserDetailsService {
         user.setEmail(userDTO.getEmail());
         user.setPhone(userDTO.getPhone());
         user.setIdentityCard(userDTO.getIdentityCard());
+        if (userDTO.getAvatar() != null) {
+            user.setAvatar(userDTO.getAvatar());
+        }
 
         userRepository.save(user);
     }

@@ -1,178 +1,526 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HomeStay - Home</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-</head>
-<body>
+    <meta charset="utf-8" />
+    <title>HomeStay - Homestay HTML Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="" name="keywords" />
+    <meta content="" name="description" />
 
-<!-- Navbar Start -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-        <a class="navbar-brand" href="#">HomeStay</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="#rooms">Rooms</a></li>
-                <li class="nav-item"><a class="nav-link" href="#team">Team</a></li>
-                <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-            </ul>
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon" />
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap"
+            rel="stylesheet"
+    />
+
+    <!-- Icon Font Stylesheet -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+            rel="stylesheet"
+    />
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css"
+            rel="stylesheet"
+    />
+
+    <!-- Libraries Stylesheet -->
+    <link href="../../static/static-user/lib/animate/animate.min.css" rel="stylesheet" />
+    <link href="../../static/static-user/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
+    <link
+            href="../../static/static-user/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css"
+            rel="stylesheet"
+    />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="../../static/static-user/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Template Stylesheet -->
+    <link href="../../static/static-user/css/style.css" rel="stylesheet" />
+</head>
+
+<body>
+<div class="container-xxl bg-white p-0">
+    <!-- Spinner Start -->
+    <div
+            id="spinner"
+            class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center"
+    >
+        <div
+                class="spinner-border text-primary"
+                style="width: 3rem; height: 3rem"
+                role="status"
+        >
+            <span class="sr-only">Loading...</span>
         </div>
     </div>
-</nav>
-<!-- Navbar End -->
+    <!-- Spinner End -->
 
-<!-- Hero Section Start -->
-<div class="container-fluid p-0">
-    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="https://source.unsplash.com/1200x400/?hotel,room" class="d-block w-100" alt="...">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>Welcome to HomeStay</h5>
-                    <p>Experience Luxury Living</p>
+    <!-- Header Start -->
+    <div class="container-fluid bg-dark px-0">
+        <div class="row gx-0">
+            <div class="col-lg-3 bg-dark d-none d-lg-block">
+                <a
+                        th:href="@{/}"
+                        class="navbar-brand w-100 h-100 m-0 p-0 d-flex align-items-center justify-content-center"
+                >
+                    <h1 class="m-0 text-primary text-uppercase">HomeStay</h1>
+                </a>
+            </div>
+            <div class="col-lg-9">
+                <div class="row gx-0 bg-white d-none d-lg-flex">
+                    <div class="col-lg-5 px-5 text-end">
+                        <div class="d-inline-flex align-items-center py-2">
+                            <a class="me-3" th:href="${facebookLink}"><i class="fab fa-facebook-f"></i></a>
+                            <a class="me-3" th:href="${twitterLink}"><i class="fab fa-twitter"></i></a>
+                            <a class="me-3" th:href="${linkedinLink}"><i class="fab fa-linkedin-in"></i></a>
+                            <a class="me-3" th:href="${instagramLink}"><i class="fab fa-instagram"></i></a>
+                            <a class="" th:href="${youtubeLink}"><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <nav class="navbar navbar-expand-lg bg-dark navbar-dark p-3 p-lg-0">
+                    <a th:href="@{/}" class="navbar-brand d-block d-lg-none">
+                        <h1 class="m-0 text-primary text-uppercase">HomeStay</h1>
+                    </a>
+                    <button
+                            type="button"
+                            class="navbar-toggler"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#navbarCollapse"
+                    >
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div
+                            class="collapse navbar-collapse justify-content-between"
+                            id="navbarCollapse"
+                    >
+                        <div class="navbar-nav mr-auto py-0">
+                            <a th:href="@{/}" class="nav-item nav-link active">Home</a>
+                            <a th:href="@{/about}" class="nav-item nav-link">About</a>
+                            <a th:href="@{/services}" class="nav-item nav-link">Services</a>
+                            <a th:href="@{/rooms}" class="nav-item nav-link">Rooms</a>
+                            <div class="nav-item dropdown">
+                                <a
+                                        href="#"
+                                        class="nav-link dropdown-toggle"
+                                        data-bs-toggle="dropdown"
+                                >Pages</a
+                                >
+                                <div class="dropdown-menu rounded-0 m-0">
+                                    <a th:href="@{/booking}" class="dropdown-item">Booking</a>
+                                    <a th:href="@{/team}" class="dropdown-item">Our Team</a>
+                                    <a th:href="@{/testimonial}" class="dropdown-item"
+                                    >Testimonial</a
+                                    >
+                                </div>
+                            </div>
+                            <a th:href="@{/contact}" class="nav-item nav-link">Contact</a>
+                        </div>
+                        <!-- Login and Signup Buttons -->
+                        <div class="d-none d-lg-flex align-items-center">
+                            <a href="../bookingHomeCamping-user/login.html" class="btn btn-primary rounded-0 py-2 px-4 me-2">Login</a>
+                            <a href="../bookingHomeCamping-user/register.html" class="btn btn-outline-primary rounded-0 py-2 px-4">Sign Up</a>
+                        </div>
+
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Header End -->
+
+    <!-- Carousel Start -->
+    <div class="container-fluid p-0 mb-5">
+        <div
+                id="header-carousel"
+                class="carousel slide"
+                data-bs-ride="carousel"
+        >
+            <div class="carousel-inner">
+                <div class="carousel-item" th:each="carousel : ${carousels}" th:classappend="${carousel.active} ? 'active' : ''">
+                    <img class="w-100" th:src="@{'/img/' + ${carousel.image}}" th:alt="${carousel.title}" />
+                    <div
+                            class="carousel-caption d-flex flex-column align-items-center justify-content-center"
+                    >
+                        <div class="p-3" style="max-width: 700px">
+                            <h6
+                                    class="section-title text-white text-uppercase mb-3 animated slideInDown"
+                                    th:text="${carousel.subtitle}"
+                            >
+                                Luxury Living
+                            </h6>
+                            <h1 class="display-3 text-white mb-4 animated slideInDown" th:text="${carousel.title}">
+                                Tung Tung Tung Sahur HomeStay
+                            </h1>
+                            <a
+                                    th:href="@{/rooms}"
+                                    class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft"
+                            >Our Rooms</a
+                            >
+                            <a
+                                    th:href="@{/booking}"
+                                    class="btn btn-light py-md-3 px-md-5 animated slideInRight"
+                            >Book A Room</a
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button
+                    class="carousel-control-prev"
+                    type="button"
+                    data-bs-target="#header-carousel"
+                    data-bs-slide="prev"
+            >
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button
+                    class="carousel-control-next"
+                    type="button"
+                    data-bs-target="#header-carousel"
+                    data-bs-slide="next"
+            >
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+    <!-- Carousel End -->
+
+    <!-- Booking Start -->
+
+</div>
+<!-- Booking End -->
+
+<!-- About Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6">
+                <h6 class="section-title text-start text-primary text-uppercase">
+                    About Us
+                </h6>
+                <h1 class="mb-4">
+                    Welcome to
+                    <span class="text-primary text-uppercase">HomeStay </span>
+                </h1>
+                <p class="mb-4" th:text="${aboutDescription}">
+                    Once, everything was fleeting and tangled. Pain echoed like
+                    endless waves. Words blurred, thoughts faded — much like the
+                    slow decay of brain rot, when endless scrolling leaves the mind
+                    empty and restless.
+                </p>
+                <div class="row g-3 pb-4">
+                    <div class="col-sm-4 wow fadeIn" data-wow-delay="0.1s">
+                        <div class="border rounded p-1">
+                            <div class="border rounded text-center p-4">
+                                <i class="fa fa-hotel fa-2x text-primary mb-2"></i>
+                                <h2 class="mb-1" data-toggle="counter-up" th:text="${roomCount}">1234</h2>
+                                <p class="mb-0">Rooms</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 wow fadeIn" data-wow-delay="0.3s">
+                        <div class="border rounded p-1">
+                            <div class="border rounded text-center p-4">
+                                <i class="fa fa-users-cog fa-2x text-primary mb-2"></i>
+                                <h2 class="mb-1" data-toggle="counter-up" th:text="${staffCount}">1234</h2>
+                                <p class="mb-0">Staffs</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 wow fadeIn" data-wow-delay="0.5s">
+                        <div class="border rounded p-1">
+                            <div class="border rounded text-center p-4">
+                                <i class="fa fa-users fa-2x text-primary mb-2"></i>
+                                <h2 class="mb-1" data-toggle="counter-up" th:text="${clientCount}">1234</h2>
+                                <p class="mb-0">Clients</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a class="btn btn-primary py-3 px-5 mt-2" th:href="@{/about}">Explore More</a>
+            </div>
+            <div class="col-lg-6">
+                <div class="row g-3">
+                    <div class="col-6 text-end">
+                        <img
+                                class="img-fluid rounded w-75 wow zoomIn"
+                                data-wow-delay="0.1s"
+                                th:src="@{'/img/' + ${aboutImages[0]}}"
+                                style="margin-top: 25%"
+                        />
+                    </div>
+                    <div class="col-6 text-start">
+                        <img
+                                class="img-fluid rounded w-100 wow zoomIn"
+                                data-wow-delay="0.3s"
+                                th:src="@{'/img/' + ${aboutImages[1]}}"
+                        />
+                    </div>
+                    <div class="col-6 text-end">
+                        <img
+                                class="img-fluid rounded w-50 wow zoomIn"
+                                data-wow-delay="0.5s"
+                                th:src="@{'/img/' + ${aboutImages[2]}}"
+                        />
+                    </div>
+                    <div class="col-6 text-start">
+                        <img
+                                class="img-fluid rounded w-75 wow zoomIn"
+                                data-wow-delay="0.7s"
+                                th:src="@{'/img/' + ${aboutImages[3]}}"
+                        />
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- Hero Section End -->
+<!-- About End -->
 
-<!-- About Section Start -->
-<section id="about" class="py-5">
+<!-- Room Start -->
+<div class="container-xxl py-5">
     <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h2>About Us</h2>
-                <p>Discover the beauty of comfort and hospitality at HomeStay, where every stay is a memorable experience.</p>
-            </div>
-            <div class="col-lg-6">
-                <img src="https://source.unsplash.com/600x400/?hotel,lobby" class="img-fluid rounded" alt="About Image">
-            </div>
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h6 class="section-title text-center text-primary text-uppercase">
+                Our Homestay
+            </h6>
+            <h1 class="mb-5">
+                Explore Our <span class="text-primary text-uppercase">Homestay</span>
+            </h1>
         </div>
-    </div>
-</section>
-<!-- About Section End -->
-
-<!-- Rooms Section Start -->
-<section id="rooms" class="py-5 bg-light">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2>Our Rooms</h2>
-            <p>Explore our luxurious and comfortable rooms</p>
-        </div>
-        <div class="row">
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="https://source.unsplash.com/400x300/?hotel,bedroom" class="card-img-top" alt="Room 1">
-                    <div class="card-body">
-                        <h5 class="card-title">Deluxe Room</h5>
-                        <p class="card-text">From $99/night</p>
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6 wow fadeInUp" th:each="room : ${rooms}" th:attr="data-wow-delay=${roomStat.index * 0.3 + 0.1} + 's'">
+                <div class="room-item shadow rounded overflow-hidden">
+                    <div class="position-relative">
+                        <img class="img-fluid" th:src="@{'/img/' + ${room.image}}" th:alt="${room.name}" />
+                        <small
+                                class="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4"
+                                th:text="${room.price} + '/Night'"
+                        ></small>
+                    </div>
+                    <div class="p-4 mt-2">
+                        <div class="d-flex justify-content-between mb-3">
+                            <h5 class="mb-0" th:text="${room.name}">Junior Suite</h5>
+                            <div class="ps-2">
+                                <small th:each="i : ${#numbers.sequence(1, room.rating)}" class="fa fa-star text-primary"></small>
+                            </div>
+                        </div>
+                        <div class="d-flex mb-3">
+                            <small class="border-end me-3 pe-3"
+                            ><i class="fa fa-bed text-primary me-2"></i><span th:text="${room.beds}">3</span> Bed</small
+                            >
+                            <small class="border-end me-3 pe-3"
+                            ><i class="fa fa-bath text-primary me-2"></i><span th:text="${room.baths}">2</span> Bath</small
+                            >
+                            <small
+                            ><i class="fa fa-wifi text-primary me-2"></i>Wifi</small
+                            >
+                        </div>
+                        <p class="text-body mb-3" th:text="${room.description}">
+                            Erat ipsum justo amet duo et elitr dolor, est duo duo eos
+                            lorem sed diam stet diam sed stet lorem.
+                        </p>
+                        <div class="d-flex justify-content-between">
+                            <a class="btn btn-sm btn-primary rounded py-2 px-4" th:href="@{'/rooms/' + ${room.id}}"
+                            >View Detail</a
+                            >
+                            <a class="btn btn-sm btn-dark rounded py-2 px-4" th:href="@{'/booking/' + ${room.id}}"
+                            >Book Now</a
+                            >
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="https://source.unsplash.com/400x300/?suite,hotel" class="card-img-top" alt="Room 2">
-                    <div class="card-body">
-                        <h5 class="card-title">Executive Suite</h5>
-                        <p class="card-text">From $199/night</p>
-                    </div>
+        </div>
+    </div>
+</div>
+<!-- Room End -->
+
+
+
+
+
+
+
+<!-- Newsletter Start -->
+<div class="container newsletter mt-5 wow fadeIn" data-wow-delay="0.1s">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 border rounded p-1">
+            <div class="border rounded text-center p-1">
+                <div class="bg-white rounded text-center p-5">
+                    <h4 class="mb-4">
+                        Subscribe Our
+                        <span class="text-primary text-uppercase">Newsletter</span>
+                    </h4>
+                    <form th:action="@{/newsletter}" method="post">
+                        <div class="position-relative mx-auto" style="max-width: 400px">
+                            <input
+                                    class="form-control w-100 py-3 ps-4 pe-5"
+                                    type="email"
+                                    name="email"
+                                    placeholder="Enter your email"
+                                    required
+                            />
+                            <button
+                                    type="submit"
+                                    class="btn btn-primary py-2 px-3 position-absolute top-0 end-0 mt-2 me-2"
+                            >
+                                Submit
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="https://source.unsplash.com/400x300/?resort,hotel" class="card-img-top" alt="Room 3">
-                    <div class="card-body">
-                        <h5 class="card-title">Presidential Suite</h5>
-                        <p class="card-text">From $299/night</p>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
-</section>
-<!-- Rooms Section End -->
-
-<!-- Team Section Start -->
-<section id="team" class="py-5">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2>Our Team</h2>
-            <p>Meet our dedicated team</p>
-        </div>
-        <div class="row">
-            <div class="col-md-3 text-center">
-                <img src="https://source.unsplash.com/150x150/?person,man" class="rounded-circle mb-3" alt="Team Member">
-                <h5>John Doe</h5>
-                <p>Manager</p>
-            </div>
-            <div class="col-md-3 text-center">
-                <img src="https://source.unsplash.com/150x150/?woman,profile" class="rounded-circle mb-3" alt="Team Member">
-                <h5>Jane Smith</h5>
-                <p>Receptionist</p>
-            </div>
-            <div class="col-md-3 text-center">
-                <img src="https://source.unsplash.com/150x150/?person,woman" class="rounded-circle mb-3" alt="Team Member">
-                <h5>Lisa Ray</h5>
-                <p>Housekeeping</p>
-            </div>
-            <div class="col-md-3 text-center">
-                <img src="https://source.unsplash.com/150x150/?man,smile" class="rounded-circle mb-3" alt="Team Member">
-                <h5>Michael Lee</h5>
-                <p>Chef</p>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- Team Section End -->
-
-<!-- Contact Section Start -->
-<section id="contact" class="py-5 bg-light">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2>Contact Us</h2>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <form>
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="name" placeholder="Enter your name">
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" placeholder="Enter your email">
-                    </div>
-                    <div class="mb-3">
-                        <label for="message" class="form-label">Message</label>
-                        <textarea class="form-control" id="message" rows="4" placeholder="Enter your message"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Send Message</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- Contact Section End -->
+</div>
+<!-- Newsletter End -->
 
 <!-- Footer Start -->
-<footer class="bg-dark text-white text-center p-4">
-    <p class="mb-0">&copy; 2025 HomeStay. All Rights Reserved.</p>
-</footer>
+<div
+        class="container-fluid bg-dark text-light footer wow fadeIn"
+        data-wow-delay="0.1s"
+>
+    <div class="container pb-5">
+        <div class="row g-5">
+            <div class="col-md-6 col-lg-4">
+                <div class="bg-primary rounded p-4">
+                    <a th:href="@{/}"
+                    ><h1 class="text-white text-uppercase mb-3">HomeStay</h1></a
+                    >
+                    <p class="text-white mb-0" th:utext="${footerDescription}">
+                        Download
+                        <a
+                                class="text-dark fw-medium"
+                                href="https://htmlcodex.com/hotel-html-template-pro"
+                        >Hotelier – Premium Version</a
+                        >, build a professional website for your hotel business and
+                        grab the attention of new visitors upon your site’s launch.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <h6
+                        class="section-title text-start text-primary text-uppercase mb-4"
+                >
+                    Contact
+                </h6>
+                <p class="mb-2">
+                    <i class="fa fa-map-marker-alt me-3"></i><span th:text="${contactAddress}">123 Street, New York, USA</span>
+                </p>
+                <p class="mb-2">
+                    <i class="fa fa-phone-alt me-3"></i><span th:text="${contactPhone}">+012 345 67890</span>
+                </p>
+                <p class="mb-2">
+                    <i class="fa fa-envelope me-3"></i><span th:text="${contactEmail}">info@example.com</span>
+                </p>
+                <div class="d-flex pt-2">
+                    <a class="btn btn-outline-light btn-social" th:href="${footerTwitterLink}"
+                    ><i class="fab fa-twitter"></i
+                    ></a>
+                    <a class="btn btn-outline-light btn-social" th:href="${footerFacebookLink}"
+                    ><i class="fab fa-facebook-f"></i
+                    ></a>
+                    <a class="btn btn-outline-light btn-social" th:href="${footerYoutubeLink}"
+                    ><i class="fab fa-youtube"></i
+                    ></a>
+                    <a class="btn btn-outline-light btn-social" th:href="${footerLinkedinLink}"
+                    ><i class="fab fa-linkedin-in"></i
+                    ></a>
+                </div>
+            </div>
+            <div class="col-lg-5 col-md-12">
+                <div class="row gy-5 g-4">
+                    <div class="col-md-6">
+                        <h6
+                                class="section-title text-start text-primary text-uppercase mb-4"
+                        >
+                            Company
+                        </h6>
+                        <a class="btn btn-link" th:href="@{/about}">About Us</a>
+                        <a class="btn btn-link" th:href="@{/contact}">Contact Us</a>
+                        <a class="btn btn-link" th:href="@{/privacy}">Privacy Policy</a>
+                        <a class="btn btn-link" th:href="@{/terms}">Terms & Condition</a>
+                        <a class="btn btn-link" th:href="@{/support}">Support</a>
+                    </div>
+                    <div class="col-md-6">
+                        <h6
+                                class="section-title text-start text-primary text-uppercase mb-4"
+                        >
+                            Services
+                        </h6>
+                        <a class="btn btn-link" th:href="@{/services}">Food & Restaurant</a>
+                        <a class="btn btn-link" th:href="@{/services}">Spa & Fitness</a>
+                        <a class="btn btn-link" th:href="@{/services}">Sports & Gaming</a>
+                        <a class="btn btn-link" th:href="@{/services}">Event & Party</a>
+                        <a class="btn btn-link" th:href="@{/services}">GYM & Yoga</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="copyright">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    © <a class="border-bottom" th:href="@{/}" th:text="${siteName}">Your Site Name</a>, All
+                    Right Reserved.
+
+                    <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+                    Designed By
+                    <a class="border-bottom" href="https://htmlcodex.com"
+                    >HTML Codex</a
+                    >
+                    <br />Distributed By:
+                    <a
+                            class="border-bottom"
+                            href="https://themewagon.com"
+                            target="_blank"
+                    >ThemeWagon</a
+                    >
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="footer-menu">
+                        <a th:href="@{/}">Home</a>
+                        <a th:href="@{/cookies}">Cookies</a>
+                        <a th:href="@{/help}">Help</a>
+                        <a th:href="@{/faqs}">FQAs</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- Footer End -->
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Back to Top -->
+<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"
+><i class="bi bi-arrow-up"></i
+></a>
+</div>
 
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../static/static-user/lib/wow/wow.min.js"></script>
+<script src="../../static/static-user/lib/easing/easing.min.js"></script>
+<script src="../../static/static-user/lib/waypoints/waypoints.min.js"></script>
+<script src="../../static/static-user/lib/counterup/counterup.min.js"></script>
+<script src="../../static/static-user/lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="../../static/static-user/lib/tempusdominus/js/moment.min.js"></script>
+<script src="../../static/static-user/lib/tempusdominus/js/moment-timezone.min.js"></script>
+<script src="../../static/static-user/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+<!-- Template Javascript -->
+<script src="../../static/static-user/js/main.js"></script>
 </body>
 </html>
+

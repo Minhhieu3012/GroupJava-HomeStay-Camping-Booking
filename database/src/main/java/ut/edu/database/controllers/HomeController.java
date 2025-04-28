@@ -24,6 +24,7 @@ import ut.edu.database.services.BookingService;
 import ut.edu.database.services.PropertyService;
 import ut.edu.database.services.ReportService;
 import ut.edu.database.services.UserService;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.io.File;
 //import java.io.IOException;
@@ -59,10 +60,9 @@ public class HomeController {
         return "index";
     }
 
-    @GetMapping("/home")
-    public String HomePage() {
-        return "home";//goi den html page
-    }
+    //@GetMapping("/home")
+    //public String homePage() { return "home";//goi den html page
+    //}
 
     @GetMapping("/admin")
     public String adminPage() {
@@ -326,6 +326,21 @@ public class HomeController {
     }
 
 
+
+    @GetMapping("/home")
+    public String home() {
+        return "bookingHomeCamping-user/home";
+    }
+
+    @GetMapping("/login")
+    public String loginPage() {
+        return "bookingHomeCamping-user/login"; // gọi đến file login.html trong templates/
+    }
+
+    @GetMapping("/register")
+    public String registerPage() {
+        return "bookingHomeCamping-user/register"; // gọi file templates/register.html
+    }
 }
 
 //Layout ...

@@ -32,7 +32,7 @@
 
   <p class="mt-6 text-center text-gray-600 text-sm">
     Don't have an account?
-    <a href="signup.html" class="text-blue-500 hover:underline">Sign up</a>
+    <a href="register" class="text-blue-500 hover:underline">Sign up</a>
   </p>
 
   <!-- Error message -->
@@ -67,16 +67,17 @@
               return response.json();
             })
             .then(data => {
-              // Lưu token vào localStorage hoặc cookie
+              // Lưu token vào localStorage
               localStorage.setItem('authToken', data.token);
 
-              // Điều hướng đến trang chính (hoặc trang bạn muốn sau khi login thành công)
-              window.location.href = '/dashboard'; // Điều chỉnh URL theo yêu cầu
+              // Kiểm tra role và chuyển trang tương ứng
+              if (data.role === 'ADMIN') {
+                window.location.href = '/bao-cao-doanh-thu'; // chuyển admin
+              } else {
+                window.location.href = '/home'; // chuyển user thường
+              }
             })
-            .catch(error => {
-              document.getElementById('error-message').textContent = error.message;
-              document.getElementById('error-message').classList.remove('hidden');
-            });
+
   });
 </script>
 

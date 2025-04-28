@@ -37,7 +37,7 @@
 
     <p class="mt-6 text-center text-gray-600 text-sm">
         Already have an account?
-        <a href="login.html" class="text-blue-500 hover:underline">Login</a>
+        <a href="login" class="text-blue-500 hover:underline">Login</a>
     </p>
 
     <!-- Error message -->
@@ -45,48 +45,41 @@
 </div>
 
 <script>
-    document.getElementById('register-form').addEventListener('submit', function(event) {
+    document.getElementById('register-form').addEventListener('submit', async function(event) {
         event.preventDefault(); // Ngừng gửi form mặc định
 
-        // Lấy dữ liệu từ form
-        const username = document.getElementById('username').value;
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('confirm-password').value;
+        const username = document.getElementById('username').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const confirmPassword = document.getElementById('confirm-password').value.trim();
+        const errorMessage = document.getElementById('error-message');
 
-        // Kiểm tra mật khẩu xác nhận
         if (password !== confirmPassword) {
-            document.getElementById('error-message').textContent = 'Passwords do not match.';
-            document.getElementById('error-message').classList.remove('hidden');
+            errorMessage.textContent = 'Passwords do not match.';
+            errorMessage.classList.remove('hidden');
             return;
         }
 
-        // Gửi yêu cầu POST tới backend
-        fetch('/api/auths/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                username: username,
-                email: email,
-                password: password,
-            }),
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Registration failed. Please try again.');
-                }
-                return response.json();
-            })
-            .then(data => {
-                // Điều hướng đến trang login hoặc dashboard sau khi đăng ký thành công
-                window.location.href = '/login'; // Điều chỉnh URL theo yêu cầu
-            })
-            .catch(error => {
-                document.getElementById('error-message').textContent = error.message;
-                document.getElementById('error-message').classList.remove('hidden');
+        try {
+            const response = await fetch('/api/auths/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, email, password }),
             });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Registration failed. Please try again.');
+            }
+
+            // Đăng ký thành công → redirect đến login page
+            window.location.href = '/login'; // Chú ý: phải đúng tên file
+        } catch (error) {
+            errorMessage.textContent = error.message;
+            errorMessage.classList.remove('hidden');
+        }
     });
 </script>
 

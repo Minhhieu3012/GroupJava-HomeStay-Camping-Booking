@@ -105,7 +105,6 @@
                         <th>Chủ phòng</th>
                         <th>Trạng thái</th>
                         <th>Hành động</th>
-                        <th>Xem Phòng</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -129,14 +128,6 @@
                                onclick="return confirm('Bạn có chắc muốn xóa phòng này không?')">
                                 <i class="bi bi-trash-fill"></i>
                             </a>
-                        </td>
-                        <td>
-                            <button class="btn btn-success btn-sm view-room-btn"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#viewRoomModal"
-                                    th:attr="data-roomid=${room.id}">
-                                Xem
-                            </button>
                         </td>
                     </tr>
                     </tbody>

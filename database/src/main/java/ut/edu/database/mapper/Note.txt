@@ -1,3 +1,0 @@
-- Mapper layer:
-    + Giúp chuyển đổi qua lại giữa models và DTO - thường dùng mapstruct thủ công)
-    + Mapping dữ liệu để trả về client.

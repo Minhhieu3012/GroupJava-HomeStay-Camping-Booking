@@ -1,9 +1,0 @@
-- Tầng Presentation:
-    + Giao tiếp với client (API)
-    + Xử lý các HTTP request từ client (fe, Postman, etc...)
-    + Auth: (xử lí các yêu cầu xác thực, login, register)
-    + Res: (xử lí các nghiệp vụ chính, mỗi controller gắn với một domain cụ thể)
-
-//GET	http://localhost:8080/auth/register-user (Trả về giao diện đăng ký, truy cập bằng trình duyệt)
-//GET	http://localhost:8080/auth/login-user	(Trả về giao diện login, truy cập bằng trình duyệt)
-//POST	http://localhost:8080/auth/register-user	(Gửi form đăng ký, HTML form submit (Not Postman)

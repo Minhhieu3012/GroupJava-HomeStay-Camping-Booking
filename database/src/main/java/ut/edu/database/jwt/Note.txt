@@ -1,2 +1,0 @@
-- Auth - Jwt: (controllers.auth, jwt, filters)
-    + Login, Register, sinh token

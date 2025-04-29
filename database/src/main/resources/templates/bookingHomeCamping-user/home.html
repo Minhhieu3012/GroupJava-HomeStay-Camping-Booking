@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8" />
-    <title>HomeStay - Homestay HTML Template</title>
+    <title>HomeStay - Hotel HTML Template</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <meta content="" name="keywords" />
     <meta content="" name="description" />
@@ -290,10 +290,10 @@
     <div class="container">
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
             <h6 class="section-title text-center text-primary text-uppercase">
-                Our Homestay
+                Our Rooms
             </h6>
             <h1 class="mb-5">
-                Explore Our <span class="text-primary text-uppercase">Homestay</span>
+                Explore Our <span class="text-primary text-uppercase">Rooms</span>
             </h1>
         </div>
         <div class="row g-4">
@@ -344,11 +344,146 @@
 </div>
 <!-- Room End -->
 
+<!-- Video Start -->
+<div class="container-xxl py-5 px-0 wow zoomIn" data-wow-delay="0.1s">
+    <div class="row g-0">
+        <div class="col-md-6 bg-dark d-flex align-items-center">
+            <div class="p-5">
+                <h6
+                        class="section-title text-start text-white text-uppercase mb-3"
+                >
+                    Luxury Living
+                </h6>
+                <h1 class="text-white mb-4" th:text="${videoTitle}">Discover A Brand Luxurious Hotel</h1>
+                <p class="text-white mb-4" th:text="${videoDescription}">
+                    Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit.
+                    Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit,
+                    sed stet lorem sit clita duo justo magna dolore erat amet
+                </p>
+                <a th:href="@{/rooms}" class="btn btn-primary py-md-3 px-md-5 me-3"
+                >Our Rooms</a
+                >
+                <a th:href="@{/booking}" class="btn btn-light py-md-3 px-md-5">Book A Room</a>
+            </div>
+        </div>
+        <div class="col-md-6"></div>
+    </div>
+</div>
 
+<div
+        class="modal fade"
+        id="videoModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+>
+    <div class="modal-dialog">
+        <div class="modal-content rounded-0">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Youtube Video</h5>
+                <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <!-- 16:9 aspect ratio -->
+                <div class="ratio ratio-16x9">
+                    <iframe
+                            class="embed-responsive-item"
+                            th:src="${videoUrl}"
+                            id="video"
+                            allowfullscreen
+                            allowscriptaccess="always"
+                            allow="autoplay"
+                    ></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Video End -->
 
+<!-- Testimonial Start -->
+<div
+        class="container-xxl testimonial my-5 py-5 bg-dark wow zoomIn"
+        data-wow-delay="0.1s"
+>
+    <div class="container">
+        <div class="owl-carousel testimonial-carousel py-5">
+            <div
+                    class="testimonial-item position-relative bg-white rounded overflow-hidden"
+                    th:each="testimonial : ${testimonials}"
+            >
+                <p th:text="${testimonial.content}">
+                    Tempor stet labore dolor clita stet diam amet ipsum dolor duo
+                    ipsum rebum stet dolor amet diam stet. Est stet ea lorem amet
+                    est kasd kasd et erat magna eos
+                </p>
+                <div class="d-flex align-items-center">
+                    <img
+                            class="img-fluid flex-shrink-0 rounded"
+                            th:src="@{'/img/' + ${testimonial.image}}"
+                            style="width: 45px; height: 45px"
+                            th:alt="${testimonial.name}"
+                    />
+                    <div class="ps-3">
+                        <h6 class="fw-bold mb-1" th:text="${testimonial.name}">Client Name</h6>
+                        <small th:text="${testimonial.profession}">Profession</small>
+                    </div>
+                </div>
+                <i
+                        class="fa fa-quote-right fa-3x text-primary position-absolute end-0 bottom-0 me-4 mb-n1"
+                ></i>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Testimonial End -->
 
-
-
+<!-- Team Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h6 class="section-title text-center text-primary text-uppercase">
+                Our Team
+            </h6>
+            <h1 class="mb-5">
+                Explore Our
+                <span class="text-primary text-uppercase">Staffs</span>
+            </h1>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6 wow fadeInUp" th:each="member : ${teamMembers}" th:attr="data-wow-delay=${memberStat.index * 0.2 + 0.1} + 's'">
+                <div class="rounded shadow overflow-hidden">
+                    <div class="position-relative">
+                        <img class="img-fluid" th:src="@{'/img/' + ${member.image}}" th:alt="${member.name}" />
+                        <div
+                                class="position-absolute start-50 top-100 translate-middle d-flex align-items-center"
+                        >
+                            <a class="btn btn-square btn-primary mx-1" th:href="${member.facebookLink}"
+                            ><i class="fab fa-facebook-f"></i
+                            ></a>
+                            <a class="btn btn-square btn-primary mx-1" th:href="${member.twitterLink}"
+                            ><i class="fab fa-twitter"></i
+                            ></a>
+                            <a class="btn btn-square btn-primary mx-1" th:href="${member.instagramLink}"
+                            ><i class="fab fa-instagram"></i
+                            ></a>
+                        </div>
+                    </div>
+                    <div class="text-center p-4 mt-3">
+                        <h5 class="fw-bold mb-0" th:text="${member.name}">Full Name</h5>
+                        <small th:text="${member.designation}">Designation</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Team End -->
 
 <!-- Newsletter Start -->
 <div class="container newsletter mt-5 wow fadeIn" data-wow-delay="0.1s">

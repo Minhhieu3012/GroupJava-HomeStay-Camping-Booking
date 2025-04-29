@@ -4,14 +4,10 @@ package ut.edu.database.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-//import org.springframework.security.core.annotation.AuthenticationPrincipal;
-//import org.springframework.security.core.userdetails.UserDetails;
-//import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-//import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ut.edu.database.dtos.*;
 import ut.edu.database.enums.PropertyStatus;
 import ut.edu.database.enums.Role;
@@ -24,9 +20,6 @@ import ut.edu.database.services.*;
 import ut.edu.database.services.PaymentService;
 
 import java.io.File;
-//import java.io.IOException;
-import java.math.BigDecimal;
-//import java.security.Principal;
 import java.util.*;
 
 @Controller
@@ -49,28 +42,6 @@ public class HomeController {
     @Autowired
     private PaymentService paymentService;
 
-    @GetMapping("/layout")
-    public String layoutPage() {
-        return "master/_layout";
-    }
-
-    @GetMapping("/about")
-    public String aboutPage() {
-        return "index";
-    }
-
-    @GetMapping("/home")
-    public String HomePage() {
-        return "home";//goi den html page
-    }
-
-    @GetMapping("/admin")
-    public String adminPage() {
-        return "home";//goi den html page
-    }
-
-
-    private final ReportService ReportService;
 
 ////XEM BAO CAO DOANH THU
 
@@ -200,17 +171,6 @@ public class HomeController {
             }
         }
 
-//        // Gán owner nếu có
-//        if (propertyDTO.getOwner_id() != null) {
-//            Optional<User> ownerOpt = userRepository.findById(propertyDTO.getOwner_id());
-//            if (ownerOpt.isPresent()) {
-//                property.setOwner(ownerOpt.get());
-//            } else {
-//                throw new IllegalArgumentException("Không tìm thấy chủ phòng với ID: " + propertyDTO.getOwner_id());
-//            }
-//        } else {
-//            throw new IllegalArgumentException("Thiếu Owner ID");
-//        }
         // Gán owner nếu có
         if (propertyDTO.getOwner_id() != null) {
             Optional<User> ownerOpt = userRepository.findById(propertyDTO.getOwner_id());
@@ -305,9 +265,70 @@ public class HomeController {
             return dashboardService.getDashboardData();
         }
     }
+
     @GetMapping("/dashboard")
     public String dashboardPage() {
         return "bookingHomeCamping-admin/Dashboard";
+    }
+
+    @GetMapping("/homestay-detail")
+    public String homestayDetailPage() {
+        return "bookingHomeCamping-user/homestay-detail";
+    }
+
+
+    @GetMapping("/home")
+    public String homeCustomerPage(Model model) {
+        // Dữ liệu Carousel banner
+        List<CarouselDTO> carousels = new ArrayList<>();
+        carousels.add(new CarouselDTO("banner1.jpg", "Welcome", "Homestay Luxury", true));
+        carousels.add(new CarouselDTO("banner2.jpg", "Comfort", "Relax and Enjoy", false));
+
+        // Dữ liệu About Us
+        model.addAttribute("aboutDescription", "Trải nghiệm kỳ nghỉ tuyệt vời tại HomeStay với không gian sang trọng, tiện nghi!");
+
+        List<String> aboutImages = Arrays.asList("about-1.jpg", "about-2.jpg", "about-3.jpg", "about-4.jpg");
+        model.addAttribute("aboutImages", aboutImages);
+
+        // Dữ liệu danh sách phòng (Rooms)
+        List<RoomDTO> rooms = new ArrayList<>();
+        rooms.add(new RoomDTO(1L, "Sunshine Villa", "villa1.jpg", 3, 2, 5, "Không gian rộng rãi, thoáng mát", 1500000));
+        rooms.add(new RoomDTO(2L, "Cozy Cabin", "villa2.jpg", 2, 1, 4, "Cabin ấm cúng cho gia đình nhỏ", 1200000));
+        rooms.add(new RoomDTO(3L, "Luxury Penthouse", "villa3.jpg", 4, 3, 7, "Trải nghiệm sang trọng đẳng cấp", 2500000));
+        rooms.add(new RoomDTO(4L, "Luxury Penthouse", "villa4.jpg", 4, 3, 7, "Trải nghiệm sang trọng đẳng cấp", 3500000));
+        rooms.add(new RoomDTO(5L, "Luxury Penthouse", "villa5.jpg", 4, 3, 7, "Trải nghiệm sang trọng đẳng cấp", 4500000));
+        rooms.add(new RoomDTO(6L, "Luxury Penthouse", "villa6.jpg", 4, 3, 7, "Trải nghiệm sang trọng đẳng cấp", 5500000));
+        rooms.add(new RoomDTO(7L, "Luxury Penthouse", "villa7.jpg", 4, 3, 7, "Trải nghiệm sang trọng đẳng cấp", 6500000));
+        rooms.add(new RoomDTO(8L, "Luxury Penthouse", "villa8.jpg", 4, 3, 7, "Trải nghiệm sang trọng đẳng cấp", 7500000));
+
+        model.addAttribute("rooms", rooms);
+
+        // Các chỉ số
+        model.addAttribute("roomCount", rooms.size());
+        model.addAttribute("staffCount", 15); // ví dụ
+        model.addAttribute("clientCount", 250); // ví dụ
+
+        // Footer
+        model.addAttribute("footerDescription", "Tận hưởng dịch vụ lưu trú đẳng cấp tại HomeStay. Trải nghiệm chuyến đi tuyệt vời!");
+
+        model.addAttribute("contactAddress", "456 Homestay Street, Đà Lạt");
+        model.addAttribute("contactPhone", "+84 123 456 789");
+        model.addAttribute("contactEmail", "support@homestay.com");
+
+        model.addAttribute("siteName", "HomeStay Booking");
+
+        // Mạng xã hội
+        model.addAttribute("facebookLink", "https://facebook.com/homestay");
+        model.addAttribute("twitterLink", "https://twitter.com/homestay");
+        model.addAttribute("linkedinLink", "https://linkedin.com/company/homestay");
+        model.addAttribute("instagramLink", "https://instagram.com/homestay");
+        model.addAttribute("youtubeLink", "https://youtube.com/homestay");
+        model.addAttribute("footerFacebookLink", "https://facebook.com/homestay");
+        model.addAttribute("footerTwitterLink", "https://twitter.com/homestay");
+        model.addAttribute("footerLinkedinLink", "https://linkedin.com/company/homestay");
+        model.addAttribute("footerYoutubeLink", "https://youtube.com/homestay");
+
+        return "bookingHomeCamping-user/home"; // đúng đường dẫn bạn đang dùng
     }
 
     @GetMapping("/login")
@@ -319,6 +340,6 @@ public class HomeController {
     public String registerPage() {
         return "bookingHomeCamping-user/register";
     }
+
 }
 
-//Layout ...

@@ -66,17 +66,22 @@
               }
               return response.json();
             })
+
             .then(data => {
-              // Lưu token vào localStorage
               localStorage.setItem('authToken', data.token);
 
-              // Kiểm tra role và chuyển trang tương ứng
               if (data.role === 'ADMIN') {
-                window.location.href = '/bao-cao-doanh-thu'; // chuyển admin
-              } else {
-                window.location.href = '/homestay-detail'; // chuyển user thường
+                window.location.href = '/dashboard';
+              } else if (data.role === 'USER') {
+                window.location.href = '/home'; // ✅ user chuyển đúng về /home
+              }else if (data.role === 'OWNER') {
+                window.location.href = '/home';
               }
-            })
+              else {
+                window.location.href = '/home'; // fallback cho role khác
+              }
+            });
+
 
   });
 </script>

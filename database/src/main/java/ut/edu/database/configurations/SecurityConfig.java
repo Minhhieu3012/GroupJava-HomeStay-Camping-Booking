@@ -60,6 +60,8 @@ public class SecurityConfig {
 
                         // Cac endpoint can login, nhung ko phan quyen cu the
                         .requestMatchers("/user/**").authenticated()
+                        .requestMatchers("/home", "/login", "/register", "/auth/**").permitAll()
+                        .requestMatchers("/home", "/login", "/register", "/homestay-detail", "/auth/**").permitAll()
 
                         // Còn lại cho phép truy cập
                         .anyRequest().permitAll()

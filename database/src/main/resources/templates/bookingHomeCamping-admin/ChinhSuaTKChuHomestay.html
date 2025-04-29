@@ -27,7 +27,7 @@
             <div class="container mt-5">
                 <h2 class="homestay-host-account mb-4">CHỈNH SỬA TÀI KHOẢN CHỦ HOMESTAY</h2>
 
-                <form action="@{/cap-nhat-tk-owner}" th:object="${user}"  method="post">
+                <form th:action="@{/cap-nhat-tk-owner}" th:object="${owner}"  method="post">
                     <input type="hidden" name="id" th:field="*{id}" />
 
                     <div class="mb-3">

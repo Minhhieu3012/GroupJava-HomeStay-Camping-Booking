@@ -71,7 +71,7 @@
                         <tbody>
                         <tr th:each="report : ${monthlyRevenues}">
                             <td th:text="'0' + ${report.month} + '/2025'">4/2025</td>
-                            <td th:text="${#numbers.formatDecimal(report.totalRevenue, 0, 'COMMA', 2, 'POINT')}">0.00</td>
+                            <td th:text="${#numbers.formatDecimal(report.totalRevenue, 0, 'COMMA', 0 , 'POINT')}">0</td>
                         </tr>
                         </tbody>
                     </table>

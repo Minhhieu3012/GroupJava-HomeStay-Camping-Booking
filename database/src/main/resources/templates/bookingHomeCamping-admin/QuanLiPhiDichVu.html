@@ -57,12 +57,11 @@
                         <tr th:each="payment, iterStat : ${payments}" th:if="${payment.paymentStatus.name() == 'PAID'}">
                             <td th:text="${iterStat.index + 1}">1</td>
                             <td th:text="${payment.username}">Nguyễn Văn A</td>
-<!--                            <td th:text="'Homestay ' + ${payment.bookingId}">Homestay 101</td> &lt;!&ndash; Tạm lấy bookingId, bạn có thể thay bằng tên homestay nếu có &ndash;&gt;-->
                             <td th:text="${payment.propertyName}">Homestay ABC</td>
 
                             <td th:text="${#temporals.format(payment.paymentDate, 'dd/MM/yyyy')}">28/04/2025</td>
-                            <td th:text="${#numbers.formatDecimal(payment.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' ₫'">1.000.000 ₫</td>
-                            <td th:text="${#numbers.formatDecimal(payment.adminFee, 0, 'COMMA', 0, 'POINT')} + ' ₫'">200.000 ₫</td>
+                            <td th:text="${#numbers.formatDecimal(payment.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' VND'">1.000.000 VND</td>
+                            <td th:text="${#numbers.formatDecimal(payment.adminFee, 0, 'COMMA', 0, 'POINT')} + ' VND'">200.000 VND</td>
                             <td>
                                 <a th:href="@{/quan-li-phi-dich-vu/{id}(id=${payment.id})}"  class="btn btn-primary btn-sm">Xem chi tiết</a>
                             </td>

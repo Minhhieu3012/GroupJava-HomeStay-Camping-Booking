@@ -50,9 +50,9 @@
                         <td th:text="${booking.propertyName}">Tên phòng</td>    <!-- lấy từ PropertyDTO -->
                         <td th:text="${booking.startDate}">Ngày bắt đầu</td>
                         <td th:text="${booking.endDate}">Ngày kết thúc</td>
-                        <td th:text="${#numbers.formatDecimal(booking.totalPrice, 1, 'COMMA', 2, 'POINT')}">Tổng giá</td>
-                        <td th:text="${#numbers.formatDecimal(booking.adminFee, 1, 'COMMA', 2, 'POINT')}">Phí admin</td>
-                        <td th:text="${#numbers.formatDecimal(booking.ownerEarning, 1, 'COMMA', 2, 'POINT')}">Chủ nhà nhận</td>
+                        <td th:text="${#numbers.formatDecimal(booking.totalPrice, 1, 'COMMA', 0, 'POINT')}">Tổng giá</td>
+                        <td th:text="${#numbers.formatDecimal(booking.adminFee, 1, 'COMMA', 0, 'POINT')}">Phí admin</td>
+                        <td th:text="${#numbers.formatDecimal(booking.ownerEarning, 1, 'COMMA', 0, 'POINT')}">Chủ nhà nhận</td>
                         <td th:text="${booking.status}">Trạng thái</td>
                     </tr>
                     </tbody>

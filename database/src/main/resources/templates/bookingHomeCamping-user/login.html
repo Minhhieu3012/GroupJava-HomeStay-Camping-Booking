@@ -73,12 +73,12 @@
               if (data.role === 'ADMIN') {
                 window.location.href = '/dashboard';
               } else if (data.role === 'USER') {
-                window.location.href = '/home'; // ✅ user chuyển đúng về /home
+                window.location.href = '/master';
               }else if (data.role === 'OWNER') {
-                window.location.href = '/home';
+                window.location.href = '/master';
               }
               else {
-                window.location.href = '/home'; // fallback cho role khác
+                window.location.href = '/login'; // fallback cho role khác
               }
             });
 

@@ -281,9 +281,25 @@ public class HomeController {
         return "bookingHomeCamping-user/register";
     }
 
+
     @GetMapping("/master")
-    public String masterPage() {
-        return "master-user/masterpage";
+    public String home(Model model) {
+        return "master-user/masterpage"; // Trả về template masterpage
+    }
+
+    @GetMapping("/properties")
+    public String properties(Model model) {
+        return "master-user/properties";
+    }
+
+    @GetMapping("/property-details")
+    public String propertyDetails(Model model) {
+        return "master-user/property-details";
+    }
+
+    @GetMapping("/contact")
+    public String contact(Model model) {
+        return "master-user/contact";
     }
 }
 

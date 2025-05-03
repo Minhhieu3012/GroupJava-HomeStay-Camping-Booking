@@ -1,3 +1,4 @@
+<div th:fragment="content">
 <!-- Các Phần đặc điểm -->
 <div class="featured section">
   <div class="container">
@@ -22,7 +23,7 @@
             </h2>
             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
               <div class="accordion-body">
-                Get <strong>the best villa</strong> website template in HTML CSS and Bootstrap for your business. TemplateMo provides you the <a th:href="https://www.google.com/search?q=best+free+css+templates" target="_blank">best free CSS templates</a> in the world. Please tell your friends about it.</div>
+                Get <strong>the best villa</strong> website template in HTML CSS and Bootstrap for your business. TemplateMo provides you the <a th:href="@{https://www.google.com/search?q=best+free+css+templates}" target="_blank">best free CSS templates</a> in the world. Please tell your friends about it.</div>
             </div>
           </div>
           <div class="accordion-item">
@@ -97,7 +98,7 @@
       <div class="col-lg-10 offset-lg-1">
         <div class="video-frame">
           <img src="@{/static-user/assets/images/video-frame.jpg}" alt="">
-          <a th:href="https://youtube.com" target="_blank"><i class="fa fa-play"></i></a>
+          <a th:href="@{'https://youtube.com'}" target="_blank"><i class="fa fa-play"></i></a>
         </div>
       </div>
     </div>
@@ -447,5 +448,6 @@
       </div>
     </div>
   </div>
+</div>
 </div>
 <!-- END  -->

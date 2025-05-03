@@ -1,52 +1,52 @@
-<!-- Header nhỏ-->
-<div class="sub-header">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-8">
-        <ul class="info">
-          <li><i class="fa fa-envelope"></i> info@company.com</li>
-          <li><i class="fa fa-map"></i> Sunny Isles Beach, FL 33160</li>
-        </ul>
-      </div>
-      <div class="col-lg-4 col-md-4">
-        <ul class="social-links">
-          <li><a th:href="#"><i class="fab fa-facebook"></i></a></li>
-          <li><a th:href="https://x.com/minthu" target="_blank"><i class="fab fa-twitter"></i></a></li>
-          <li><a th:href="#"><i class="fab fa-linkedin"></i></a></li>
-          <li><a th:href="#"><i class="fab fa-instagram"></i></a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- END -->
-
-<!--Header lớn -->
-<header class="header-area header-sticky">
-  <div class="container">
-    <div class="row">
-      <div class="col-12">
-        <nav class="main-nav">
-          <!-- ***** Logo Start ***** -->
-          <a th:href="index.html" class="logo">
-            <h1>Villa</h1>
-          </a>
-          <!-- ***** Logo End ***** -->
-          <!-- ***** Menu Start ***** -->
-          <ul class="nav">
-            <li><a th:href="index.html" class="active">Home</a></li>
-            <li><a th:href="properties.html">Properties</a></li>
-            <li><a th:href="property-details.html">Property Details</a></li>
-            <li><a th:href="contact.html">Contact Us</a></li>
-            <li><a th:href="#"><i class="fa fa-calendar"></i> Schedule a visit</a></li>
+<!-- Header nhỏ -->
+<div th:fragment="header">
+  <div class="sub-header">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-8">
+          <ul class="info">
+            <li><i class="fa fa-envelope"></i> info@company.com</li>
+            <li><i class="fa fa-map"></i> Sunny Isles Beach, FL 33160</li>
           </ul>
-          <a class='menu-trigger'>
-            <span>Menu</span>
-          </a>
-          <!-- ***** Menu End ***** -->
-        </nav>
+        </div>
+        <div class="col-lg-4 col-md-4">
+          <ul class="social-links">
+            <li><a th:href="@{#}"><i class="fab fa-facebook"></i></a></li>
+            <li><a th:href="@{#}"><i class="fab fa-linkedin"></i></a></li>
+            <li><a th:href="@{#}"><i class="fab fa-instagram"></i></a></li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
-</header>
+
+  <!-- Header lớn -->
+  <header class="header-area header-sticky">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <nav class="main-nav">
+            <!-- ***** Logo Start ***** -->
+            <a th:href="@{/}" class="logo">
+              <h1>Villa</h1>
+            </a>
+            <!-- ***** Logo End ***** -->
+            <!-- ***** Menu Start ***** -->
+            <ul class="nav">
+              <li><a th:href="@{/}" class="active">Home</a></li>
+              <li><a th:href="@{/properties}">Properties</a></li>
+              <li><a th:href="@{/property-details}">Property Details</a></li>
+              <li><a th:href="@{/contact}">Contact Us</a></li>
+              <li><a th:href="@{#}"><i class="fa fa-calendar"></i> Schedule a visit</a></li>
+            </ul>
+            <a class='menu-trigger'>
+              <span>Menu</span>
+            </a>
+            <!-- ***** Menu End ***** -->
+          </nav>
+        </div>
+      </div>
+    </div>
+  </header>
+</div>
 <!-- END -->

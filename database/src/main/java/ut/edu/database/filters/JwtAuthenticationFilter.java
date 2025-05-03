@@ -4,6 +4,7 @@ package ut.edu.database.filters;
 import java.io.IOException;
 import java.util.List;
 
+import jakarta.servlet.http.Cookie;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,39 +32,54 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.userService = userService;
     }
 
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
+        // Kiểm tra header Authorization trước (cho API)
         String authHeader = request.getHeader("Authorization");
+        String token = null;
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            try {
-                String token = authHeader.substring(7); // Extract the token
-                String username = jwtUtil.extractUsername(token); // Extract username from token
-                String role = jwtUtil.extractRole(token).name(); //ADMIN, CUSTOMER, OWNER
+            token = authHeader.substring(7); // Extract token từ header
+        } else {
+            // Nếu không có trong header, kiểm tra trong cookie (cho web)
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("jwt".equals(cookie.getName())) {
+                        token = cookie.getValue();
+                        break;
+                    }
+                }
+            }
+        }
 
-                // Check if the user is not already authenticated
+        // Xử lý token nếu tìm thấy
+        if (token != null) {
+            try {
+                String username = jwtUtil.extractUsername(token);
+                String role = jwtUtil.extractRole(token).name();
+
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    // Kiểm tra token hợp lệ (signature, expiration, username khớp)
                     if (jwtUtil.validateToken(token, username)) {
-                        UserDetails userDetails = userService.loadUserByUsername(username); //lay userDetail that su
-                        // Chuyển vai trò sang ROLE_ prefix cho Spring Security
+                        UserDetails userDetails = userService.loadUserByUsername(username);
                         List<SimpleGrantedAuthority> authorities = List.of(
                                 new SimpleGrantedAuthority("ROLE_" + role)
                         );
+
                         UsernamePasswordAuthenticationToken authentication =
                                 new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
 
                         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                        // Set vào security context
                         SecurityContextHolder.getContext().setAuthentication(authentication);
-                        }
                     }
+                }
             } catch (Exception e) {
-                // Không cho lỗi JWT làm crash hệ thống
-                logger.warn("Lỗi JWT token: {}"+e.getMessage());
+                logger.warn("Lỗi JWT token: " + e.getMessage());
             }
         }
-        chain.doFilter(request, response); // Continue the filter chain
+
+        chain.doFilter(request, response);
     }
 }

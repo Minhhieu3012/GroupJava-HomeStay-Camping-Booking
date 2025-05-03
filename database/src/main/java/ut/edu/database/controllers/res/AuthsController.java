@@ -6,9 +6,10 @@ package ut.edu.database.controllers.res;
 
 import java.util.stream.Collectors;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,18 +17,16 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import ut.edu.database.dtos.AuthResponse;
 import ut.edu.database.dtos.LoginRequest;
 import ut.edu.database.dtos.RegisterRequest;
 import ut.edu.database.enums.Role;
+import ut.edu.database.jwt.JwtService;
 import ut.edu.database.jwt.JwtUtil;
 import ut.edu.database.models.User;
 import ut.edu.database.repositories.UserRepository;
@@ -37,17 +36,42 @@ import ut.edu.database.services.UserService;
 @RequestMapping("/api/auths") //prefix cho moi endpoint
 @RequiredArgsConstructor //tao constructor co chuc cac final field
 public class AuthsController {
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
+    private final JwtService jwtService;
+    private final UserService userService;
 
-    @Autowired
-    private UserService userService;
+    @PostMapping("/auth/process-login")
+    public String processLogin(@RequestParam String username,
+                               @RequestParam String password,
+                               HttpServletResponse response) {
+        try {
+            // Xác thực người dùng
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, password)
+            );
 
-    @Autowired
-    private UserRepository userRepository;
+            // Lưu vào SecurityContext
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            // Tạo JWT token
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String token = jwtService.generateToken(userDetails);
+
+            // Lưu JWT vào cookie
+            Cookie jwtCookie = new Cookie("jwt", token);
+            jwtCookie.setPath("/");
+            jwtCookie.setHttpOnly(true); // Bảo mật hơn, không cho JS truy cập
+            jwtCookie.setMaxAge(24 * 60 * 60); // 1 ngày
+            response.addCookie(jwtCookie);
+
+            return "redirect:/"; // Chuyển về trang chủ sau khi đăng nhập
+        } catch (Exception e) {
+            return "redirect:/auth/login-user?error";
+        }
+    }
 
     //dang nhap
     @PostMapping(value= "/login", produces = "application/json")

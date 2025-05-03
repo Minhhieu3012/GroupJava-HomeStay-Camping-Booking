@@ -1,4 +1,4 @@
-<div th:fragment="content">
+<div th:fragment="content" xmlns:sec="http://www.w3.org/1999/xhtml">
 <!-- Các Phần đặc điểm -->
 <div class="featured section">
   <div class="container">
@@ -188,7 +188,18 @@
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, do eiusmod tempor pack incididunt ut labore et dolore magna aliqua quised ipsum suspendisse.
                       <br><br>When you need free CSS templates, you can simply type TemplateMo in any search engine website. In addition, you can type TemplateMo Portfolio, TemplateMo One Page Layouts, etc.</p>
                     <div class="icon-button">
-                      <a th:href="property-details.html"><i class="fa fa-calendar"></i>Đặt phòng</a>
+                      <!-- Nếu đã đăng nhập -->
+                    <div class="icon-button" sec:authorize="isAuthenticated()">
+                      <a th:href="@{/booking}"><i class="fa fa-calendar"></i>Đặt phòng</a>
+                    </div>
+
+                    <!-- Nếu chưa đăng nhập -->
+                    <div class="icon-button" sec:authorize="!isAuthenticated()">
+                      <a th:href="@{/login}" onclick="alert('Vui lòng đăng nhập để đặt phòng!')">
+                        <i class="fa fa-calendar"></i>Đặt phòng
+                      </a>
+                    </div>
+
                     </div>
                   </div>
                 </div>
@@ -213,7 +224,18 @@
                     <h4>Thông tin cụ thể</h4>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, do eiusmod tempor pack incididunt ut labore et dolore magna aliqua quised ipsum suspendisse. <br><br>Swag fanny pack lyft blog twee. JOMO ethical copper mug, succulents typewriter shaman DIY kitsch twee taiyaki fixie hella venmo after messenger poutine next level humblebrag swag franzen.</p>
                     <div class="icon-button">
-                      <a th:href="property-details.html"><i class="fa fa-calendar"></i>Đặt phòng</a>
+                      <!-- Nếu đã đăng nhập -->
+                    <div class="icon-button" sec:authorize="isAuthenticated()">
+                      <a th:href="@{/booking}"><i class="fa fa-calendar"></i>Đặt phòng</a>
+                    </div>
+
+                    <!-- Nếu chưa đăng nhập -->
+                    <div class="icon-button" sec:authorize="!isAuthenticated()">
+                      <a th:href="@{/login}" onclick="alert('Vui lòng đăng nhập để đặt phòng!')">
+                        <i class="fa fa-calendar"></i>Đặt phòng
+                      </a>
+                    </div>
+
                     </div>
                   </div>
                 </div>
@@ -238,7 +260,18 @@
                     <h4>Thông tin cụ thể</h4>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, do eiusmod tempor pack incididunt ut labore et dolore magna aliqua quised ipsum suspendisse. <br><br>Swag fanny pack lyft blog twee. JOMO ethical copper mug, succulents typewriter shaman DIY kitsch twee taiyaki fixie hella venmo after messenger poutine next level humblebrag swag franzen.</p>
                     <div class="icon-button">
-                      <a th:href="property-details.html"><i class="fa fa-calendar"></i>Đặt phòng</a>
+                      <!-- Nếu đã đăng nhập -->
+                    <div class="icon-button" sec:authorize="isAuthenticated()">
+                      <a th:href="@{/booking}"><i class="fa fa-calendar"></i>Đặt phòng</a>
+                    </div>
+
+                    <!-- Nếu chưa đăng nhập -->
+                    <div class="icon-button" sec:authorize="!isAuthenticated()">
+                      <a th:href="@{/login}" onclick="alert('Vui lòng đăng nhập để đặt phòng!')">
+                        <i class="fa fa-calendar"></i>Đặt phòng
+                      </a>
+                    </div>
+
                     </div>
                   </div>
                 </div>

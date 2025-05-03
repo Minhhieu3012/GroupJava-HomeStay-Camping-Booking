@@ -15,6 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import org.thymeleaf.extras.springsecurity6.dialect.SpringSecurityDialect;
 import ut.edu.database.filters.JwtAuthenticationFilter;
 
 @EnableMethodSecurity(prePostEnabled = true) //cho phep dung @PreAuthorize trong cac controller
@@ -32,6 +33,12 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
+    }
+
+    // Bean cho SpringSecurityDialect
+    @Bean
+    public SpringSecurityDialect springSecurityDialect() {
+        return new SpringSecurityDialect();
     }
 
     // cau hinh bao mat chinh
@@ -70,7 +77,17 @@ public class SecurityConfig {
 
                 // dat filter kiem tra Jwt truoc khi Spring xu li UsernamePassword
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                // Thêm cấu hình logout
+                .logout(logout -> logout
+                    .logoutUrl("/logout")
+                    .logoutSuccessUrl("/auth/login-user?logout")
+                    .deleteCookies("jwt") // Xóa cookie JWT khi đăng xuất
+                    .invalidateHttpSession(true)
+                    .clearAuthentication(true)
+                    .permitAll()
+                )
                 .build();
+
     }
 
 }

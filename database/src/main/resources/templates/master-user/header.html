@@ -1,5 +1,5 @@
 <!-- Header nhỏ -->
-<div th:fragment="header">
+<div th:fragment="header" xmlns:sec="http://www.w3.org/1999/xhtml">
   <div class="sub-header">
     <div class="container">
       <div class="row">
@@ -17,15 +17,27 @@
           </ul>
         </div>
         <div class="col-lg-6 col-md-6 text-right">
-          <div class="auth-links">
-            <button type="button" class="btn btn-outline-primary btn-sm" onclick="window.location.href='/login'">
-              <i class="fa fa-sign-in-alt"></i> Đăng nhập
+
+        <!-- Nếu chưa đăng nhập -->
+        <div class="auth-links" sec:authorize="!isAuthenticated()">
+          <button type="button" class="btn btn-outline-primary btn-sm" onclick="window.location.href='/login'">
+            <i class="fa fa-sign-in-alt"></i> Đăng nhập
+          </button>
+          <span class="auth-divider mx-2">|</span>
+          <button type="button" class="btn btn-outline-primary btn-sm" onclick="window.location.href='/register'">
+            <i class="fa fa-user-plus"></i> Đăng ký
+          </button>
+        </div>
+
+        <!-- Nếu đã đăng nhập -->
+        <div class="auth-links" sec:authorize="isAuthenticated()">
+          <span class="text-white me-2">👤 <b th:text="${#authentication.name}">Tên người dùng</b></span>
+          <form th:action="@{/logout}" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-outline-danger btn-sm">
+              <i class="fa fa-sign-out-alt"></i> Đăng xuất
             </button>
-            <span class="auth-divider mx-2">|</span>
-            <button type="button" class="btn btn-outline-primary btn-sm" onclick="window.location.href='/register'">
-              <i class="fa fa-user-plus"></i> Đăng ký
-            </button>
-          </div>
+          </form>
+        </div>
         </div>
       </div>
     </div>
@@ -49,7 +61,18 @@
               <li><a th:href="@{/properties}">Bất Động sản</a></li>
               <li><a th:href="@{/property-details}">Nhà Nghỉ</a></li>
               <li><a th:href="@{/contact}">Liên hệ</a></li>
-              <li><a th:href="@{#}"><i class="fa fa-calendar"></i>Đặt Phòng</a></li>
+              <!-- Hiển thị nếu đã đăng nhập -->
+              <li sec:authorize="isAuthenticated()">
+                <a th:href="@{/booking}"><i class="fa fa-calendar"></i>Đặt Phòng</a>
+              </li>
+
+              <!-- Hiển thị nếu chưa đăng nhập -->
+              <li sec:authorize="!isAuthenticated()">
+                <a th:href="@{/login}" onclick="alert('Bạn cần đăng nhập để đặt phòng!')">
+                  <i class="fa fa-calendar"></i>Đặt Phòng
+                </a>
+              </li>
+
             </ul>
             <a class='menu-trigger'>
               <span>Menu</span>

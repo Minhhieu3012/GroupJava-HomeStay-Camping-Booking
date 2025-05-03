@@ -271,66 +271,6 @@ public class HomeController {
         return "bookingHomeCamping-admin/Dashboard";
     }
 
-    @GetMapping("/homestay-detail")
-    public String homestayDetailPage() {
-        return "bookingHomeCamping-user/homestay-detail";
-    }
-
-
-    @GetMapping("/home")
-    public String homeCustomerPage(Model model) {
-        // Dữ liệu Carousel banner
-        List<CarouselDTO> carousels = new ArrayList<>();
-        carousels.add(new CarouselDTO("banner1.jpg", "Welcome", "Homestay Luxury", true));
-        carousels.add(new CarouselDTO("banner2.jpg", "Comfort", "Relax and Enjoy", false));
-
-        // Dữ liệu About Us
-        model.addAttribute("aboutDescription", "Trải nghiệm kỳ nghỉ tuyệt vời tại HomeStay với không gian sang trọng, tiện nghi!");
-
-        List<String> aboutImages = Arrays.asList("about-1.jpg", "about-2.jpg", "about-3.jpg", "about-4.jpg");
-        model.addAttribute("aboutImages", aboutImages);
-
-        // Dữ liệu danh sách phòng (Rooms)
-        List<RoomDTO> rooms = new ArrayList<>();
-        rooms.add(new RoomDTO(1L, "Sunshine Villa", "villa1.jpg", 3, 2, 5, "Không gian rộng rãi, thoáng mát", 1500000));
-        rooms.add(new RoomDTO(2L, "Cozy Cabin", "villa2.jpg", 2, 1, 4, "Cabin ấm cúng cho gia đình nhỏ", 1200000));
-        rooms.add(new RoomDTO(3L, "Luxury Penthouse", "villa3.jpg", 4, 3, 7, "Trải nghiệm sang trọng đẳng cấp", 2500000));
-        rooms.add(new RoomDTO(4L, "Luxury Penthouse", "villa4.jpg", 4, 3, 7, "Trải nghiệm sang trọng đẳng cấp", 3500000));
-        rooms.add(new RoomDTO(5L, "Luxury Penthouse", "villa5.jpg", 4, 3, 7, "Trải nghiệm sang trọng đẳng cấp", 4500000));
-        rooms.add(new RoomDTO(6L, "Luxury Penthouse", "villa6.jpg", 4, 3, 7, "Trải nghiệm sang trọng đẳng cấp", 5500000));
-        rooms.add(new RoomDTO(7L, "Luxury Penthouse", "villa7.jpg", 4, 3, 7, "Trải nghiệm sang trọng đẳng cấp", 6500000));
-        rooms.add(new RoomDTO(8L, "Luxury Penthouse", "villa8.jpg", 4, 3, 7, "Trải nghiệm sang trọng đẳng cấp", 7500000));
-
-        model.addAttribute("rooms", rooms);
-
-        // Các chỉ số
-        model.addAttribute("roomCount", rooms.size());
-        model.addAttribute("staffCount", 15); // ví dụ
-        model.addAttribute("clientCount", 250); // ví dụ
-
-        // Footer
-        model.addAttribute("footerDescription", "Tận hưởng dịch vụ lưu trú đẳng cấp tại HomeStay. Trải nghiệm chuyến đi tuyệt vời!");
-
-        model.addAttribute("contactAddress", "456 Homestay Street, Đà Lạt");
-        model.addAttribute("contactPhone", "+84 123 456 789");
-        model.addAttribute("contactEmail", "support@homestay.com");
-
-        model.addAttribute("siteName", "HomeStay Booking");
-
-        // Mạng xã hội
-        model.addAttribute("facebookLink", "https://facebook.com/homestay");
-        model.addAttribute("twitterLink", "https://twitter.com/homestay");
-        model.addAttribute("linkedinLink", "https://linkedin.com/company/homestay");
-        model.addAttribute("instagramLink", "https://instagram.com/homestay");
-        model.addAttribute("youtubeLink", "https://youtube.com/homestay");
-        model.addAttribute("footerFacebookLink", "https://facebook.com/homestay");
-        model.addAttribute("footerTwitterLink", "https://twitter.com/homestay");
-        model.addAttribute("footerLinkedinLink", "https://linkedin.com/company/homestay");
-        model.addAttribute("footerYoutubeLink", "https://youtube.com/homestay");
-
-        return "bookingHomeCamping-user/home"; // đúng đường dẫn bạn đang dùng
-    }
-
     @GetMapping("/login")
     public String loginPage() {
         return "bookingHomeCamping-user/login";
@@ -341,5 +281,9 @@ public class HomeController {
         return "bookingHomeCamping-user/register";
     }
 
+    @GetMapping("/master")
+    public String masterPage() {
+        return "master-user/masterpage";
+    }
 }
 

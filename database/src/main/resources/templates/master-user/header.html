@@ -16,6 +16,17 @@
             <li><a th:href="@{#}"><i class="fab fa-instagram"></i></a></li>
           </ul>
         </div>
+        <div class="col-lg-6 col-md-6 text-right">
+          <div class="auth-links">
+            <button type="button" class="btn btn-outline-primary btn-sm" onclick="window.location.href='/login'">
+              <i class="fa fa-sign-in-alt"></i> Đăng nhập
+            </button>
+            <span class="auth-divider mx-2">|</span>
+            <button type="button" class="btn btn-outline-primary btn-sm" onclick="window.location.href='/register'">
+              <i class="fa fa-user-plus"></i> Đăng ký
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -27,13 +38,14 @@
         <div class="col-12">
           <nav class="main-nav">
             <!-- ***** Logo Start ***** -->
-            <a th:href="@{/}" class="logo">
+            <a th:href="@{/master}" class="logo">
               <h1>Villa</h1>
             </a>
             <!-- ***** Logo End ***** -->
+
             <!-- ***** Menu Start ***** -->
             <ul class="nav">
-              <li><a th:href="@{/}" class="active">Home</a></li>
+              <li><a th:href="@{#}" class="active">Home</a></li>
               <li><a th:href="@{/properties}">Properties</a></li>
               <li><a th:href="@{/property-details}">Property Details</a></li>
               <li><a th:href="@{/contact}">Contact Us</a></li>

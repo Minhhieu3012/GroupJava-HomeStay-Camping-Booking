@@ -62,6 +62,7 @@ public class SecurityConfig {
                         .requestMatchers("/user/**").authenticated()
                         .requestMatchers("/home", "/login", "/register", "/auth/**").permitAll()
                         .requestMatchers("/home", "/login", "/register", "/homestay-detail", "/auth/**").permitAll()
+                        .requestMatchers("/static-user/**", "/assets/**", "/images/**").permitAll()
 
                         // Còn lại cho phép truy cập
                         .anyRequest().permitAll()

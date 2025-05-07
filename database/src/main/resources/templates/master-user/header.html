@@ -1,4 +1,3 @@
-<!-- Header nhỏ -->
 <div th:fragment="header" xmlns:sec="http://www.w3.org/1999/xhtml">
   <div class="sub-header">
     <div class="container">
@@ -11,33 +10,29 @@
         </div>
         <div class="col-lg-4 col-md-4">
           <ul class="social-links">
-            <li><a th:href="@{#}"><i class="fab fa-facebook"></i></a></li>
-            <li><a th:href="@{#}"><i class="fab fa-linkedin"></i></a></li>
-            <li><a th:href="@{#}"><i class="fab fa-instagram"></i></a></li>
+            <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+            <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
+            <li><a href="#"><i class="fab fa-instagram"></i></a></li>
           </ul>
         </div>
         <div class="col-lg-6 col-md-6 text-right">
+          <!-- Luôn luôn hiển thị 3 phần sau để JS xử lý -->
+          <div class="auth-links">
+            <!-- Chưa login -->
+            <!-- Hiển thị khi chưa đăng nhập -->
+            <div sec:authorize="isAnonymous()">
+              <button onclick="window.location.href='/login'">Đăng nhập</button>
+              <button onclick="window.location.href='/register'">Đăng ký</button>
+            </div>
 
-        <!-- Nếu chưa đăng nhập -->
-        <div class="auth-links" sec:authorize="!isAuthenticated()">
-          <button type="button" class="btn btn-outline-primary btn-sm" onclick="window.location.href='/login'">
-            <i class="fa fa-sign-in-alt"></i> Đăng nhập
-          </button>
-          <span class="auth-divider mx-2">|</span>
-          <button type="button" class="btn btn-outline-primary btn-sm" onclick="window.location.href='/register'">
-            <i class="fa fa-user-plus"></i> Đăng ký
-          </button>
-        </div>
-
-        <!-- Nếu đã đăng nhập -->
-        <div class="auth-links" sec:authorize="isAuthenticated()">
-          <span class="text-white me-2">👤 <b th:text="${#authentication.name}">Tên người dùng</b></span>
-          <form th:action="@{/logout}" method="post" style="display:inline;">
-            <button type="submit" class="btn btn-outline-danger btn-sm">
-              <i class="fa fa-sign-out-alt"></i> Đăng xuất
-            </button>
-          </form>
-        </div>
+            <!-- Hiển thị khi đã đăng nhập -->
+            <div sec:authorize="isAuthenticated()">
+              <span>Xin chào, <b th:text="${#authentication.name}">Tên người dùng</b></span>
+              <form th:action="@{/logout}" method="post">
+                <button type="submit">Đăng xuất</button>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -49,39 +44,31 @@
       <div class="row">
         <div class="col-12">
           <nav class="main-nav">
-            <!-- ***** Logo Start ***** -->
             <a th:href="@{/master}" class="logo">
               <h1>Homestay</h1>
             </a>
-            <!-- ***** Logo End ***** -->
-
-            <!-- ***** Menu Start ***** -->
             <ul class="nav">
               <li><a th:href="@{#}" class="active">Trang chủ</a></li>
               <li><a th:href="@{/properties}">Bất Động sản</a></li>
               <li><a th:href="@{/property-details}">Nhà Nghỉ</a></li>
               <li><a th:href="@{/contact}">Liên hệ</a></li>
-              <!-- Hiển thị nếu đã đăng nhập -->
-              <li sec:authorize="isAuthenticated()">
-                <a th:href="@{/booking}"><i class="fa fa-calendar"></i>Đặt Phòng</a>
-              </li>
 
-              <!-- Hiển thị nếu chưa đăng nhập -->
-              <li sec:authorize="!isAuthenticated()">
+              <!-- Luôn luôn hiển thị, để JS xử lý logic -->
+              <li class="nav-booking-guest">
                 <a th:href="@{/login}" onclick="alert('Bạn cần đăng nhập để đặt phòng!')">
                   <i class="fa fa-calendar"></i>Đặt Phòng
                 </a>
               </li>
-
+              <li class="nav-booking-user" style="display:none;">
+                <a th:href="@{/booking}">
+                  <i class="fa fa-calendar"></i>Đặt Phòng
+                </a>
+              </li>
             </ul>
-            <a class='menu-trigger'>
-              <span>Menu</span>
-            </a>
-            <!-- ***** Menu End ***** -->
+            <a class='menu-trigger'><span>Menu</span></a>
           </nav>
         </div>
       </div>
     </div>
   </header>
 </div>
-<!-- END -->

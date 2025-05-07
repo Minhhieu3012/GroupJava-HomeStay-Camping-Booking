@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 
 <!--START CSS-->
 <head>
@@ -48,4 +50,42 @@
 <script th:src="@{/static-user/assets/js/custom.js}"></script>
 
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const token = localStorage.getItem('authToken');
+
+        if (token) {
+            fetch('/api/auths/me', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error('Token không hợp lệ');
+                    return res.json();
+                })
+                .then(user => {
+                    // Ẩn phần đăng nhập/đăng ký
+                    document.querySelector('.when-guest').style.display = 'none';
+
+                    // Hiện phần đặt phòng & user info
+                    document.querySelector('.nav-booking-user').style.display = 'inline-block';
+                    document.querySelector('.nav-booking-guest').style.display = 'none';
+
+                    const userInfo = document.querySelector('.header-user-area');
+                    userInfo.style.display = 'inline-block';
+                    userInfo.innerHTML = `
+          👤 <b>${user.username}</b>
+          <button onclick="logout()" class="btn btn-outline-danger btn-sm ms-2">Đăng xuất</button>
+        `;
+                })
+                .catch(err => {
+                    console.warn('[AUTH ERROR]', err.message);
+                });
+        }
+    });
+
+    function logout() {
+        localStorage.removeItem('authToken');
+        location.reload();
+    }
+</script>
 </html>
